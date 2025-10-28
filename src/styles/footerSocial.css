@@ -1,0 +1,62 @@
+.footer-social {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: white;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 50;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.footer-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2rem;
+  padding: 0.8rem 1rem;
+  color: #0b0b0b;
+  font-size: 1rem;
+}
+
+.connect-text {
+  color: #14b8a6; /* teal-500 */
+  font-weight: 600;
+}
+
+/* Icon styling */
+.icons {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.icons a {
+  color: #0b0b0b;
+  font-size: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.icons a:hover {
+  color: #14b8a6;
+  transform: scale(1.2);
+}
+
+/* Responsive: hide "Let's Connect" on small screens */
+@media (max-width: 640px) {
+  .connect-text {
+    display: none;
+  }
+
+  .footer-content {
+    gap: 1.5rem;
+    padding: 1rem 0.5rem;
+  }
+
+  .icons a {
+    font-size: 1.8rem;
+  }
+}
