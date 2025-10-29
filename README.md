@@ -5,35 +5,31 @@
   Featuring dark/light mode, smooth animations, and an interactive showcase of projects and experiences.
 </p>
 
----
 
-## 🌐 Live Demo  
-🔗 [View Portfolio](https://rjoshi141.github.io/portfolio-v2)
+## Live Demo  
+[View Portfolio](https://rjoshi141.github.io/portfolio-v2)
 
----
 
-## Preview  
+## Preview Screens  
 
 <p align="center">
-  <b>🎥 GIF 1:</b> Landing & About section  
+  Landing & About section  
   <br/>
   <img src="./public/p1.gif" width="250" alt="Portfolio loading preview"/>
 </p>
 
 <p align="center">
-  <b>🎥 GIF 2:</b> Navigating via hamburger menu  
+  Navigating via hamburger menu  
   <br/>
   <img src="./public/p2.gif" width="250" alt="Navigating portfolio preview"/>
 </p>
 
 <p align="center">
-  <b>🎥 GIF 3:</b> Light/Dark mode toggle + Resume preview  
+  Light/Dark mode toggle + Resume preview  
   <br/>
   <img src="./public/p3.gif" width="250" alt="Dark mode and resume preview"/>
 </p>
 
-
----
 
 ## Tech Stack  
 
@@ -45,7 +41,6 @@
 | Icons | React Icons |
 | Theme | Light/Dark Mode toggle with localStorage |
 
----
 
 ## Setup  
 
@@ -75,54 +70,18 @@
    npm run deploy
    ```
 
----
 
-## Folder Structure
+## Future Improvements
 
-```
-portfolio-v2/
-│
-├── public/
-│   ├── logo-black.png
-│   ├── logo-white.png
-│   ├── p1.gif
-│   ├── p2.gif
-│   ├── p3.gif
-│   └── resume-preview.png
-│
-├── src/
-│   ├── components/
-│   │   ├── Navbar.jsx
-│   │   └── FooterSocial.jsx
-│   ├── pages/
-│   │   ├── Home.jsx
-│   │   ├── About.jsx
-│   │   ├── Experience.jsx
-│   │   ├── Projects.jsx
-│   │   └── Resume.jsx
-│   └── main.jsx
-│
-└── vite.config.js
-```
+* Integrate backend for contact form submissions
+* Leadership section
 
----
 
-## 🚀 Future Improvements
-
-* ✨ Add a custom 404 page
-* 🧑‍💻 Integrate backend for contact form submissions
-* 🪄 Animate scroll progress indicator
-* 📊 Add analytics to track engagement
-
----
-
-## 💡 Credits
+## Credits
 
 Designed & Developed with ❤️ by **Ritika Joshi**  
 📍 San Francisco, CA  
 🔗 [LinkedIn](https://www.linkedin.com/in/ritika-joshi-9395591a7/) • [GitHub](https://github.com/RJoshi141)
-
----
 
 <p align="center">
   <sub>© 2025 Ritika Joshi — All rights reserved.</sub>
