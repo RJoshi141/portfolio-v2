@@ -1,4 +1,3 @@
-```markdown
 <h1 align="center">✨ Ritika Joshi — Portfolio</h1>
 
 <p align="center">
@@ -125,4 +124,3 @@ Designed & Developed with ❤️ by **Ritika Joshi**
 <p align="center">
   <sub>© 2025 Ritika Joshi — All rights reserved.</sub>
 </p>
-```
