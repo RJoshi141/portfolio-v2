@@ -1,4 +1,4 @@
-
+````markdown
 <h1 align="center">✨ Ritika Joshi — Portfolio</h1>
 
 <p align="center">
@@ -8,7 +8,7 @@
 
 ---
 
-## Live Demo  
+## 🌐 Live Demo  
 🔗 [View Portfolio](https://rjoshi141.github.io/portfolio-v2)
 
 ---
@@ -33,7 +33,7 @@
 
 ---
 
-## 🛠️ Tech Stack  
+## Tech Stack  
 
 | Category | Tools |
 |-----------|-------|
@@ -109,7 +109,7 @@ portfolio-v2/
 
 ---
 
-## Future Improvements
+## 🚀 Future Improvements
 
 * ✨ Add a custom 404 page
 * 🧑‍💻 Integrate backend for contact form submissions
@@ -118,7 +118,7 @@ portfolio-v2/
 
 ---
 
-## Credits
+## 💡 Credits
 
 Designed & Developed with ❤️ by **Ritika Joshi**
 📍 San Francisco, CA
@@ -129,4 +129,4 @@ Designed & Developed with ❤️ by **Ritika Joshi**
 <p align="center">
   <sub>© 2025 Ritika Joshi — All rights reserved.</sub>
 </p>
-
+```
