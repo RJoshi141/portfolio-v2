@@ -42,7 +42,7 @@ export default function Navbar() {
                 : `${import.meta.env.BASE_URL}logo-black.png`
             }
             alt="Ritika Joshi Logo"
-            className="w-6 h-6 object-contain transition-all duration-500"
+            className="w-5 h-5 object-contain transition-all duration-500"
           />
         </button>
 
