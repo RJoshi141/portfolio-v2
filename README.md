@@ -17,18 +17,21 @@
 <p align="center">
   <b>🎥 GIF 1:</b> Landing & About section  
   <br/>
-  <img src="./public/p1.gif" width="200" alt="Portfolio loading preview"/>
-  <br/><br/>
+  <img src="./public/p1.gif" width="250" alt="Portfolio loading preview"/>
+</p>
 
+<p align="center">
   <b>🎥 GIF 2:</b> Navigating via hamburger menu  
   <br/>
-  <img src="./public/p2.gif" width="200" alt="Navigating portfolio preview"/>
-  <br/><br/>
+  <img src="./public/p2.gif" width="250" alt="Navigating portfolio preview"/>
+</p>
 
+<p align="center">
   <b>🎥 GIF 3:</b> Light/Dark mode toggle + Resume preview  
   <br/>
-  <img src="./public/p3.gif" width="200" alt="Dark mode and resume preview"/>
+  <img src="./public/p3.gif" width="250" alt="Dark mode and resume preview"/>
 </p>
+
 
 ---
 
