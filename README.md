@@ -7,7 +7,7 @@ A minimal, responsive portfolio built with **React**, **Tailwind CSS**, and **Fr
   <img src="./public/portfolio-web-demo.gif" width="700" alt="Portfolio web demo" />
   <br/><br/>
   <b>Mobile Demo</b><br/>
-  <img src="./public/portfolio-mobile-demo.gif" width="300" alt="Portfolio mobile demo" />
+  <img src="./public/portfolio-mobile-demo.gif" width="250" alt="Portfolio mobile demo" />
 </p>
 
 
