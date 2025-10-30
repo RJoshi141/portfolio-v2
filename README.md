@@ -1,6 +1,6 @@
 <p align="center">
 <h2> Ritika Joshi's Portfolio </h2>
-A minimal, responsive portfolio built with **React**, **Tailwind CSS**, and **Framer Motion**, designed to reflect my work, design philosophy, and projects.
+<p>A minimal, responsive portfolio built with **React**, **Tailwind CSS**, and **Framer Motion**, designed to reflect my work, design philosophy, and projects.</p>
 </p>
 
 <p align="center">
