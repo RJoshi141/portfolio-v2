@@ -1,6 +1,7 @@
-# Ritika Joshi – Portfolio
-
+<p align="center">
+<h2> Ritika Joshi's Portfolio </h2>
 A minimal, responsive portfolio built with **React**, **Tailwind CSS**, and **Framer Motion**, designed to reflect my work, design philosophy, and projects.
+</p>
 
 <p align="center">
   <b>Web Demo</b><br/>
@@ -11,7 +12,7 @@ A minimal, responsive portfolio built with **React**, **Tailwind CSS**, and **Fr
 </p>
 
 
- ## 🛠️ Tech Stack  
+ ## Tech Stack  
 
 | Category | Tools |
 |-----------|-------|
@@ -50,5 +51,3 @@ A minimal, responsive portfolio built with **React**, **Tailwind CSS**, and **Fr
 ```bash
    npm run deploy
 ```
-
-If you enjoyed this portfolio, consider giving the repo a star!
