@@ -3,7 +3,7 @@
 A minimal, responsive portfolio built with **React**, **Tailwind CSS**, and **Framer Motion**, designed to reflect my work, design philosophy, and projects.
 
 <p align="center">
-  <img src="portfolio-web-demo.gif" width="500" alt="Portfolio web demo" />
+  <img src="portfolio-web-demo.gif" width="800" alt="Portfolio web demo" />
   <br/>
   <img src="portfolio-mobile-demo.gif" width="300" alt="Portfolio mobile demo" />
 </p>
