@@ -1,4 +1,4 @@
-<h1 align="center">✨ Ritika Joshi — Portfolio</h1>
+<h1 align="center">Ritika Joshi — Portfolio</h1>
 
 <p align="center">
   <b>A modern, responsive developer portfolio built with React + Vite</b><br/>
@@ -81,7 +81,7 @@
 
 Designed & Developed with ❤️ by **Ritika Joshi**  
 📍 San Francisco, CA  
-🔗 [LinkedIn](https://www.linkedin.com/in/ritika-joshi-9395591a7/) • [GitHub](https://github.com/RJoshi141)
+[LinkedIn](https://www.linkedin.com/in/ritika-joshi-9395591a7/) • [GitHub](https://github.com/RJoshi141)
 
 <p align="center">
   <sub>© 2025 Ritika Joshi — All rights reserved.</sub>

@@ -118,7 +118,7 @@ export default function Experience() {
       {/* Section title */}
       <motion.h2
         variants={leftFade}
-        className="text-5xl font-bold mb-12 text-gray-900 dark:text-white transition-colors duration-500"
+        className="text-5xl font-bold mb-12 text-gray-900 dark:text-white text-center transition-colors duration-500"
       >
         Experience
       </motion.h2>
@@ -130,7 +130,7 @@ export default function Experience() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.2 }}
-          className="hidden md:flex md:flex-col md:w-1/3 border-l-2 border-gray-200 dark:border-gray-700 
+          className="hidden md:flex md:flex-col md:w-1/3 border-l-2 border-gray-200 dark:border-card-dark 
                      pl-6 space-y-6 transition-colors duration-500"
         >
           {Object.entries(experiences).map(([key, exp]) => (
@@ -163,7 +163,7 @@ export default function Experience() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className="hidden md:block md:w-2/3 bg-gray-50 dark:bg-gray-900 
+            className="hidden md:block md:w-2/3 bg-gray-50 dark:bg-card-dark 
                        rounded-lg shadow-sm p-8 transition-colors duration-500"
           >
             <motion.h3
@@ -204,9 +204,9 @@ export default function Experience() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.1 }}
               viewport={{ once: true }}
-              className={`rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden transition-colors duration-500 ${
+              className={`rounded-lg shadow-sm border border-gray-200 dark:border-card-dark overflow-hidden transition-colors duration-500 ${
                 activeCompany === key
-                  ? "bg-gray-50 dark:bg-gray-900 border-teal-500 dark:border-cyan-400"
+                  ? "bg-gray-50 dark:bg-card-dark border-gray-50 dark:border-card-dark"
                   : "bg-white dark:bg-black"
               }`}
             >
@@ -215,11 +215,17 @@ export default function Experience() {
                 className="w-full text-left p-4 flex justify-between items-center font-medium text-lg text-gray-800 dark:text-gray-200 transition-colors duration-500"
               >
                 <div>
-                  <span>{exp.company}</span>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    {exp.location}
-                  </p>
-                </div>
+                <span className="block text-base font-semibold text-gray-900 dark:text-white">
+                  {exp.company}
+                </span>
+                <p className="text-sm text-gray-600 dark:text-gray-300">
+                  {exp.title}
+                </p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  {exp.location}
+                </p>
+              </div>
+
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"

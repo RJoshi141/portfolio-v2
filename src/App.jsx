@@ -3,7 +3,8 @@ import Home from "./pages/Home";
 import About from "./pages/About";
 import Experience from "./pages/Experience";
 import Projects from "./pages/Projects";
-import Resume from "./pages/Resume";
+import Articles from "./pages/Articles";
+import Leadership from "./pages/Leadership";
 import FooterSocial from "./components/FooterSocial";
 
 function App() {
@@ -18,7 +19,8 @@ function App() {
         <About />
         <Experience />
         <Projects />
-        <Resume />
+        <Articles />
+        <Leadership />
       </main>
 
       {/* Fixed footer always visible */}
