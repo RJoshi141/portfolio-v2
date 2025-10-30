@@ -11,21 +11,44 @@ A minimal, responsive portfolio built with **React**, **Tailwind CSS**, and **Fr
 </p>
 
 
-## Tech Stack
-- React + Vite  
-- Tailwind CSS  
-- Framer Motion  
-- Lucide React Icons  
+ ## 🛠️ Tech Stack  
+
+| Category | Tools |
+|-----------|-------|
+| Frontend | React, Vite, Tailwind CSS |
+| Animations | Framer Motion |
+| Deployment | GitHub Pages |
+| Icons | React Icons |
+| Theme | Light/Dark Mode toggle with localStorage |
 
 
-## Getting Started
 
+## Setup  
+
+1. **Clone the repository**
 ```bash
-git clone https://github.com/RJoshi141/portfolio-v2.git
-cd portfolio-v2
-npm install
-npm run dev
+   git clone https://github.com/RJoshi141/portfolio-v2.git
+   cd portfolio-v2
 ```
 
+2. **Install dependencies**
+```bash
+   npm install
+```
+
+3. **Start the development server**
+```bash
+   npm run dev
+```
+
+4. **Build for production**
+```bash
+   npm run build
+```
+
+5. **Deploy to GitHub Pages**
+```bash
+   npm run deploy
+```
 
 If you enjoyed this portfolio, consider giving the repo a star!
