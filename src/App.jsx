@@ -1,6 +1,5 @@
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
-import About from "./pages/About";
 import Experience from "./pages/Experience";
 import Projects from "./pages/Projects";
 import Articles from "./pages/Articles";
@@ -16,7 +15,6 @@ function App() {
 
       <main className="pt-24 max-w-6xl mx-auto px-6">
         <Home />
-        <About />
         <Experience />
         <Projects />
         <Articles />

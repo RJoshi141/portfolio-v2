@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { User, Briefcase, Code2, Newspaper, Award, FileText } from "lucide-react";
+import { Briefcase, Code2, Newspaper, Award, FileText } from "lucide-react";
 import "../styles/themeToggle.css"; // ✅ keep this import
 
 export default function Navbar() {
@@ -32,7 +32,6 @@ export default function Navbar() {
   };
 
   const navItems = [
-    { name: "About", icon: <User size={20} /> },
     { name: "Experience", icon: <Briefcase size={20} /> },
     { name: "Projects", icon: <Code2 size={20} /> },
     { name: "Articles", icon: <Newspaper size={20} /> },

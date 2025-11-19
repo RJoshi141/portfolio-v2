@@ -9,11 +9,6 @@ export default function FooterSocial() {
                  transition-colors duration-500"
     >
       <div className="footer-content flex flex-col sm:flex-row justify-center items-center gap-5 py-4">
-        {/* Hide text on mobile for consistency */}
-        <span className="connect-text hidden sm:inline text-teal-600 dark:text-cyan-400 font-medium transition-colors duration-300">
-          Let’s Connect!
-        </span>
-
         <div className="icons flex items-center gap-5">
           {/* LinkedIn */}
           <a

@@ -2,10 +2,13 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Heart } from "lucide-react";
+import ScrollFloat from "../components/ScrollFloat";
 
 
 export default function Leadership() {
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  const [activeAccolade, setActiveAccolade] = useState(null);
 
   const leadershipRoles = [
     {
@@ -49,25 +52,33 @@ export default function Leadership() {
   const accolades = [
     {
       title: "Senior 100 Cohort 2024",
+      date: "MAY 2024",
       description:
         "Recognized among UC’s top 100 graduating seniors for academic excellence, leadership, and community impact.",
     },
     {
       title: "Freeman Foundation Scholarship",
+      date: "AUG 2022",
       description:
         "Awarded for international outreach and academic excellence during study abroad in Singapore.",
     },
     {
       title: "UC Global Scholarship",
+      date: "AUG 2019 – MAY 2024",
       description:
         "Received for demonstrating cultural engagement and leadership in international education programs.",
     },
     {
       title: "CEAS International Outreach Scholarship",
+      date: "AUG 2019 – MAY 2024",
       description:
         "A merit-based award for international students offered by UC's College of Engineering & Applied Science.",
     },
   ];
+
+  const toggleAccolade = (index) => {
+    setActiveAccolade((prev) => (prev === index ? null : index));
+  };
 
   const nextSlide = (images) =>
     setCurrentIndex((prev) => (prev + 1) % images.length);
@@ -84,14 +95,12 @@ export default function Leadership() {
       viewport={{ once: true, amount: 0.3 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
     >
-      <motion.h2
-        className="text-5xl font-bold mb-12 text-center"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
+      <ScrollFloat
+        containerClassName="mb-12 text-center"
+        textClassName="text-4xl font-bold uppercase text-gray-900 dark:text-white transition-colors duration-500"
       >
-        Leadership & Accolades
-      </motion.h2>
+        Leadership
+      </ScrollFloat>
 
       {/* Leadership Cards */}
       <div className="space-y-12">
@@ -178,46 +187,68 @@ export default function Leadership() {
       </div>
 
       {/* Accolades Section */}
-      <div className="mt-20 text-center">
-        <motion.h3
-          className="text-3xl font-semibold mb-12 text-teal-600 dark:text-cyan-400"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          Accolades
-        </motion.h3>
-        
+      <div className="mt-20">
+        <div className="grid gap-10 md:grid-cols-[minmax(0,1fr),minmax(0,2fr)] items-start">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="text-center md:text-left space-y-4"
+          >
+            <p className="text-sm font-semibold uppercase tracking-[0.3em] text-teal-600 dark:text-cyan-400">
+              Awards
+            </p>
+            <h3 className="text-4xl font-bold uppercase text-gray-900 dark:text-white">Accolades</h3>
+            <p className="text-gray-600 dark:text-gray-300 text-base md:text-lg">
+              Recognition for leadership, impact, and community-building work across UC and abroad.
+            </p>
+          </motion.div>
 
-        <div className="flex flex-wrap justify-center gap-12">
-          {accolades.map((a, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ delay: i * 0.1, duration: 0.6, ease: "easeOut" }}
-              className="group relative w-72 h-72 flex flex-col justify-center items-center text-center
-                         rounded-full bg-gray-50 dark:bg-card-dark border border-gray-50 dark:border-card-dark
-                         shadow-sm hover:shadow-xl hover:-translate-y-1
-                         transition-all duration-300 p-8"
-            >
-              <h4
-                className="text-xl font-semibold mb-3 text-gray-900 dark:text-white
-                           group-hover:text-teal-600 dark:group-hover:text-cyan-400 transition-colors duration-300"
+          <div className="bg-transparent">
+            {accolades.map((a, i) => (
+              <div
+                key={a.title}
+                className={`transition-colors duration-300 ${
+                  i !== 0 ? "border-t border-gray-200 dark:border-card-dark" : ""
+                }`}
               >
-                {a.title}
-              </h4>
-
-              <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed px-2">
-                {a.description}
-              </p>
-              
-            </motion.div>
-            
-          ))}
-          
+                <button
+                  onClick={() => toggleAccolade(i)}
+                  className="w-full flex flex-col md:flex-row md:items-center justify-between gap-3 px-1 py-5 text-left hover:text-teal-600 dark:hover:text-cyan-400 transition-colors duration-300"
+                >
+                  <div>
+                    <p className="text-lg font-semibold text-gray-900 dark:text-white">{a.title}</p>
+                    {activeAccolade === i && (
+                      <p className="text-sm text-gray-600 dark:text-gray-300 mt-2 md:hidden">
+                        {a.description}
+                      </p>
+                    )}
+                  </div>
+                  <span className="text-sm font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                    {a.date}
+                  </span>
+                </button>
+                <AnimatePresence initial={false}>
+                  {activeAccolade === i && (
+                    <motion.div
+                      initial={{ height: 0 }}
+                      animate={{ height: "auto" }}
+                      exit={{ height: 0 }}
+                      transition={{ duration: 0.35, ease: "easeInOut" }}
+                      className="overflow-hidden hidden md:block"
+                    >
+                      <div className="pb-5 md:pb-6">
+                        <p className="text-gray-600 dark:text-gray-300 text-base leading-relaxed">
+                          {a.description}
+                        </p>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            ))}
+          </div>
         </div>
-        
       </div>
       {/* ❤️ Made with love note */}
       <motion.div

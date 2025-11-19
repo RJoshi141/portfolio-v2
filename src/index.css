@@ -1,10 +1,11 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
 
 /* Apple-style global typography */
 html, body {
-  @apply bg-white text-black scroll-smooth;
+  background-color: #ffffff;
+  color: #111111;
   margin: 0;
   padding: 0;
 

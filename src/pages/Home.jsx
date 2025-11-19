@@ -50,7 +50,7 @@ export default function Home() {
           custom={0}
           className="text-base sm:text-lg font-medium text-teal-600 dark:text-cyan-400 transition-colors duration-500"
         >
-          Hey there 👋, I'm
+          Hi there, I'm
         </motion.p>
 
         {/* Name */}

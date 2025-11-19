@@ -1,4 +1,6 @@
 import { motion } from "framer-motion";
+import ScrollFloat from "../components/ScrollFloat";
+import ArticleCarousel from "../components/ArticleCarousel";
 import { FaMedium } from "react-icons/fa";
 
 export default function Articles() {
@@ -6,14 +8,29 @@ export default function Articles() {
     {
       title: "AWS Front End Interview Series: From Application to Phone Screen — Part 1",
       description:
-        "Hi, I’m Ritika, a recent CS grad who recently went through the full front-end engineering interview process at Amazon Web Services (AWS) specifically for the EC2N Console team. The entire journey took nearly 4 months...",
+        "Hi, I’m Ritika, a recent CS grad who recently went through the full front-end engineering interview process at Amazon Web Services...",
       link: "https://medium.com/@ritikajoshi141/aws-front-end-interview-series-from-application-to-phone-screen-part-1-of-2-8bd24350fc41",
+      author: "Ritika Joshi",
+      date: "Jun 2024",
+      readTime: "7 min read",
     },
     {
       title: "AWS Front End Interview Series: From Phone Screen to Virtual Loop Onsite — Part 2",
       description:
-        "If you’re reading this, you’re probably preparing for an Amazon front-end interview — or at least deep in the process. In Part 1, I walked through how I applied and optimized my resume, what the OA was like, and how I...",
+        "If you’re reading this, you’re probably preparing for an Amazon front-end interview — or at least deep in the process. In Part 1...",
       link: "https://medium.com/@ritikajoshi141/aws-front-end-interview-series-from-phone-screen-to-virtual-loop-onsite-part-2-of-2-bea61498bee7",
+      author: "Ritika Joshi",
+      date: "Jul 2024",
+      readTime: "9 min read",
+    },
+    {
+      title: "Marking milestones",
+      description:
+        "In my student address, I shared how our class navigated the twists and turns of UC together — united as Bearcats through Juncta Juvant and Next Lives Here.",
+      link: "https://www.uc.edu/news/articles/2024/04/uc-recognizes-its-largest-graduating-class-in-history-in-three-days-of-commencement.html#:~:text=Undergraduate%20student%20speaker%20Ritika%20Joshi",
+      author: "University of Cincinnati News",
+      date: "Apr 2024",
+      readTime: "9 min read",
     },
   ];
 
@@ -27,55 +44,38 @@ export default function Articles() {
       viewport={{ once: true, amount: 0.3 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
     >
-      {/* Title */}
-      <motion.h2
-        className="text-5xl font-bold mb-12 text-center"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        viewport={{ once: true }}
-      >
-        Articles
-      </motion.h2>
-
-      {/* Articles grid */}
-      <div className="grid sm:grid-cols-2 gap-8">
-        {articles.map((article, index) => (
-          <motion.div
-            key={index}
-            initial={{ opacity: 0, y: 40, scale: 0.97 }}
-            whileInView={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{
-              duration: 0.6,
-              delay: index * 0.1,
-              ease: "easeOut",
-            }}
-            viewport={{ once: true }}
-            className="group bg-gray-50 dark:bg-card-dark border border-gray-50 dark:border-card-dark 
-                       rounded-xl shadow-sm p-8 hover:shadow-xl hover:-translate-y-1 
-                       transition-all duration-300"
+      <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr),minmax(0,1.2fr)] items-start">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="space-y-6"
+        >
+          <p className="text-sm font-semibold uppercase tracking-[0.3em] text-teal-600 dark:text-cyan-400">
+            Writing
+          </p>
+          <ScrollFloat
+            containerClassName="text-left"
+            textClassName="text-4xl font-bold uppercase text-gray-900 dark:text-white transition-colors duration-500"
           >
-            <h3
-              className="text-2xl font-semibold mb-3 group-hover:text-teal-600 dark:group-hover:text-cyan-400 
-                         transition-colors leading-snug"
-            >
-              {article.title}
-            </h3>
+            Articles
+          </ScrollFloat>
+          <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed max-w-md">
+            Deep dives on interviewing at AWS, human-centered design, and building thoughtful product experiences.
+          </p>
+          <a
+            href="https://medium.com/@ritikajoshi141"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 text-teal-600 dark:text-cyan-400 font-semibold hover:translate-x-1 transition-transform duration-300"
+          >
+            <FaMedium className="w-5 h-5" />
+            Follow on Medium
+          </a>
+        </motion.div>
 
-            <p className="text-gray-700 dark:text-gray-300 mb-6 leading-relaxed text-base line-clamp-5">
-              {article.description}
-            </p>
-
-            <a
-              href={article.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-teal-600 dark:text-cyan-400 hover:underline font-medium"
-            >
-              <FaMedium className="w-5 h-5" /> Read on Medium →
-            </a>
-          </motion.div>
-        ))}
+        <ArticleCarousel articles={articles} />
       </div>
     </motion.section>
   );

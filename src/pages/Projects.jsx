@@ -1,6 +1,8 @@
 import { useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { Github } from "lucide-react";
+import ScrollFloat from "../components/ScrollFloat";
+import TiltedCard from "../components/TiltedCard";
 
 export default function Projects() {
   const [visibleCount, setVisibleCount] = useState(6);
@@ -112,15 +114,12 @@ export default function Projects() {
       viewport={{ once: true, amount: 0.2 }}
       transition={{ duration: 0.8, ease: 'easeOut' }}
     >
-      <motion.h2
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        viewport={{ once: true }}
-        className="text-5xl font-bold mb-12 text-center text-gray-900 dark:text-white transition-colors duration-500"
+      <ScrollFloat
+        containerClassName="mb-12 text-center"
+        textClassName="text-4xl font-bold uppercase text-gray-900 dark:text-white transition-colors duration-500"
       >
         Projects
-      </motion.h2>
+      </ScrollFloat>
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {visibleProjects.map((project, index) => (
@@ -134,47 +133,55 @@ export default function Projects() {
               ease: 'easeOut',
             }}
             viewport={{ once: true }}
-            className="group relative bg-gray-50 dark:bg-card-dark border border-gray-50 dark:border-card-dark 
-                       rounded-xl shadow-sm p-8 hover:shadow-xl hover:-translate-y-1 
-                       transition-all duration-300"
+            className="h-full"
           >
-            {/* GitHub Icon (top-right) */}
-            <a
-              href={project.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`Open ${project.name} on GitHub`}
-              className="absolute top-4 right-4 text-gray-500 dark:text-gray-400 
-                         hover:text-black dark:hover:text-white focus-visible:outline-none 
-                         focus-visible:ring-2 focus-visible:ring-teal-500 dark:focus-visible:ring-cyan-400 
-                         rounded-sm transition-colors duration-300"
+            <TiltedCard
+              className="h-full"
+              rotateAmplitude={12}
+              scaleOnHover={1.05}
+              showMobileWarning={false}
             >
-              <Github className="w-5 h-5" />
-
-            </a>
-
-            {/* Title */}
-            <h3 className="text-2xl font-semibold mb-3 group-hover:text-teal-600 dark:group-hover:text-cyan-400 transition-colors leading-snug">
-              {project.name}
-            </h3>
-
-            {/* Description */}
-            <p className="text-gray-700 dark:text-gray-300 mb-6 leading-relaxed text-base">
-              {project.description}
-            </p>
-
-            {/* Tech Stack */}
-            <div className="flex flex-wrap gap-2 mt-2">
-              {project.tech.map((tech, i) => (
-                <span
-                  key={i}
-                  className="text-sm font-medium bg-gray-200 dark:bg-tech-dark text-gray-700 dark:text-gray-200 
-                             px-3 py-1 rounded-full transition-colors duration-500"
+              <div className="group relative bg-gray-50 dark:bg-card-dark border border-gray-50 dark:border-card-dark 
+                             rounded-xl shadow-sm p-8 hover:shadow-xl 
+                             transition-all duration-300 h-full">
+                {/* GitHub Icon (top-right) */}
+                <a
+                  href={project.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`Open ${project.name} on GitHub`}
+                  className="absolute top-4 right-4 text-gray-500 dark:text-gray-400 
+                             hover:text-black dark:hover:text-white focus-visible:outline-none 
+                             focus-visible:ring-2 focus-visible:ring-teal-500 dark:focus-visible:ring-cyan-400 
+                             rounded-sm transition-colors duration-300 z-10"
                 >
-                  {tech}
-                </span>
-              ))}
-            </div>
+                  <Github className="w-5 h-5" />
+                </a>
+
+                {/* Title */}
+                <h3 className="text-2xl font-semibold mb-3 group-hover:text-teal-600 dark:group-hover:text-cyan-400 transition-colors leading-snug">
+                  {project.name}
+                </h3>
+
+                {/* Description */}
+                <p className="text-gray-700 dark:text-gray-300 mb-6 leading-relaxed text-base">
+                  {project.description}
+                </p>
+
+                {/* Tech Stack */}
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {project.tech.map((tech, i) => (
+                    <span
+                      key={i}
+                      className="text-sm font-medium bg-gray-200 dark:bg-tech-dark text-gray-700 dark:text-gray-200 
+                                 px-3 py-1 rounded-full transition-colors duration-500"
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </TiltedCard>
           </motion.div>
         ))}
       </div>
