@@ -5,6 +5,7 @@ import Projects from "./pages/Projects";
 import Articles from "./pages/Articles";
 import Leadership from "./pages/Leadership";
 import FooterSocial from "./components/FooterSocial";
+import ChatbotWidget from "./components/ChatbotWidget";
 
 function App() {
   return (
@@ -23,6 +24,9 @@ function App() {
 
       {/* Fixed footer always visible */}
       <FooterSocial />
+
+      {/* AI Assistant Chat Widget */}
+      <ChatbotWidget />
     </div>
   );
 }
