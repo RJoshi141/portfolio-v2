@@ -24,6 +24,13 @@ export default function Projects() {
       github: "https://github.com/RJoshi141/cinemate",
     },
     {
+      name: "Harmoni",
+      description:
+        "A full-stack Spotify dashboard that lets you explore your listening profile, edit playlists, and control playback.",
+      tech: ["React", "React Router", "Styled Components", "Vercel", "Spotify Web API", "Serverless Functions"],
+      github: "https://github.com/RJoshi141/harmoni",
+    },
+    {
       name: "EventReady",
       description:
         "A full-stack web app for event management with goal tracking, budget planning, and attendance tools.",
