@@ -6,6 +6,15 @@ import { FaMedium } from "react-icons/fa";
 export default function Articles() {
   const articles = [
     {
+      title: "I Interviewed at Atlassian — Here's Everything You Need to Know",
+      description:
+        "When I got the chance to interview at Atlassian for a Full Stack Software Engineer role, I wasn't sure what to expect. I'd heard about their...",
+      link: "https://medium.com/@ritikajoshi141/i-interviewed-at-atlassian-heres-everything-you-need-to-know-b126553a03d5",
+      author: "Ritika Joshi",
+      date: "Dec 2025",
+      readTime: "8 min read",
+    },
+    {
       title: "AWS Front End Interview Series: From Application to Phone Screen — Part 1",
       description:
         "Hi, I’m Ritika, a recent CS grad who recently went through the full front-end engineering interview process at Amazon Web Services...",
@@ -17,7 +26,7 @@ export default function Articles() {
     {
       title: "AWS Front End Interview Series: From Phone Screen to Virtual Loop Onsite — Part 2",
       description:
-        "If you’re reading this, you’re probably preparing for an Amazon front-end interview — or at least deep in the process. In Part 1...",
+        "If you're reading this, you're probably preparing for an Amazon front-end interview — or at least deep in the process. In Part 1...",
       link: "https://medium.com/@ritikajoshi141/aws-front-end-interview-series-from-phone-screen-to-virtual-loop-onsite-part-2-of-2-bea61498bee7",
       author: "Ritika Joshi",
       date: "Jul 2024",
