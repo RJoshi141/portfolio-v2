@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import ScrollFloat from "../components/ScrollFloat";
 import ArticleCarousel from "../components/ArticleCarousel";
 import { FaMedium } from "react-icons/fa";
+import ShinyText from "../components/ShinyText";
 
 export default function Articles() {
   const articles = [
@@ -61,9 +62,12 @@ export default function Articles() {
           viewport={{ once: true }}
           className="space-y-6"
         >
-          <p className="text-sm font-semibold uppercase tracking-[0.3em] text-teal-600 dark:text-cyan-400">
-            Writing
-          </p>
+          <ShinyText 
+            text="Writing" 
+            disabled={false} 
+            speed={3} 
+            className="text-sm font-semibold uppercase tracking-[0.3em]" 
+          />
           <ScrollFloat
             containerClassName="text-left"
             textClassName="text-4xl font-bold uppercase text-gray-900 dark:text-white transition-colors duration-500"

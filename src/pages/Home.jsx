@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import ShinyText from "../components/ShinyText";
 
 export default function Home() {
   const fadeUp = {
@@ -61,7 +62,12 @@ export default function Home() {
           custom={0.5}
           className="text-5xl md:text-5xl font-bold text-gray-900 dark:text-white leading-tight transition-colors duration-500"
         >
-          Ritika Joshi.
+          <ShinyText 
+            text="Ritika Joshi." 
+            disabled={false} 
+            speed={3} 
+            className="" 
+          />
         </motion.h1>
 
         {/* Subtitle */}

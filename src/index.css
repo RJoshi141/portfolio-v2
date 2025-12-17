@@ -2,16 +2,19 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
-/* Apple-style global typography */
+/* Apple-style global typography - SF font for all text */
+* {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
+               "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-feature-settings: "kern" 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 html, body {
   background-color: #ffffff;
   color: #111111;
   margin: 0;
   padding: 0;
-
-  /* Apple system font stack */
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
-               "Helvetica Neue", Helvetica, Arial, sans-serif;
-
   scroll-behavior: smooth;
 }

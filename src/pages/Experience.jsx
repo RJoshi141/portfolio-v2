@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import ScrollFloat from "../components/ScrollFloat";
+import ShinyText from "../components/ShinyText";
 import joydropLogo from "../assets/joydrop.svg";
 import bmeLogo from "../assets/bme.png";
 import toyotaLogo from "../assets/toyota-icon.svg";
@@ -126,9 +127,12 @@ export default function Experience() {
           viewport={{ once: true }}
           className="space-y-5 text-left"
         >
-          <p className="text-sm font-semibold uppercase tracking-[0.4em] text-teal-600 dark:text-cyan-400">
-            Work History
-          </p>
+          <ShinyText 
+            text="Work History" 
+            disabled={false} 
+            speed={3} 
+            className="text-sm font-semibold uppercase tracking-[0.4em]" 
+          />
           <ScrollFloat
             containerClassName="text-left"
             textClassName="text-4xl font-bold uppercase text-gray-900 dark:text-white"

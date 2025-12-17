@@ -1,0 +1,44 @@
+.shiny-text {
+  /* Light mode: dark text with bright shine */
+  background: linear-gradient(
+    120deg,
+    #1a1a1a 40%,
+    #ffffff 50%,
+    #1a1a1a 60%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  display: inline-block;
+  animation: shine 5s linear infinite;
+}
+
+/* Dark mode: light text with bright shine for proper visibility */
+.dark .shiny-text {
+  background: linear-gradient(
+    120deg,
+    #b0b0b0 40%,
+    #ffffff 50%,
+    #b0b0b0 60%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+@keyframes shine {
+  0% {
+    background-position: 100%;
+  }
+  100% {
+    background-position: -100%;
+  }
+}
+
+.shiny-text.disabled {
+  animation: none;
+}

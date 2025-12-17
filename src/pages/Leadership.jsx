@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Heart } from "lucide-react";
 import ScrollFloat from "../components/ScrollFloat";
+import ShinyText from "../components/ShinyText";
 
 
 export default function Leadership() {
@@ -195,9 +196,12 @@ export default function Leadership() {
             transition={{ duration: 0.5 }}
             className="text-center md:text-left space-y-4"
           >
-            <p className="text-sm font-semibold uppercase tracking-[0.3em] text-teal-600 dark:text-cyan-400">
-              Awards
-            </p>
+            <ShinyText 
+              text="Awards" 
+              disabled={false} 
+              speed={3} 
+              className="text-sm font-semibold uppercase tracking-[0.3em]" 
+            />
             <h3 className="text-4xl font-bold uppercase text-gray-900 dark:text-white">Accolades</h3>
             <p className="text-gray-600 dark:text-gray-300 text-base md:text-lg">
               Recognition for leadership, impact, and community-building work across UC and abroad.
