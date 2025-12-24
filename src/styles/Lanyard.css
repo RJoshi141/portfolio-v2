@@ -9,6 +9,7 @@
   align-items: flex-start;
   transform: scale(1);
   transform-origin: top center;
+  overflow: visible;
 }
 
 @media (min-width: 768px) {

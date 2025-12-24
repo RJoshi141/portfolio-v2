@@ -82,10 +82,10 @@ export default function Home() {
       id="home"
       className="relative scroll-mt-20 flex flex-col justify-center items-start 
                  h-auto lg:h-[calc(100vh-5rem)] px-5 sm:px-8 md:px-12 py-24 lg:py-0 
-                 max-w-6xl mx-auto bg-white dark:bg-black overflow-hidden 
+                 max-w-6xl mx-auto bg-white dark:bg-black overflow-visible 
                  transition-colors duration-500"
     >
-      <div className="relative z-10 w-full flex flex-col lg:flex-row lg:items-center lg:gap-8 lg:-mt-12">
+      <div className="relative z-10 w-full flex flex-col lg:flex-row lg:items-center lg:gap-8 lg:-mt-20 overflow-visible">
         {/* Left column - Text content */}
         <div className="space-y-5 sm:space-y-6 text-left w-full lg:w-3/5 transition-colors duration-500">
           {/* Intro line */}
@@ -219,7 +219,7 @@ export default function Home() {
 
         {/* Right column - Lanyard (hidden on mobile) - drops from header */}
         <motion.div 
-          className="hidden lg:block lg:w-2/5 h-[600px] -mt-24"
+          className="hidden lg:block lg:w-2/5 h-[600px] -mt-24 overflow-visible"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 1, ease: "easeOut" }}
