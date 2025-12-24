@@ -13,21 +13,21 @@ export default function Projects() {
       name: "Zoomies",
       description:
         "Retro 2D endless runner built with SpriteKit + Swift with custom pixel sprites and UI.",
-      tech: ["Swift", "iOS", "SpriteKit", "Mobile Game", "Xcode", "Platformer", "Sprite Animation"],
+      tech: ["Swift", "iOS", "SpriteKit", "Mobile Game", "Xcode", "Sprite Animation"],
       github: "https://github.com/RJoshi141/Zoomies",
     },
     {
       name: "Cinemate",
       description:
         "Discover and track your favorite movies with personalized recommendations, trivia, and interactive features.",
-      tech: ["React", "JavaScript", "TypeScript", "Tailwind CSS", "TMDB API"],
+      tech: ["React", "JavaScript", "TypeScript", "TMDB API"],
       github: "https://github.com/RJoshi141/cinemate",
     },
     {
       name: "Harmoni",
       description:
         "A full-stack Spotify dashboard that lets you explore your listening profile, edit playlists, and control playback.",
-      tech: ["React", "React Router", "Styled Components", "Vercel", "Spotify Web API", "Serverless Functions"],
+      tech: ["React", "React Router", "Vercel", "Spotify Web API"],
       github: "https://github.com/RJoshi141/harmoni",
     },
     {
@@ -144,7 +144,7 @@ export default function Projects() {
           >
             <TiltedCard
               className="h-full"
-              rotateAmplitude={12}
+              rotateAmplitude={6}
               scaleOnHover={1.05}
               showMobileWarning={false}
             >
