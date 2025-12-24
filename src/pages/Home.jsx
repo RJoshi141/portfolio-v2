@@ -1,5 +1,27 @@
 import { motion } from "framer-motion";
 import ShinyText from "../components/ShinyText";
+import {
+  SiTypescript,
+  SiJavascript,
+  SiReact,
+  SiAngular,
+  SiNextdotjs,
+  SiNestjs,
+  SiNodedotjs,
+  SiFirebase,
+  SiPython,
+  SiSwift,
+  SiCplusplus,
+  SiPostgresql,
+  SiMysql,
+  SiGraphql,
+  SiMongodb,
+  SiAmazonwebservices,
+  SiDocker,
+  SiVercel,
+  SiTailwindcss,
+  SiOpenai,
+} from "react-icons/si";
 
 export default function Home() {
   const fadeUp = {
@@ -12,26 +34,26 @@ export default function Home() {
   };
 
   const techStack = [
-    "TypeScript",
-    "JavaScript (ES6+)",
-    "React",
-    "Angular",
-    "Next.js",
-    "Nest.js",
-    "Node.js",
-    "Firebase",
-    "Python",
-    "Swift",
-    "C++",
-    "PostgreSQL",
-    "SQL",
-    "GraphQL",
-    "MongoDB",
-    "AWS",
-    "Docker",
-    "Vercel",
-    "Tailwind CSS",
-    "LLMs",
+    { Icon: SiTypescript, name: "TypeScript" },
+    { Icon: SiJavascript, name: "JavaScript" },
+    { Icon: SiReact, name: "React" },
+    { Icon: SiAngular, name: "Angular" },
+    { Icon: SiNextdotjs, name: "Next.js" },
+    { Icon: SiNestjs, name: "Nest.js" },
+    { Icon: SiNodedotjs, name: "Node.js" },
+    { Icon: SiFirebase, name: "Firebase" },
+    { Icon: SiPython, name: "Python" },
+    { Icon: SiSwift, name: "Swift" },
+    { Icon: SiCplusplus, name: "C++" },
+    { Icon: SiPostgresql, name: "PostgreSQL" },
+    { Icon: SiMysql, name: "SQL" },
+    { Icon: SiGraphql, name: "GraphQL" },
+    { Icon: SiMongodb, name: "MongoDB" },
+    { Icon: SiAmazonwebservices, name: "AWS" },
+    { Icon: SiDocker, name: "Docker" },
+    { Icon: SiVercel, name: "Vercel" },
+    { Icon: SiTailwindcss, name: "Tailwind CSS" },
+    { Icon: SiOpenai, name: "LLMs" },
   ];
 
   return (
@@ -128,9 +150,9 @@ export default function Home() {
           initial="hidden"
           animate="visible"
           custom={3}
-          className="mt-10 overflow-hidden border-t border-gray-200 dark:border-gray-700 pt-4 transition-colors duration-500"
+          className="mt-10 overflow-x-clip overflow-y-visible border-t border-gray-200 dark:border-gray-700 pt-4 pb-8 transition-colors duration-500"
         >
-          <div className="relative flex overflow-hidden whitespace-nowrap">
+          <div className="relative flex overflow-x-clip overflow-y-visible whitespace-nowrap">
             <motion.div
               animate={{ x: ["0%", "-50%"] }}
               transition={{
@@ -140,8 +162,18 @@ export default function Home() {
               }}
               className="flex gap-8 text-teal-600 dark:text-cyan-400 font-medium text-sm sm:text-base md:text-lg transition-colors duration-500"
             >
-              {[...techStack, ...techStack, ...techStack].map((tech, index) => (
-                <span key={index}>{tech}</span>
+              {[...techStack, ...techStack, ...techStack].map((item, index) => (
+                <div key={index} className="group relative flex-shrink-0">
+                  <item.Icon 
+                    className="w-6 h-6 sm:w-7 sm:h-7 transition-colors duration-200 
+                               group-hover:text-black dark:group-hover:text-white" 
+                  />
+                  <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 
+                                   opacity-0 group-hover:opacity-100 transition-opacity 
+                                   text-xs text-gray-600 dark:text-gray-300 whitespace-nowrap pointer-events-none">
+                    {item.name}
+                  </span>
+                </div>
               ))}
             </motion.div>
           </div>
