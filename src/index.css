@@ -2,6 +2,14 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
+:root {
+  --fade-bg: #ffffff;
+}
+
+.dark {
+  --fade-bg: #000000;
+}
+
 /* Apple-style global typography - SF font for all text */
 * {
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
