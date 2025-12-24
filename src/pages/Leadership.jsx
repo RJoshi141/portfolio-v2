@@ -13,7 +13,7 @@ export default function Leadership() {
 
   const leadershipRoles = [
     {
-      org: "Undergraduate Student Government",
+      org: "Student Government",
       positions: [
         {
           title: "Senator-At-Large",

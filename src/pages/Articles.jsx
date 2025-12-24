@@ -25,15 +25,6 @@ export default function Articles() {
       readTime: "7 min read",
     },
     {
-      title: "AWS Front End Interview Series: From Phone Screen to Virtual Loop Onsite — Part 2",
-      description:
-        "If you're reading this, you're probably preparing for an Amazon front-end interview — or at least deep in the process. In Part 1...",
-      link: "https://medium.com/@ritikajoshi141/aws-front-end-interview-series-from-phone-screen-to-virtual-loop-onsite-part-2-of-2-bea61498bee7",
-      author: "Ritika Joshi",
-      date: "Jul 2024",
-      readTime: "9 min read",
-    },
-    {
       title: "Marking milestones",
       description:
         "In my student address, I shared how our class navigated the twists and turns of UC together — united as Bearcats through Juncta Juvant and Next Lives Here.",
