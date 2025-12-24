@@ -85,7 +85,7 @@ export default function Home() {
                  max-w-6xl mx-auto bg-white dark:bg-black overflow-hidden 
                  transition-colors duration-500"
     >
-      <div className="relative z-10 w-full flex flex-col lg:flex-row lg:items-center lg:gap-8">
+      <div className="relative z-10 w-full flex flex-col lg:flex-row lg:items-center lg:gap-8 lg:-mt-12">
         {/* Left column - Text content */}
         <div className="space-y-5 sm:space-y-6 text-left w-full lg:w-3/5 transition-colors duration-500">
           {/* Intro line */}
