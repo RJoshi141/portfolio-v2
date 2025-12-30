@@ -1,11 +1,18 @@
 import { useState, useRef } from "react";
 import { motion } from "framer-motion";
-import { Github } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import ScrollFloat from "../components/ScrollFloat";
-import TiltedCard from "../components/TiltedCard";
+
+// Frame image imports
+import zoomiesFrame from "../assets/project-frames/zoomies-iphone.png";
+import cinemateFrame from "../assets/project-frames/cinemate-mac.png";
+import harmoniFrame from "../assets/project-frames/harmoni-mac.png";
+import portfolioFrame from "../assets/project-frames/portfolio-mac.png";
+import rubiksFrame from "../assets/project-frames/rubiks-mac.png";
+import lumonFrame from "../assets/project-frames/lumon-mac.png";
 
 export default function Projects() {
-  const [visibleCount, setVisibleCount] = useState(6);
+  const [showAll, setShowAll] = useState(false);
   const sectionRef = useRef(null);
 
   const projects = [
@@ -13,102 +20,61 @@ export default function Projects() {
       name: "Zoomies",
       description:
         "Retro 2D endless runner built with SpriteKit + Swift with custom pixel sprites and UI.",
-      tech: ["Swift", "iOS", "SpriteKit", "Mobile Game", "Xcode", "Sprite Animation"],
+      tech: ["Swift", "iOS", "SpriteKit", "Xcode"],
       github: "https://github.com/RJoshi141/Zoomies",
+      frame: zoomiesFrame,
+      frameType: "iphone",
     },
     {
       name: "Cinemate",
       description:
         "Discover and track your favorite movies with personalized recommendations, trivia, and interactive features.",
-      tech: ["React", "JavaScript", "TypeScript", "TMDB API"],
+      tech: ["React", "TypeScript", "TMDB API"],
       github: "https://github.com/RJoshi141/cinemate",
+      frame: cinemateFrame,
+      frameType: "mac",
     },
     {
       name: "Harmoni",
       description:
         "A full-stack Spotify dashboard that lets you explore your listening profile, edit playlists, and control playback.",
-      tech: ["React", "React Router", "Vercel", "Spotify Web API"],
+      tech: ["React", "Vercel", "Spotify Web API"],
       github: "https://github.com/RJoshi141/harmoni",
-    },
-    {
-      name: "EventReady",
-      description:
-        "A full-stack web app for event management with goal tracking, budget planning, and attendance tools.",
-      tech: ["Django", "React", "MUI", "JavaScript"],
-      github: "https://github.com/RJoshi141/Capstone-Project",
+      frame: harmoniFrame,
+      frameType: "mac",
     },
     {
       name: "Portfolio",
       description:
-        "This portfolio page showcases my skills, experiences, and projects with responsive design and smooth scroll.",
-      tech: ["React", "Tailwind CSS", "JavaScript"],
+        "Personal portfolio with AI chatbot, light/dark mode, 3D interactive elements, and smooth animations.",
+      tech: ["React", "Tailwind CSS", "Framer Motion"],
       github: "https://github.com/RJoshi141/portfolio-v2",
+      frame: portfolioFrame,
+      frameType: "mac",
     },
     {
-      name: "Taskly",
+      name: "Rubik's Cube Solver",
       description:
-        "A clean, minimal to-do list iOS app built with SwiftUI and SwiftData — designed for clarity, speed, and delight.",
-      tech: ["Swift", "iOS", "Xcode", "SwiftData"],
-      github: "https://github.com/RJoshi141/Taskly",
-    },
-    {
-      name: "Reddit Clone",
-      description:
-        "A Reddit-style site featuring post creation, upvoting, comments, and user profiles for community interaction.",
-      tech: ["React", "Node.js", "MongoDB", "Express"],
-      github: "https://github.com/RJoshi141/reddit-clone",
+        "Interactive 3D Rubik's Cube visualizer and trainer built with React and Three.js.",
+      tech: ["React", "Three.js", "3D Graphics"],
+      github: "https://github.com/RJoshi141/RubiksMaster",
+      frame: rubiksFrame,
+      frameType: "mac",
     },
     {
       name: "Lumon Interface",
       description:
-        "A recreation of Severance’s retro-futuristic Lumon interface with grid animations and immersive visuals.",
+        "A recreation of Severance's retro-futuristic Lumon interface with grid animations and immersive visuals.",
       tech: ["HTML", "CSS", "JavaScript"],
       github: "https://github.com/RJoshi141/lumon",
-    },
-    {
-      name: "SkyCast",
-      description:
-        "Weather app showing real-time forecasts, parameters like humidity, temperature, and wind speed using APIs.",
-      tech: ["React", "Tailwind CSS", "Weather API"],
-      github: "https://github.com/RJoshi141/skycast",
-    },
-    {
-      name: "Retro Snake Game",
-      description:
-        "A classic Snake game built using Python’s Turtle graphics library and Freegames module.",
-      tech: ["Python", "Turtle Graphics", "Freegames"],
-      github: "https://github.com/RJoshi141/retro-snake-game",
-    },
-    {
-      name: "Matrix",
-      description:
-        "Recreation of The Matrix code rain animation using HTML, CSS, and JavaScript.",
-      tech: ["HTML", "JavaScript", "Canvas API"],
-      github: "https://github.com/RJoshi141/matrix",
-    },
-    {
-      name: "Office Adventure Game",
-      description:
-        "A text-based adventure game set in the world of The Office, with choices determining the story path.",
-      tech: ["Python"],
-      github: "https://github.com/RJoshi141/TextbasedGame",
-    },
-    {
-      name: "KroDash",
-      description:
-        "A Flask-based data dashboard built for Kroger, improving data analysis and decision-making with visual insights.",
-      tech: ["Flask", "SQLAlchemy", "Azure", "HTML", "PostgreSQL"],
-      github: "https://github.com/RJoshi141/KroDash",
+      frame: lumonFrame,
+      frameType: "mac",
     },
   ];
 
-  const handleLoadMore = () => setVisibleCount((prev) => prev + 6);
-  const handleShowLess = () => {
-    sectionRef.current.scrollIntoView({ behavior: "smooth" });
-    setTimeout(() => setVisibleCount(6), 500);
-  };
+  const handleLoadMore = () => setShowAll(true);
 
-  const visibleProjects = projects.slice(0, visibleCount);
+  const visibleProjects = showAll ? projects : projects.slice(0, 3);
 
   return (
     <motion.section
@@ -118,106 +84,124 @@ export default function Projects() {
                  px-6 md:px-12 py-20 max-w-7xl mx-auto transition-colors duration-500"
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.2 }}
-      transition={{ duration: 0.8, ease: 'easeOut' }}
+      viewport={{ once: true, amount: 0.1 }}
+      transition={{ duration: 0.8, ease: "easeOut" }}
     >
       <ScrollFloat
-        containerClassName="mb-12 text-center"
+        containerClassName="mb-16 text-center"
         textClassName="text-4xl font-bold uppercase text-gray-900 dark:text-white transition-colors duration-500"
       >
         Projects
       </ScrollFloat>
 
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      {/* Projects List */}
+      <div className="flex flex-col gap-16 md:gap-20">
         {visibleProjects.map((project, index) => (
-          <motion.div
+          <motion.article
             key={project.name}
-            initial={{ opacity: 0, y: 40, scale: 0.97 }}
-            whileInView={{ opacity: 1, y: 0, scale: 1 }}
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
             transition={{
               duration: 0.6,
-              delay: (index % 6) * 0.1,
-              ease: 'easeOut',
+              delay: index * 0.1,
+              ease: "easeOut",
             }}
-            viewport={{ once: true }}
-            className="h-full"
+            viewport={{ once: true, amount: 0.2 }}
+            className={`flex flex-col md:flex-row ${
+              index % 2 === 1 ? "md:flex-row-reverse" : ""
+            } items-center gap-8 md:gap-12`}
           >
-            <TiltedCard
-              className="h-full"
-              rotateAmplitude={6}
-              scaleOnHover={1.05}
-              showMobileWarning={false}
+            {/* Frame Image (Left) */}
+            <a
+              href={project.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`View ${project.name} on GitHub`}
+              className="group relative flex-shrink-0 w-full md:w-[45%] lg:w-[50%]"
             >
-              <div className="group relative bg-gray-50 dark:bg-card-dark border border-gray-50 dark:border-card-dark 
-                             rounded-xl shadow-sm p-8 hover:shadow-xl 
-                             transition-all duration-300 h-full">
-                {/* GitHub Icon (top-right) */}
-                <a
-                  href={project.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={`Open ${project.name} on GitHub`}
-                  className="absolute top-4 right-4 text-gray-500 dark:text-gray-400 
-                             hover:text-black dark:hover:text-white focus-visible:outline-none 
-                             focus-visible:ring-2 focus-visible:ring-teal-500 dark:focus-visible:ring-cyan-400 
-                             rounded-sm transition-colors duration-300 z-10"
-                >
-                  <Github className="w-5 h-5" />
-                </a>
-
-                {/* Title */}
-                <h3 className="text-2xl font-semibold mb-3 group-hover:text-teal-600 dark:group-hover:text-cyan-400 transition-colors leading-snug">
-                  {project.name}
-                </h3>
-
-                {/* Description */}
-                <p className="text-gray-700 dark:text-gray-300 mb-6 leading-relaxed text-base">
-                  {project.description}
-                </p>
-
-                {/* Tech Stack */}
-                <div className="flex flex-wrap gap-2 mt-2">
-                  {project.tech.map((tech, i) => (
-                    <span
-                      key={i}
-                      className="text-sm font-medium bg-gray-200 dark:bg-tech-dark text-gray-700 dark:text-gray-200 
-                                 px-3 py-1 rounded-full transition-colors duration-500"
-                    >
-                      {tech}
-                    </span>
-                  ))}
+              <div className="relative overflow-hidden rounded-xl transition-all duration-300 
+                            group-hover:scale-[1.02] 
+                            border-2 border-transparent
+                            group-hover:border-coral-400 dark:group-hover:border-coral-500
+                            flex items-center justify-center">
+                <img
+                  src={project.frame}
+                  alt={`${project.name} preview`}
+                  className={`h-auto object-contain ${
+                    project.frameType === "iphone" 
+                      ? "w-[85%] max-w-[500px]" 
+                      : "w-full"
+                  }`}
+                />
+                {/* Hover button */}
+                <div className="absolute inset-0 flex items-center justify-center 
+                              opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <span className="bg-coral-400 dark:bg-coral-500 text-white 
+                                 px-4 py-2 rounded-full text-sm font-medium flex items-center gap-1
+                                 shadow-lg">
+                    View Project <ArrowUpRight className="w-4 h-4" />
+                  </span>
                 </div>
               </div>
-            </TiltedCard>
-          </motion.div>
+            </a>
+
+            {/* Project Details (Right) */}
+            <div className="flex-1 text-center md:text-left">
+              <h3 className="text-2xl md:text-3xl font-semibold mb-4 text-gray-900 dark:text-white">
+                {project.name}
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400 mb-6 leading-relaxed text-base md:text-lg max-w-xl">
+                {project.description}
+              </p>
+              {/* Tech Stack */}
+              <div className="flex flex-wrap justify-center md:justify-start gap-2">
+                {project.tech.map((tech, i) => (
+                  <span
+                    key={i}
+                    className="text-sm font-medium bg-gray-100 dark:bg-neutral-900 
+                             text-gray-700 dark:text-gray-300 
+                             px-3 py-1.5 rounded-full transition-colors duration-300
+                             border border-gray-200 dark:border-neutral-800"
+                  >
+                    {tech}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </motion.article>
         ))}
       </div>
 
+      {/* Load More / More Projects Link */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3, duration: 0.6 }}
         viewport={{ once: true }}
-        className="flex justify-center mt-12"
+        className="flex justify-center mt-16"
       >
-        {visibleCount < projects.length ? (
+        {!showAll ? (
           <motion.button
             onClick={handleLoadMore}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.97 }}
-            className="text-lg text-teal-600 dark:text-cyan-400 font-medium hover:underline"
+            className="text-lg text-teal-600 dark:text-cyan-400 font-medium 
+                     hover:underline underline-offset-4 transition-all duration-300"
           >
             Load more projects ↓
           </motion.button>
         ) : (
-          <motion.button
-            onClick={handleShowLess}
+          <motion.a
+            href="https://github.com/RJoshi141?tab=repositories"
+            target="_blank"
+            rel="noopener noreferrer"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.97 }}
-            className="text-lg text-teal-600 dark:text-cyan-400 font-medium hover:underline"
+            className="inline-flex items-center gap-2 text-lg text-teal-600 dark:text-cyan-400 
+                     font-medium hover:underline underline-offset-4 transition-all duration-300"
           >
-            Show less projects ↑
-          </motion.button>
+            More projects on GitHub <ArrowUpRight className="w-5 h-5" />
+          </motion.a>
         )}
       </motion.div>
     </motion.section>
