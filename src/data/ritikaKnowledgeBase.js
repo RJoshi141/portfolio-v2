@@ -561,52 +561,31 @@ export const ritikaKnowledgeBase = [
       text: 'Here are some of Ritika\'s notable projects:',
       bullets: [
         {
-          title: 'Cinemate – Movie Discovery & Watchlist',
-          description: 'A React-based movie companion app using the TMDb API for discovery, cast details, and a personalized watchlist.',
-          links: [
-            { label: 'GitHub repo', url: 'https://github.com/RJoshi141/cinemate' },
-          ],
-        },
-        {
-          title: 'EventReady – Event Planning Dashboard',
-          description: 'A full-stack event planning web app with tasks, budgeting, and attendance tracking. Built with Django and React.',
-          links: [
-            { label: 'GitHub repo', url: 'https://github.com/RJoshi141/Capstone-Project' },
-          ],
-        },
-        {
-          title: 'Taskly – iOS To-Do App',
-          description: 'A clean, minimal to-do list iOS app built with SwiftUI and SwiftData, designed for clarity and speed.',
-          links: [
-            { label: 'GitHub repo', url: 'https://github.com/RJoshi141/Taskly' },
-          ],
-        },
-        {
           title: 'Zoomies – 2D Endless Runner',
-          description: 'A retro 2D endless runner game built with SpriteKit and Swift, featuring custom pixel sprites and UI.',
+          description: 'Retro 2D endless runner built with SpriteKit + Swift with custom pixel sprites and UI.',
           links: [
             { label: 'GitHub repo', url: 'https://github.com/RJoshi141/Zoomies' },
           ],
         },
         {
-          title: 'Reddit Clone',
-          description: 'A Reddit-style site featuring post creation, upvoting, comments, and user profiles for community interaction.',
+          title: 'Cinemate – Movie Discovery & Watchlist',
+          description: 'Discover and track your favorite movies with personalized recommendations, trivia, and interactive features.',
           links: [
-            { label: 'GitHub repo', url: 'https://github.com/RJoshi141/reddit-clone' },
+            { label: 'GitHub repo', url: 'https://github.com/RJoshi141/cinemate' },
           ],
         },
         {
-          title: 'SkyCast – Weather App',
-          description: 'Weather app showing real-time forecasts, parameters like humidity, temperature, and wind speed using APIs.',
+          title: 'Harmoni – Spotify Dashboard',
+          description: 'A full-stack Spotify dashboard that lets you explore your listening profile, edit playlists, and control playback.',
           links: [
-            { label: 'GitHub repo', url: 'https://github.com/RJoshi141/skycast' },
+            { label: 'GitHub repo', url: 'https://github.com/RJoshi141/harmoni' },
           ],
         },
       ],
       followUpQuestions: [
         'Which project has been most challenging for Ritika so far?',
         'Can you share more details about Cinemate?',
-        'How did Ritika design and build EventReady?',
+        'How did Ritika build Zoomies?',
         'What technologies does Ritika use for mobile development?',
       ],
     },
@@ -722,6 +701,39 @@ export const ritikaKnowledgeBase = [
         'What projects best showcase Ritika\'s design philosophy?',
         'What are Ritika\'s key skills?',
         'What projects has Ritika built?',
+      ],
+    },
+  },
+
+  {
+    id: 'contact',
+    category: 'general',
+    tags: ['contact', 'email', 'phone', 'phone number', 'reach out', 'get in touch', 'contact information', 'how to contact', 'ritika contact', 'ritika email', 'ritika phone'],
+    questionPatterns: [
+      'contact information',
+      'contact info',
+      'how to contact',
+      'email address',
+      'phone number',
+      'ritika contact',
+      'ritika email',
+      'ritika phone',
+      'how can i reach ritika',
+      'ritika contact information',
+      'get in touch with ritika',
+      'ritika email address',
+      'ritika phone number',
+      'what is ritika email',
+      'what is ritika phone',
+    ],
+    answer: {
+      type: 'paragraph',
+      text: `You can reach Ritika at:\n\nEmail: ritikajoshi141@gmail.com\nPhone: 5133060325`,
+      bullets: null,
+      followUpQuestions: [
+        'What is Ritika\'s current role?',
+        'What projects has Ritika built?',
+        'What are Ritika\'s key skills?',
       ],
     },
   },

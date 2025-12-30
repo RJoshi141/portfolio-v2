@@ -518,31 +518,32 @@ export default function ChatbotWidget() {
                           <div className="flex gap-1">
                             <motion.div
                               className="w-1.5 h-1.5 bg-black dark:bg-white rounded-full"
-                              animate={{ y: [0, -4, 0] }}
+                              animate={{ opacity: [0.3, 1, 0.3] }}
                               transition={{
-                                duration: 0.9,
+                                duration: 1.2,
                                 repeat: Infinity,
                                 delay: 0,
-                                ease: [0.4, 0, 0.6, 1],
+                                ease: "easeInOut",
                               }}
                             />
                             <motion.div
                               className="w-1.5 h-1.5 bg-black dark:bg-white rounded-full"
-                              animate={{ y: [0, -4, 0] }}
+                              animate={{ opacity: [0.3, 1, 0.3] }}
                               transition={{
-                                duration: 0.9,
+                                duration: 1.2,
                                 repeat: Infinity,
-                                delay: 0.3,
-                                ease: [0.4, 0, 0.6, 1],
+                                delay: 0.4,
+                                ease: "easeInOut",
                               }}
                             />
                             <motion.div
                               className="w-1.5 h-1.5 bg-black dark:bg-white rounded-full"
-                              animate={{ y: [0, -4, 0] }}
+                              animate={{ opacity: [0.3, 1, 0.3] }}
                               transition={{
-                                duration: 0.9,
+                                duration: 1.2,
                                 repeat: Infinity,
-                                delay: 0.6,
+                                delay: 0.8,
+                                ease: "easeInOut",
                               }}
                             />
                           </div>

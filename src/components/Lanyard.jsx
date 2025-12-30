@@ -168,10 +168,10 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, cardImage = null,
 
   curve.curveType = 'chordal';
 
-  // Theme-based colors (dark mode = white card, light mode = black card)
-  const cardColor = theme === 'dark' ? '#ffffff' : '#000000';
-  const textColor = theme === 'dark' ? '#000000' : '#ffffff';
-  const subtitleColor = theme === 'dark' ? '#000000' : '#ffffff';
+  // Card is always black with white text
+  const cardColor = '#000000';
+  const textColor = '#ffffff';
+  const subtitleColor = '#ffffff';
 
   return (
     <>
@@ -251,7 +251,7 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, cardImage = null,
               <mesh position={[0, 0.5, 0]}>
                 <planeGeometry args={[0.25, 0.25]} />
                 <meshBasicMaterial 
-                  map={theme === 'dark' ? logoBlackTexture : logoWhiteTexture} 
+                  map={logoWhiteTexture} 
                   toneMapped={false}
                   transparent={true}
                 />
