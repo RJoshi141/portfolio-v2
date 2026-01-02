@@ -5,11 +5,11 @@ import ScrollFloat from "../components/ScrollFloat";
 
 // Frame image imports
 import zoomiesFrame from "../assets/project-frames/zoomies-iphone.png";
-import cinemateFrame from "../assets/project-frames/cinemate-mac.png";
-import harmoniFrame from "../assets/project-frames/harmoni-mac.png";
-import portfolioFrame from "../assets/project-frames/portfolio-mac.png";
+import cinemateFrame from "../assets/project-frames/cinemate-ipad.png";
+import harmoniFrame from "../assets/project-frames/harmoni-frames.png";
+import portfolioFrame from "../assets/project-frames/portfolio-frames.png";
 import rubiksFrame from "../assets/project-frames/rubiks-mac.png";
-import lumonFrame from "../assets/project-frames/lumon-mac.png";
+import lumonFrame from "../assets/project-frames/lumon-frames.png";
 
 export default function Projects() {
   const [showAll, setShowAll] = useState(false);
@@ -32,7 +32,7 @@ export default function Projects() {
       tech: ["React", "TypeScript", "TMDB API"],
       github: "https://github.com/RJoshi141/cinemate",
       frame: cinemateFrame,
-      frameType: "mac",
+      frameType: "ipad",
     },
     {
       name: "Harmoni",
@@ -130,6 +130,8 @@ export default function Projects() {
                   className={`h-auto object-contain ${
                     project.frameType === "iphone" 
                       ? "w-[85%] max-w-[500px]" 
+                      : project.frameType === "ipad"
+                      ? "w-[75%] max-w-[600px]"
                       : "w-full"
                   }`}
                 />
