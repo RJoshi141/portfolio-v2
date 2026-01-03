@@ -737,4 +737,36 @@ export const ritikaKnowledgeBase = [
       ],
     },
   },
+
+  {
+    id: 'portfolio-site',
+    category: 'projects',
+    tags: ['portfolio', 'portfolio site', 'this site', 'this website', 'how was this built', 'how did ritika build this', 'website tech stack'],
+    questionPatterns: [
+      'how was this portfolio site built',
+      'how was this site built',
+      'how was this website built',
+      'how did ritika build this portfolio',
+      'how did ritika build this site',
+      'what tech stack did ritika use for this portfolio',
+      'what technologies did ritika use for this portfolio',
+      'how is this portfolio built',
+      'what did ritika use to build this portfolio',
+      'portfolio tech stack',
+      'this portfolio tech stack',
+    ],
+    answer: {
+      type: 'paragraph',
+      text: `This portfolio site was built with React, Vite, Tailwind CSS, and Framer Motion for smooth animations. It also uses Three.js and React Three Fiber for 3D elements, GSAP for advanced animations, and is deployed on GitHub Pages. But most importantly, it was built with a lot of love! 💜`,
+      bullets: null,
+      links: [
+        { label: 'GitHub repo', url: 'https://github.com/RJoshi141/portfolio-v2' },
+      ],
+      followUpQuestions: [
+        'What are Ritika\'s key skills?',
+        'What other projects has Ritika built?',
+        'What technologies does Ritika use?',
+      ],
+    },
+  },
 ];

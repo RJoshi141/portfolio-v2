@@ -106,11 +106,61 @@ export function getAnswerFromRitikaBrain(userMessage) {
   const normalized = normalizeInput(userMessage);
 
   // Handle greetings
-  const greetingWords = ['hi', 'hello', 'hey', 'greetings'];
-  if (greetingWords.some(word => normalized.startsWith(word) || normalized.includes(` ${word} `))) {
+  const greetingWords = ['hi', 'hello', 'hey', 'greetings', 'yo'];
+  if (greetingWords.some(word => normalized.startsWith(word) || normalized.includes(` ${word} `)) || 
+      normalized.includes("what's up") || normalized.includes("whats up")) {
     return {
       entryId: 'greeting',
       answerText: `Hi! I'm here to help you learn about Ritika's skills, work experience, projects, and interests. What would you like to know? 😊`,
+      answerType: 'paragraph',
+      bullets: null,
+      links: null,
+      followUpQuestions: [
+        'What are Ritika\'s key skills and areas of expertise?',
+        'Can you give an overview of Ritika\'s past work experience?',
+        'What are some of Ritika\'s notable projects?',
+      ],
+    };
+  }
+
+  // Handle gratitude (thank you, thanks)
+  const gratitudePatterns = ['thank you', 'thanks'];
+  if (gratitudePatterns.some(pattern => normalized.includes(pattern))) {
+    return {
+      entryId: 'gratitude',
+      answerText: `You're welcome! Feel free to ask me anything else about Ritika's work, experience, or projects. I'm here to help! 😊`,
+      answerType: 'paragraph',
+      bullets: null,
+      links: null,
+      followUpQuestions: [
+        'What are Ritika\'s key skills and areas of expertise?',
+        'Can you give an overview of Ritika\'s past work experience?',
+        'What are some of Ritika\'s notable projects?',
+      ],
+    };
+  }
+
+  // Handle farewells (bye, goodbye)
+  const farewellPatterns = ['goodbye', 'good bye'];
+  const farewellWords = ['bye'];
+  if (farewellPatterns.some(pattern => normalized.includes(pattern)) ||
+      farewellWords.some(word => wordInText(word, normalized))) {
+    return {
+      entryId: 'farewell',
+      answerText: `Goodbye! It was great chatting with you. Feel free to come back anytime if you have more questions about Ritika! 👋`,
+      answerType: 'paragraph',
+      bullets: null,
+      links: null,
+      followUpQuestions: [],
+    };
+  }
+
+  // Handle acknowledgments (ok, okay)
+  const acknowledgmentWords = ['ok', 'okay'];
+  if (acknowledgmentWords.some(word => wordInText(word, normalized))) {
+    return {
+      entryId: 'acknowledgment',
+      answerText: `Got it! Is there anything else you'd like to know about Ritika's skills, experience, or projects?`,
       answerType: 'paragraph',
       bullets: null,
       links: null,
