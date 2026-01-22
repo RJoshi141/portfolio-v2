@@ -25,7 +25,7 @@ export default function Experience() {
         "Contributed to UI/UX improvements that elevate accessibility, interactivity, and user retention through thoughtful design and iteration.",
       ],
       logo: { src: joydropLogo, alt: "Joydrop logo", shape: "circle" },
-      link: "https://www.joydrop.me/",
+      link: "https://app.joydrop.me/",
     },
     {
       key: "BMEAS",
@@ -100,7 +100,7 @@ export default function Experience() {
         "Incorporated customer feedback into iterative UI/UX updates, raising App Store ratings by 12%.",
       ],
       logo: { src: krogerLogo, alt: "Kroger logo" },
-      link: "https://www.kroger.com/",
+      link: "https://apps.apple.com/us/app/kroger/id403901186",
     },
   ];
 

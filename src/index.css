@@ -47,6 +47,24 @@
   font-display: swap;
 }
 
+/* GeneralSans-Bold font */
+@font-face {
+  font-family: 'GeneralSans-Bold';
+  src: url('/fonts/GeneralSans-Bold.woff2') format('woff2');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* GeneralSans-Semibold font */
+@font-face {
+  font-family: 'GeneralSans-Semibold';
+  src: url('/fonts/GeneralSans-Semibold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* Global typography - Helvetica font for all text */
 * {
   font-family: "Helvetica Neue", "Helvetica", Arial, sans-serif;
@@ -55,20 +73,20 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Tanker font for all headings */
+/* GeneralSans-Semibold font for all headings */
 h1, h2, h3, h4, h5, h6 {
-  font-family: "Tanker", "Helvetica Neue", "Helvetica", Arial, sans-serif !important;
-  letter-spacing: 0.05em;
+  font-family: "GeneralSans-Semibold", "Helvetica Neue", "Helvetica", Arial, sans-serif !important;
+  letter-spacing: normal;
 }
 
-/* Ensure ScrollFloat headings use Tanker by default */
+/* Ensure ScrollFloat headings use GeneralSans-Semibold by default */
 .scroll-float,
 .scroll-float h2,
 .scroll-float-text,
 .scroll-float .char,
 .scroll-float-text .char {
-  font-family: "Tanker", "Helvetica Neue", "Helvetica", Arial, sans-serif !important;
-  letter-spacing: 0.05em !important;
+  font-family: "GeneralSans-Semibold", "Helvetica Neue", "Helvetica", Arial, sans-serif !important;
+  letter-spacing: normal !important;
 }
 
 /* Stardom-Regular font for specific section headers */
@@ -97,6 +115,26 @@ h1, h2, h3, h4, h5, h6 {
   font-family: "Stardom", "Helvetica Neue", "Helvetica", Arial, sans-serif !important;
 }
 
+/* GeneralSans-Semibold font for project titles */
+#projects h3.text-2xl.font-semibold,
+#projects h3.md\:text-3xl {
+  font-family: "GeneralSans-Semibold", "Helvetica Neue", "Helvetica", Arial, sans-serif !important;
+  letter-spacing: normal !important;
+  text-transform: uppercase !important;
+}
+
+/* Stardom font for Portfolio Concierge header - override Tanker with more specific selector */
+div.flex.items-center.gap-3 div h3.text-base.font-semibold {
+  font-family: "Stardom", "Helvetica Neue", "Helvetica", Arial, sans-serif !important;
+  letter-spacing: normal !important;
+}
+
+/* GeneralSans-Semibold font for "Built by Ritika Joshi" */
+div.flex.items-center.gap-3 div p.text-xs {
+  font-family: "GeneralSans-Semibold", "Helvetica Neue", "Helvetica", Arial, sans-serif !important;
+  letter-spacing: normal !important;
+}
+
 /* Pencerio-Hairline font for "Made with ❤️ by Ritika Joshi." */
 #leadership .mt-16.text-center span {
   font-family: "Pencerio-Hairline", "Helvetica Neue", "Helvetica", Arial, sans-serif !important;
@@ -122,12 +160,12 @@ h1, h2, h3, h4, h5, h6 {
   font-size: 2.5rem !important;
 }
 
-/* Inter font for specific labels */
+/* GeneralSans-Semibold font for specific labels */
 #home p:first-of-type,
 #experience .shiny-text,
 #articles .shiny-text,
 #leadership .shiny-text {
-  font-family: "Inter", "Helvetica Neue", "Helvetica", Arial, sans-serif !important;
+  font-family: "GeneralSans-Semibold", "Helvetica Neue", "Helvetica", Arial, sans-serif !important;
 }
 
 /* Center Experience section content on mobile */
@@ -164,12 +202,31 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
+/* Center Student Government text on mobile */
+@media (max-width: 1023px) {
+  #leadership h3.text-2xl.font-semibold.text-teal-600,
+  #leadership h3.text-2xl.font-semibold.dark\:text-cyan-400 {
+    text-align: center !important;
+  }
+}
+
 html, body {
   background-color: #ffffff;
   color: #111111;
   margin: 0;
   padding: 0;
   scroll-behavior: smooth;
+}
+
+/* Custom text selection styling with theme red */
+::selection {
+  background-color: #f46565;
+  color: #ffffff;
+}
+
+::-moz-selection {
+  background-color: #f46565;
+  color: #ffffff;
 }
 
 /* Custom scrollbar styling - Red accent color */
