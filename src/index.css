@@ -10,13 +10,158 @@
   --fade-bg: #000000;
 }
 
-/* Apple-style global typography - SF font for all text */
+/* Tanker font for headings */
+@font-face {
+  font-family: 'Tanker';
+  src: url('/fonts/Tanker-Regular.woff2') format('woff2'),
+       url('/fonts/Tanker-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Stardom font for article content */
+@font-face {
+  font-family: 'Stardom';
+  src: url('/fonts/Stardom-Regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Pencerio-Hairline font */
+@font-face {
+  font-family: 'Pencerio-Hairline';
+  src: url('/fonts/Pencerio-Hairline.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Telma-Bold font */
+@font-face {
+  font-family: 'Telma-Bold';
+  src: url('/fonts/Telma-Bold.woff2') format('woff2');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Global typography - Helvetica font for all text */
 * {
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
-               "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Helvetica Neue", "Helvetica", Arial, sans-serif;
   font-feature-settings: "kern" 1;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Tanker font for all headings */
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Tanker", "Helvetica Neue", "Helvetica", Arial, sans-serif !important;
+  letter-spacing: 0.05em;
+}
+
+/* Ensure ScrollFloat headings use Tanker by default */
+.scroll-float,
+.scroll-float h2,
+.scroll-float-text,
+.scroll-float .char,
+.scroll-float-text .char {
+  font-family: "Tanker", "Helvetica Neue", "Helvetica", Arial, sans-serif !important;
+  letter-spacing: 0.05em !important;
+}
+
+/* Stardom-Regular font for specific section headers */
+#experience .scroll-float,
+#experience .scroll-float-text,
+#experience .scroll-float .char,
+#experience .scroll-float-text .char,
+#projects .scroll-float,
+#projects .scroll-float-text,
+#projects .scroll-float .char,
+#projects .scroll-float-text .char,
+#articles .scroll-float,
+#articles .scroll-float-text,
+#articles .scroll-float .char,
+#articles .scroll-float-text .char,
+#leadership .scroll-float,
+#leadership .scroll-float-text,
+#leadership .scroll-float .char,
+#leadership .scroll-float-text .char {
+  font-family: "Stardom", "Helvetica Neue", "Helvetica", Arial, sans-serif !important;
+  font-size: 2.5rem !important;
+}
+
+/* Stardom font for article titles only */
+#articles article h3 {
+  font-family: "Stardom", "Helvetica Neue", "Helvetica", Arial, sans-serif !important;
+}
+
+/* Pencerio-Hairline font for "Made with ❤️ by Ritika Joshi." */
+#leadership .mt-16.text-center span {
+  font-family: "Pencerio-Hairline", "Helvetica Neue", "Helvetica", Arial, sans-serif !important;
+  font-weight: 600 !important;
+  color: #000000 !important;
+  letter-spacing: 0.1em !important;
+  word-spacing: 0.2em !important;
+}
+
+.dark #leadership .mt-16.text-center span {
+  color: #ffffff !important;
+}
+
+/* Stardom-Regular for "Ritika Joshi." in home section */
+#home h1 {
+  font-family: "Stardom", "Helvetica Neue", "Helvetica", Arial, sans-serif !important;
+  text-transform: uppercase !important;
+}
+
+/* Stardom-Regular for "Accolades" heading */
+#leadership h3.text-4xl {
+  font-family: "Stardom", "Helvetica Neue", "Helvetica", Arial, sans-serif !important;
+  font-size: 2.5rem !important;
+}
+
+/* Inter font for specific labels */
+#home p:first-of-type,
+#experience .shiny-text,
+#articles .shiny-text,
+#leadership .shiny-text {
+  font-family: "Inter", "Helvetica Neue", "Helvetica", Arial, sans-serif !important;
+}
+
+/* Center Experience section content on mobile */
+@media (max-width: 1023px) {
+  #experience .space-y-5 {
+    text-align: center !important;
+  }
+  
+  #experience .scroll-float {
+    text-align: center !important;
+  }
+  
+  #experience .scroll-float-text {
+    text-align: center !important;
+  }
+}
+
+/* Center Articles section content on mobile */
+@media (max-width: 1023px) {
+  #articles .space-y-6 {
+    text-align: center !important;
+  }
+  
+  #articles .scroll-float {
+    text-align: center !important;
+  }
+  
+  #articles .scroll-float-text {
+    text-align: center !important;
+  }
+  
+  #articles .inline-flex {
+    justify-content: center !important;
+  }
 }
 
 html, body {

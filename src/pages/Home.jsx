@@ -1,6 +1,5 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import ShinyText from "../components/ShinyText";
 import Lanyard from "../components/Lanyard";
 import {
   SiTypescript,
@@ -107,12 +106,7 @@ export default function Home() {
             custom={0.5}
             className="text-5xl md:text-5xl font-bold text-gray-900 dark:text-white leading-tight transition-colors duration-500"
           >
-            <ShinyText 
-              text="Ritika Joshi." 
-              disabled={false} 
-              speed={3} 
-              className="" 
-            />
+            Ritika Joshi.
           </motion.h1>
 
           {/* Subtitle */}

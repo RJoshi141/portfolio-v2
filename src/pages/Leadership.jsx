@@ -218,35 +218,55 @@ export default function Leadership() {
               >
                 <button
                   onClick={() => toggleAccolade(i)}
-                  className="w-full flex flex-col md:flex-row md:items-center justify-between gap-3 px-1 py-5 text-left hover:text-teal-600 dark:hover:text-cyan-400 transition-colors duration-300"
+                  className="w-full flex flex-col md:flex-row md:items-center justify-between gap-3 py-5 text-left hover:text-teal-600 dark:hover:text-cyan-400 transition-colors duration-300"
                 >
-                  <div>
+                  <div className="flex-1">
                     <p className="text-lg font-semibold text-gray-900 dark:text-white">{a.title}</p>
-                    {activeAccolade === i && (
-                      <p className="text-sm text-gray-600 dark:text-gray-300 mt-2 md:hidden">
-                        {a.description}
-                      </p>
-                    )}
                   </div>
-                  <span className="text-sm font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                  <span className="text-sm font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400 flex-shrink-0">
                     {a.date}
                   </span>
                 </button>
                 <AnimatePresence initial={false}>
                   {activeAccolade === i && (
-                    <motion.div
-                      initial={{ height: 0 }}
-                      animate={{ height: "auto" }}
-                      exit={{ height: 0 }}
-                      transition={{ duration: 0.35, ease: "easeInOut" }}
-                      className="overflow-hidden hidden md:block"
-                    >
-                      <div className="pb-5 md:pb-6">
-                        <p className="text-gray-600 dark:text-gray-300 text-base leading-relaxed">
-                          {a.description}
-                        </p>
-                      </div>
-                    </motion.div>
+                    <>
+                      {/* Mobile view */}
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ 
+                          duration: 0.4, 
+                          ease: [0.4, 0, 0.2, 1],
+                          opacity: { duration: 0.3 }
+                        }}
+                        className="overflow-hidden md:hidden"
+                      >
+                        <div className="pb-5">
+                          <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+                            {a.description}
+                          </p>
+                        </div>
+                      </motion.div>
+                      {/* Desktop view */}
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ 
+                          duration: 0.4, 
+                          ease: [0.4, 0, 0.2, 1],
+                          opacity: { duration: 0.3 }
+                        }}
+                        className="overflow-hidden hidden md:block"
+                      >
+                        <div className="pb-5 md:pb-6">
+                          <p className="text-gray-600 dark:text-gray-300 text-base leading-relaxed">
+                            {a.description}
+                          </p>
+                        </div>
+                      </motion.div>
+                    </>
                   )}
                 </AnimatePresence>
               </div>

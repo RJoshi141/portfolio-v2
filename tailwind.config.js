@@ -8,7 +8,8 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        'sf': ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Display"', '"SF Pro Text"', '"Helvetica Neue"', 'Helvetica', 'Arial', 'sans-serif'],
+        'sans': ['"Helvetica Neue"', '"Helvetica"', 'Arial', 'sans-serif'],
+        'heading': ['Tanker', '"Helvetica Neue"', '"Helvetica"', 'Arial', 'sans-serif'],
       },
       colors: {
         carnation: "#f46565", // 🌸 accent color
