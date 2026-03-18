@@ -4,6 +4,7 @@ import { ArrowUpRight } from "lucide-react";
 import ScrollFloat from "../components/ScrollFloat";
 
 // Frame image imports
+import utterFrame from "../assets/project-frames/utter-watch-ultra.png";
 import zoomiesFrame from "../assets/project-frames/zoomies-iphone.png";
 import cinemateFrame from "../assets/project-frames/cinemate-ipad.png";
 import harmoniFrame from "../assets/project-frames/harmoni-frames.png";
@@ -16,6 +17,15 @@ export default function Projects() {
   const sectionRef = useRef(null);
 
   const projects = [
+    {
+      name: "Utter",
+      description:
+        "Voice capture app for Apple Watch and iPhone. Speak a thought on your wrist, transcribe and organize it on your phone.",
+      tech: ["Swift", "iOS", "watchOS", "WatchConnectivity", "SwiftUI", "Xcode"],
+      github: "https://github.com/RJoshi141/utter",
+      frame: utterFrame,
+      frameType: "watch",
+    },
     {
       name: "Zoomies",
       description:
@@ -128,7 +138,9 @@ export default function Projects() {
                   src={project.frame}
                   alt={`${project.name} preview`}
                   className={`h-auto object-contain ${
-                    project.frameType === "iphone" 
+                    project.frameType === "watch"
+                      ? "w-[62%] max-w-[360px]"
+                      : project.frameType === "iphone" 
                       ? "w-[85%] max-w-[500px]" 
                       : project.frameType === "ipad"
                       ? "w-[75%] max-w-[600px]"
