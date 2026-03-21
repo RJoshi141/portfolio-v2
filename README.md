@@ -1,81 +1,83 @@
 <div align="center">
-  <img src="public/logo.png" alt="Ritika Joshi" width="72" />
+  <img src="public/logo.png" alt="Ritika Joshi" width="64" />
   <br /><br />
-  <h2>ritika joshi — portfolio v2</h2>
-  <p>Full-Stack Developer & Tech-Creative · San Francisco</p>
-  <br />
-  <a href="https://rjoshi141.github.io/portfolio-v2/">Live Site</a>
-  &nbsp;·&nbsp;
-  <a href="https://github.com/RJoshi141/portfolio-v2">GitHub</a>
-  &nbsp;·&nbsp;
-  <a href="https://medium.com/@ritikajoshi141">Medium</a>
-  &nbsp;·&nbsp;
-  <a href="mailto:ritikajoshi141@gmail.com">Contact</a>
+  <h1>Ritika Joshi — Portfolio v2</h1>
+  <p>Personal portfolio site for Ritika Joshi, Full-Stack Developer & Tech-Creative based in San Francisco.</p>
 </div>
 
 ---
 
 <div align="center">
-  <img src="public/iPhone.png" alt="Projects section on iPhone" width="260" />
-  &nbsp;&nbsp;&nbsp;
-  <img src="public/macbook-pro.png" alt="Experience section on MacBook Pro" width="480" />
+  <img src="public/iPhone.png" alt="Projects on iPhone" height="320" />
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="public/macbook-pro.png" alt="Experience on MacBook Pro" height="320" />
 </div>
 
 ---
 
-## overview
+## What This Is
 
-A personal portfolio built to showcase my work, writing, and background as a full-stack developer. Designed for clarity and delight — fast, accessible, and built with care.
+This repository contains the full source code for Ritika's personal portfolio. It's a React application built to be fast, polished, and interactive — showcasing her work experience, projects, writing, and leadership background. The portfolio includes several custom-built interactive features rather than relying on templates or component libraries for layout.
 
-## features
+## Sections
 
-- **AI chatbot** — Portfolio Concierge powered by a local knowledge base, answers questions about my work in real time
-- **3D lanyard** — physics-based hanging card built with Three.js and React Three Fiber
-- **Book-flip articles** — 3D CSS page-turn animation for browsing writing
-- **Experience & projects** — accordion-style work history and image-forward project showcase
-- **Leadership timeline** — vertical timeline for campus roles and accolades
-- **Light / dark mode** — system-aware with manual toggle
-- **Draggable chatbot** — drag the chat widget to any corner, snaps on release
+| Section | Description |
+|---|---|
+| **Home** | Intro with physics-based 3D lanyard card and scrolling tech stack ticker |
+| **Experience** | Accordion-style work history across 6 companies |
+| **Projects** | Image-forward project showcase with load-more |
+| **Articles** | 3D book-flip page-turn animation for browsing writing |
+| **Leadership** | Vertical timeline of campus roles and awards accordion |
 
-## stack
+## Notable Features
+
+**AI Portfolio Concierge** — a chatbot widget built with a local knowledge base (`src/utils/ritikaBrain.js`). All answers are computed in-browser via pattern matching against `src/utils/ritikaKnowledgeBase.js` — no external API calls. The widget is draggable and snaps to any corner of the viewport on release.
+
+**3D Lanyard** — a physics-simulated hanging ID card on the home page, built with Three.js and React Three Fiber. The card swings and responds to cursor movement.
+
+**Book-flip Articles** — the articles section uses raw CSS 3D transforms (`rotateY`) with pointer-event-based drag tracking to simulate realistic page-turning, pivoting from the correct edge depending on direction.
+
+**Light / Dark Mode** — system-aware with a manual toggle in the navbar. All sections and components adapt fully.
+
+## Tech Stack
 
 | Layer | Tech |
 |---|---|
-| Framework | React + Vite |
+| Framework | React 18 + Vite |
 | Styling | Tailwind CSS |
 | Animation | Framer Motion, GSAP |
-| 3D | Three.js, React Three Fiber |
+| 3D | Three.js, React Three Fiber, Rapier physics |
 | Deployment | GitHub Pages |
 
-## getting started
+## Getting Started
 
 ```bash
-# install
+# Install dependencies
 npm install
 
-# dev server
+# Start dev server
 npm run dev
 
-# build
+# Production build
 npm run build
 ```
 
-## project structure
+## Repo Structure
 
 ```
 src/
-├── components/      # Navbar, Lanyard, ChatbotWidget, etc.
-├── pages/           # Home, Experience, Projects, Articles, Leadership
-├── utils/           # ritikaBrain.js — chatbot knowledge base matcher
-├── assets/          # Logos, project frames, images
+├── components/        # Reusable UI — Navbar, Lanyard, ChatbotWidget, ScrollFloat, etc.
+├── pages/             # Section-level components — Home, Experience, Projects, Articles, Leadership
+├── utils/
+│   ├── ritikaBrain.js         # Pattern matching logic for the chatbot
+│   └── ritikaKnowledgeBase.js # All Q&A entries the chatbot can answer
+├── assets/            # Logos, project frame images, icons
 public/
 ├── logo.png
 ├── iPhone.png
 └── macbook-pro.png
 ```
 
----
+## Updating the Chatbot
 
-<div align="center">
-  <sub>Made with ♥ by Ritika Joshi</sub>
-</div>
+The chatbot's knowledge lives entirely in `src/utils/ritikaKnowledgeBase.js`. Each entry has a category, tags, question patterns, and a structured answer. To add or update what the bot knows, edit or add entries in that file — no backend or API changes needed.
