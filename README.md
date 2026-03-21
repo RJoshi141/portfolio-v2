@@ -1,23 +1,24 @@
 <div align="center">
-  <img src="public/logo.png" alt="Ritika Joshi" width="64" />
-  <br /><br />
-  <h1>Ritika Joshi — Portfolio v2</h1>
-  <p>Personal portfolio site for Ritika Joshi, Full-Stack Developer & Tech-Creative based in San Francisco.</p>
+  <img src="public/logo.png" alt="Logo" width="64" />
+  <h1>Portfolio v2</h1>
+  <p>A personal portfolio built with React — fast, interactive, and designed with care.</p>
 </div>
 
 ---
 
 <div align="center">
-  <img src="public/iPhone.png" alt="Projects on iPhone" height="320" />
-  &nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="public/macbook-pro.png" alt="Experience on MacBook Pro" height="320" />
+  <img src="public/iPhone.png" alt="Projects on iPhone" height="300" />
+  &nbsp;&nbsp;
+  <img src="public/ipad.png" alt="Articles on iPad" height="300" />
+  &nbsp;&nbsp;
+  <img src="public/macbook-pro.png" alt="Experience on MacBook Pro" height="300" />
 </div>
 
 ---
 
 ## What This Is
 
-This repository contains the full source code for Ritika's personal portfolio. It's a React application built to be fast, polished, and interactive — showcasing her work experience, projects, writing, and leadership background. The portfolio includes several custom-built interactive features rather than relying on templates or component libraries for layout.
+This repository contains the full source code for a personal portfolio site. It's a React application built to be fast, polished, and interactive — showcasing work experience, projects, writing, and leadership background. The portfolio includes several custom-built interactive features rather than relying on templates or component libraries for layout.
 
 ## Sections
 
@@ -69,12 +70,13 @@ src/
 ├── components/        # Reusable UI — Navbar, Lanyard, ChatbotWidget, ScrollFloat, etc.
 ├── pages/             # Section-level components — Home, Experience, Projects, Articles, Leadership
 ├── utils/
-│   ├── ritikaBrain.js         # Pattern matching logic for the chatbot
-│   └── ritikaKnowledgeBase.js # All Q&A entries the chatbot can answer
+│   ├── ritikaBrain.js             # Pattern matching logic for the chatbot
+│   └── ritikaKnowledgeBase.js     # All Q&A entries the chatbot can answer
 ├── assets/            # Logos, project frame images, icons
 public/
 ├── logo.png
 ├── iPhone.png
+├── ipad.png
 └── macbook-pro.png
 ```
 
