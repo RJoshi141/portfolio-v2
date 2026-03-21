@@ -1,6 +1,6 @@
 <div align="center">
   <img src="public/logo.png" alt="Logo" width="64" />
-  <h1>Ritika's Portfolio</h1>
+  <h2>Ritika's Portfolio</h2>
 </div>
 
 
