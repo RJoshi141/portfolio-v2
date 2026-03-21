@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="public/logo.png" alt="Logo" width="64" />
+  <img src="public/logo.png" alt="Logo" width="100" />
   <h2>Ritika's Portfolio</h2>
     <p>A personal portfolio built with React — fast, interactive, and designed with care.</p>
 
