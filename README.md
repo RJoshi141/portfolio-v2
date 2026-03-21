@@ -9,9 +9,10 @@
 <div align="center">
   <img src="public/iPhone.png" alt="Projects on iPhone" height="300" />
   &nbsp;&nbsp;
-  <img src="public/ipad.png" alt="Articles on iPad" height="300" />
-  &nbsp;&nbsp;
   <img src="public/macbook-pro.png" alt="Experience on MacBook Pro" height="300" />
+  &nbsp;&nbsp;
+  <img src="public/ipad.png" alt="Articles on iPad" height="300" />
+
 </div>
 
 ---
