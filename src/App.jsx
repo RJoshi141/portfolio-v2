@@ -9,12 +9,10 @@ import ChatbotWidget from "./components/ChatbotWidget";
 
 function App() {
   return (
-    <div
-      className="bg-white dark:bg-black text-black dark:text-white min-h-screen transition-colors duration-500"
-    >
+    <div className="bg-white dark:bg-black text-black dark:text-white min-h-screen transition-colors duration-500">
       <Navbar />
 
-      <main className="pt-24 max-w-6xl mx-auto px-6">
+      <main className="pt-24">
         <Home />
         <Experience />
         <Projects />
@@ -22,10 +20,7 @@ function App() {
         <Leadership />
       </main>
 
-      {/* Fixed footer always visible */}
       <FooterSocial />
-
-      {/* AI Assistant Chat Widget */}
       <ChatbotWidget />
     </div>
   );

@@ -93,7 +93,7 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, cardImage = null,
   const { nodes, materials } = useGLTF(cardGLB);
   
   // Load custom card image for front side
-  const backTexture = useTexture(cardImage || '/portfolio-v2/assets/IMG_5815.JPG');
+  const backTexture = useTexture(cardImage || '/portfolio-v2/assets/comic-self.png');
   
   // Load logo textures for back side
   const logoWhiteTexture = useTexture('/portfolio-v2/logo-white.png');

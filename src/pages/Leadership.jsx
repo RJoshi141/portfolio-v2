@@ -1,14 +1,10 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Heart } from "lucide-react";
 import ScrollFloat from "../components/ScrollFloat";
 import ShinyText from "../components/ShinyText";
 
-
 export default function Leadership() {
-  const [currentIndex, setCurrentIndex] = useState(0);
-
   const [activeAccolade, setActiveAccolade] = useState(null);
 
   const leadershipRoles = [
@@ -45,8 +41,6 @@ export default function Leadership() {
           ],
         },
       ],
-      // 👇 Public folder images need a leading slash
-      images: ["ug1.jpeg", "ug2.jpeg"],
     },
   ];
 
@@ -55,7 +49,7 @@ export default function Leadership() {
       title: "Senior 100 Cohort 2024",
       date: "MAY 2024",
       description:
-        "Recognized among UC’s top 100 graduating seniors for academic excellence, leadership, and community impact.",
+        "Recognized among UC's top 100 graduating seniors for academic excellence, leadership, and community impact.",
     },
     {
       title: "Freeman Foundation Scholarship",
@@ -81,11 +75,6 @@ export default function Leadership() {
     setActiveAccolade((prev) => (prev === index ? null : index));
   };
 
-  const nextSlide = (images) =>
-    setCurrentIndex((prev) => (prev + 1) % images.length);
-  const prevSlide = (images) =>
-    setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
-
   return (
     <motion.section
       id="leadership"
@@ -103,92 +92,91 @@ export default function Leadership() {
         Leadership
       </ScrollFloat>
 
-      {/* Leadership Cards */}
-      <div className="space-y-12">
-        {leadershipRoles.map((role, index) => (
-          <motion.div
-            key={index}
-            className="group bg-gray-50 dark:bg-card-dark border border-gray-50 dark:border-card-dark 
-                       rounded-xl shadow-sm p-8 hover:shadow-xl hover:-translate-y-1 
-                       transition-all duration-300 flex flex-col md:flex-row items-center gap-8"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.2, duration: 0.6 }}
-          >
-            {/* Carousel */}
-            <div className="relative w-full md:w-1/2 rounded-lg overflow-hidden shadow-md dark:shadow-[0_0_20px_rgba(0,255,255,0.15)] h-80 md:h-[28rem] bg-gray-200 dark:bg-gray-800">
-              <AnimatePresence mode="wait">
-                <motion.img
-                  key={role.images[currentIndex]}
-                  src={role.images[currentIndex]}
-                  alt={`${role.org} ${currentIndex + 1}`}
-                  initial={{ opacity: 0, x: 50 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -50 }}
-                  transition={{ duration: 0.35, ease: "easeOut" }}
-                  className="absolute inset-0 w-full h-full object-cover rounded-lg"
-                />
-              </AnimatePresence>
+      {/* Student Government Section */}
+      {leadershipRoles.map((role, roleIndex) => (
+        <motion.div
+          key={roleIndex}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.5 }}
+          className="mb-20"
+        >
+          <div className="grid gap-10 md:grid-cols-[minmax(0,1fr),minmax(0,2fr)] items-start">
 
-              {/* Arrows — now visible */}
-              <div className="absolute inset-0 flex justify-between items-center px-3 opacity-0 hover:opacity-100 transition-opacity duration-300">
-                <button
-                  onClick={() => prevSlide(role.images)}
-                  className="bg-white/70 dark:bg-gray-800/70 text-gray-800 dark:text-white 
-                             rounded-full p-2 shadow-md hover:bg-white dark:hover:bg-gray-700 transition"
-                >
-                  <ChevronLeft size={24} />
-                </button>
-
-                <button
-                  onClick={() => nextSlide(role.images)}
-                  className="bg-white/70 dark:bg-gray-800/70 text-gray-800 dark:text-white 
-                             rounded-full p-2 shadow-md hover:bg-white dark:hover:bg-gray-700 transition"
-                >
-                  <ChevronRight size={24} />
-                </button>
-              </div>
-
-              {/* Dots Indicator */}
-              <div className="absolute bottom-4 w-full flex justify-center gap-2">
-                {role.images.map((_, i) => (
-                  <span
-                    key={i}
-                    className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
-                      i === currentIndex
-                        ? "bg-teal-600 dark:bg-cyan-400 scale-110"
-                        : "bg-gray-400 dark:bg-gray-700"
-                    }`}
-                  />
-                ))}
-              </div>
-            </div>
-
-            {/* Text Content */}
-            <div className="w-full md:w-1/2 space-y-4">
-              <h3 className="text-2xl font-semibold text-teal-600 dark:text-cyan-400">
+            {/* Left label — mirrors accolades left column exactly */}
+            <div className="text-center md:text-left space-y-4">
+              <ShinyText
+                text="On-campus Experience"
+                disabled={false}
+                speed={3}
+                className="text-sm font-semibold uppercase tracking-[0.3em]"
+              />
+              <h3 className="text-4xl font-bold uppercase text-gray-900 dark:text-white">
                 {role.org}
               </h3>
-              {role.positions.map((pos, idx) => (
-                <div key={idx} className="space-y-1">
-                  <p className="font-medium text-lg">{pos.title}</p>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    {pos.date}
-                  </p>
-                  <ul className="list-disc pl-5 text-gray-700 dark:text-gray-300">
-                    {pos.bullets.map((b, i) => (
-                      <li key={i}>{b}</li>
-                    ))}
-                  </ul>
-                </div>
+              <p className="text-gray-600 dark:text-gray-300 text-base md:text-lg">
+                Held four progressive roles representing and serving the UC undergraduate student body.
+              </p>
+            </div>
+
+            {/* Right — timeline */}
+            <div className="flex flex-col">
+              {role.positions.map((pos, posIndex) => (
+                <motion.div
+                  key={posIndex}
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.2 }}
+                  transition={{ duration: 0.45, delay: posIndex * 0.08 }}
+                  className="group grid grid-cols-[16px_1fr] gap-x-4"
+                >
+                  {/* Spine */}
+                  <div className="flex flex-col items-center">
+                    <div
+                      className="w-2 h-2 rounded-full border border-gray-300 dark:border-gray-600
+                                  bg-white dark:bg-black flex-shrink-0 mt-2
+                                  group-hover:bg-gray-900 dark:group-hover:bg-white
+                                  group-hover:border-gray-900 dark:group-hover:border-white
+                                  transition-all duration-200"
+                    />
+                    {posIndex < role.positions.length - 1 && (
+                      <div className="w-px flex-1 mt-1 bg-gray-200 dark:bg-gray-800" />
+                    )}
+                  </div>
+
+                  {/* Content */}
+                  <div className="pb-8">
+                    {/* Title + date row — matches accolade button row */}
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 mb-2">
+                      <p className="text-lg font-semibold text-gray-900 dark:text-white leading-snug">
+                        {pos.title}
+                      </p>
+                      <span className="text-sm font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400 flex-shrink-0">
+                        {pos.date}
+                      </span>
+                    </div>
+                    {/* Bullets — match accolade description style */}
+                    <ul className="space-y-1">
+                      {pos.bullets.map((bullet, i) => (
+                        <li
+                          key={i}
+                          className="text-gray-600 dark:text-gray-300 text-base leading-relaxed"
+                        >
+                          {bullet}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </motion.div>
               ))}
             </div>
-          </motion.div>
-        ))}
-      </div>
+          </div>
+        </motion.div>
+      ))}
 
       {/* Accolades Section */}
-      <div className="mt-20">
+      <div className="mt-4">
         <div className="grid gap-10 md:grid-cols-[minmax(0,1fr),minmax(0,2fr)] items-start">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -196,11 +184,11 @@ export default function Leadership() {
             transition={{ duration: 0.5 }}
             className="text-center md:text-left space-y-4"
           >
-            <ShinyText 
-              text="Awards" 
-              disabled={false} 
-              speed={3} 
-              className="text-sm font-semibold uppercase tracking-[0.3em]" 
+            <ShinyText
+              text="Awards"
+              disabled={false}
+              speed={3}
+              className="text-sm font-semibold uppercase tracking-[0.3em]"
             />
             <h3 className="text-4xl font-bold uppercase text-gray-900 dark:text-white">Accolades</h3>
             <p className="text-gray-600 dark:text-gray-300 text-base md:text-lg">
@@ -229,44 +217,23 @@ export default function Leadership() {
                 </button>
                 <AnimatePresence initial={false}>
                   {activeAccolade === i && (
-                    <>
-                      {/* Mobile view */}
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ 
-                          duration: 0.4, 
-                          ease: [0.4, 0, 0.2, 1],
-                          opacity: { duration: 0.3 }
-                        }}
-                        className="overflow-hidden md:hidden"
-                      >
-                        <div className="pb-5">
-                          <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
-                            {a.description}
-                          </p>
-                        </div>
-                      </motion.div>
-                      {/* Desktop view */}
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ 
-                          duration: 0.4, 
-                          ease: [0.4, 0, 0.2, 1],
-                          opacity: { duration: 0.3 }
-                        }}
-                        className="overflow-hidden hidden md:block"
-                      >
-                        <div className="pb-5 md:pb-6">
-                          <p className="text-gray-600 dark:text-gray-300 text-base leading-relaxed">
-                            {a.description}
-                          </p>
-                        </div>
-                      </motion.div>
-                    </>
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{
+                        duration: 0.4,
+                        ease: [0.4, 0, 0.2, 1],
+                        opacity: { duration: 0.3 },
+                      }}
+                      className="overflow-hidden"
+                    >
+                      <div className="pb-5 md:pb-6">
+                        <p className="text-gray-600 dark:text-gray-300 text-base leading-relaxed">
+                          {a.description}
+                        </p>
+                      </div>
+                    </motion.div>
                   )}
                 </AnimatePresence>
               </div>
@@ -274,7 +241,8 @@ export default function Leadership() {
           </div>
         </div>
       </div>
-      {/* ❤️ Made with love note */}
+
+      {/* Made with love */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -286,7 +254,6 @@ export default function Leadership() {
         <Heart className="w-4 h-4 text-[#d50202]" fill="#d50202" />
         <span className="text-sm font-medium">by Ritika Joshi.</span>
       </motion.div>
-
     </motion.section>
   );
 }

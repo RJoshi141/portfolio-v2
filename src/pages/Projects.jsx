@@ -8,7 +8,7 @@ import utterFrame from "../assets/project-frames/utter-watch-ultra.png";
 import zoomiesFrame from "../assets/project-frames/zoomies-iphone.png";
 import cinemateFrame from "../assets/project-frames/cinemate-ipad.png";
 import harmoniFrame from "../assets/project-frames/harmoni-frames.png";
-import portfolioFrame from "../assets/project-frames/portfolio-frames.png";
+import portfolioFrame from "../assets/project-frames/potfolio-frames.png";
 import rubiksFrame from "../assets/project-frames/rubiks-mac.png";
 import lumonFrame from "../assets/project-frames/lumon-frames.png";
 
@@ -78,7 +78,7 @@ export default function Projects() {
       tech: ["HTML", "CSS", "JavaScript"],
       github: "https://github.com/RJoshi141/lumon",
       frame: lumonFrame,
-      frameType: "mac",
+      frameType: "lumon",
     },
   ];
 
@@ -140,6 +140,8 @@ export default function Projects() {
                   className={`h-auto object-contain ${
                     project.frameType === "watch"
                       ? "w-[62%] max-w-[360px]"
+                      : project.frameType === "lumon"
+                      ? "w-[80%] max-w-[900px]"
                       : project.frameType === "iphone" 
                       ? "w-[85%] max-w-[500px]" 
                       : project.frameType === "ipad"
