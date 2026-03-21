@@ -2,7 +2,15 @@
   <img src="public/logo.png" alt="Logo" width="64" />
   <h1>Portfolio v2</h1>
 </div>
-
+<div align="center">
+  <img src="public/iPhone.png" alt="Projects on iPhone" height="300" />
+  &nbsp;&nbsp;
+   <img src="public/macbook-pro.png" alt="Experience on MacBook Pro" height="400" />
+    &nbsp;&nbsp;
+  <img src="public/ipad.png" alt="Articles on iPad" height="300" />
+ 
+ 
+</div>
 ## What This Is
 
 This repository contains the full source code for a personal portfolio site. It's a React application built to be fast, polished, and interactive — showcasing work experience, projects, writing, and leadership background. The portfolio includes several custom-built interactive features rather than relying on templates or component libraries for layout.
