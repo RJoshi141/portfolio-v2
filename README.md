@@ -1,22 +1,7 @@
 <div align="center">
   <img src="public/logo.png" alt="Logo" width="64" />
   <h1>Portfolio v2</h1>
-  <p>A personal portfolio built with React — fast, interactive, and designed with care.</p>
 </div>
-
----
-
-<div align="center">
-  <img src="public/iPhone.png" alt="Projects on iPhone" height="300" />
-  &nbsp;&nbsp;
-  <img src="public/macbook-pro.png" alt="Experience on MacBook Pro" height="400" />
-  <br></br>
-  &nbsp;&nbsp;
-  <img src="public/ipad.png" alt="Articles on iPad" height="300" />
-
-</div>
-
----
 
 ## What This Is
 
@@ -24,13 +9,15 @@ This repository contains the full source code for a personal portfolio site. It'
 
 ## Sections
 
-| Section | Description |
-|---|---|
-| **Home** | Intro with physics-based 3D lanyard card and scrolling tech stack ticker |
-| **Experience** | Accordion-style work history across 6 companies |
-| **Projects** | Image-forward project showcase with load-more |
-| **Articles** | 3D book-flip page-turn animation for browsing writing |
-| **Leadership** | Vertical timeline of campus roles and awards accordion |
+
+| Section        | Description                                                              |
+| -------------- | ------------------------------------------------------------------------ |
+| **Home**       | Intro with physics-based 3D lanyard card and scrolling tech stack ticker |
+| **Experience** | Accordion-style work history across 6 companies                          |
+| **Projects**   | Image-forward project showcase with load-more                            |
+| **Articles**   | 3D book-flip page-turn animation for browsing writing                    |
+| **Leadership** | Vertical timeline of campus roles and awards accordion                   |
+
 
 ## Notable Features
 
@@ -44,13 +31,15 @@ This repository contains the full source code for a personal portfolio site. It'
 
 ## Tech Stack
 
-| Layer | Tech |
-|---|---|
-| Framework | React 18 + Vite |
-| Styling | Tailwind CSS |
-| Animation | Framer Motion, GSAP |
-| 3D | Three.js, React Three Fiber, Rapier physics |
-| Deployment | GitHub Pages |
+
+| Layer      | Tech                                        |
+| ---------- | ------------------------------------------- |
+| Framework  | React 18 + Vite                             |
+| Styling    | Tailwind CSS                                |
+| Animation  | Framer Motion, GSAP                         |
+| 3D         | Three.js, React Three Fiber, Rapier physics |
+| Deployment | GitHub Pages                                |
+
 
 ## Getting Started
 
