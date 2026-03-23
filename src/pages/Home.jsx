@@ -115,7 +115,7 @@ export default function Home() {
             custom={1}
             className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 dark:text-gray-200 transition-colors duration-500"
           >
-            Full-Stack Developer & Tech-Creative
+            Full-Stack Developer & Product Designer
           </motion.h2>
 
           <motion.p
@@ -135,6 +135,7 @@ export default function Home() {
             <span className="font-medium text-gray-800 dark:text-gray-100">Nest.js</span>, and{" "}
             <span className="font-medium text-gray-800 dark:text-gray-100">Firebase</span>.
           </motion.p>
+
           <motion.p
             variants={fadeUp}
             initial="hidden"
@@ -197,17 +198,13 @@ export default function Home() {
           </motion.div>
         </div>
 
-        {/* Right column — Lanyard
-            - position: absolute so it doesn't push the left column
-            - no overflow clipping anywhere in the chain
-            - pointer-events-none so it never blocks text interaction
-            - anchored to the top-right of the flex row, hanging down freely */}
+        {/* Right column — Lanyard */}
         <motion.div
           className="hidden lg:block"
           style={{
             position: "absolute",
-            top: "-6rem",        // same as lg:-mt-20 equivalent, drops from navbar
-            right: "-3rem",      // bleeds past the section's right edge
+            top: "-6rem",
+            right: "-3rem",
             width: "40%",
             height: "600px",
             overflow: "visible",

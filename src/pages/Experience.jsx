@@ -210,7 +210,7 @@ export default function Experience() {
                       transition={{ duration: 0.35, ease: "easeInOut" }}
                       className="mt-4 overflow-hidden text-gray-600 dark:text-gray-300 text-sm leading-relaxed"
                     >
-                      <ul className="list-disc pl-5 space-y-2">
+                      <ul className="space-y-2">
                         {role.bullets.map((bullet, idx) => (
                           <li key={idx}>{bullet}</li>
                         ))}

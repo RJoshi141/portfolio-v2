@@ -69,7 +69,7 @@ export default function Projects() {
       tech: ["React", "Three.js", "3D Graphics"],
       github: "https://github.com/RJoshi141/RubiksMaster",
       frame: rubiksFrame,
-      frameType: "mac",
+      frameType: "ipad",
     },
     {
       name: "Lumon Interface",
