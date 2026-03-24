@@ -45,15 +45,6 @@ export default function Projects() {
       frameType: "ipad",
     },
     {
-      name: "Harmoni",
-      description:
-        "A full-stack Spotify dashboard that lets you explore your listening profile, edit playlists, and control playback.",
-      tech: ["React", "Vercel", "Spotify Web API"],
-      github: "https://github.com/RJoshi141/harmoni",
-      frame: harmoniFrame,
-      frameType: "mac",
-    },
-    {
       name: "Portfolio",
       description:
         "Personal portfolio with AI chatbot, light/dark mode, 3D interactive elements, and smooth animations.",
@@ -63,12 +54,12 @@ export default function Projects() {
       frameType: "mac",
     },
     {
-      name: "Rubik's Cube Solver",
+      name: "Harmoni",
       description:
-        "Interactive 3D Rubik's Cube visualizer and trainer built with React and Three.js.",
-      tech: ["React", "Three.js", "3D Graphics"],
-      github: "https://github.com/RJoshi141/RubiksMaster",
-      frame: rubiksFrame,
+        "A full-stack Spotify dashboard that lets you explore your listening profile, edit playlists, and control playback.",
+      tech: ["React", "Vercel", "Spotify Web API"],
+      github: "https://github.com/RJoshi141/harmoni",
+      frame: harmoniFrame,
       frameType: "ipad",
     },
     {
@@ -80,6 +71,16 @@ export default function Projects() {
       frame: lumonFrame,
       frameType: "lumon",
     },
+    {
+      name: "Rubik's Cube Solver",
+      description:
+        "Interactive 3D Rubik's Cube visualizer and trainer built with React and Three.js.",
+      tech: ["React", "Three.js", "3D Graphics"],
+      github: "https://github.com/RJoshi141/RubiksMaster",
+      frame: rubiksFrame,
+      frameType: "ipad",
+    },
+    
   ];
 
   const handleLoadMore = () => setShowAll(true);
@@ -117,9 +118,7 @@ export default function Projects() {
               ease: "easeOut",
             }}
             viewport={{ once: true, amount: 0.2 }}
-            className={`flex flex-col md:flex-row ${
-              index % 2 === 1 ? "md:flex-row-reverse" : ""
-            } items-center gap-8 md:gap-12`}
+            className="flex flex-col md:flex-row items-center gap-8 md:gap-12"
           >
             {/* Frame Image (Left) */}
             <a
