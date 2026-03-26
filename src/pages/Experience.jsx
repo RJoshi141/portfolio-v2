@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import ScrollFloat from "../components/ScrollFloat";
 import ShinyText from "../components/ShinyText";
@@ -39,7 +40,7 @@ export default function Experience() {
         "Accelerated backend performance, cutting API response times by 35% and lowering bounce rates by 20% with streamlined logic.",
         "Delivered high-performance, accessible features end-to-end, boosting site traffic and engagement by 25%.",
       ],
-      logo: { src: bmeLogo, alt: "Bright Mind Enrichment & Schooling logo" },
+      logo: { src: bmeLogo, alt: "Bright Mind Enrichment logo" },
       link: "https://brightmindenrichment.org/",
     },
     {
@@ -107,9 +108,8 @@ export default function Experience() {
   const [openIndex, setOpenIndex] = useState(0);
   const [showAll, setShowAll] = useState(false);
 
-  const toggleIndex = (index) => {
+  const toggleIndex = (index) =>
     setOpenIndex((prev) => (prev === index ? null : index));
-  };
 
   const visibleExperiences = showAll ? experiences : experiences.slice(0, 3);
 
@@ -123,6 +123,8 @@ export default function Experience() {
       viewport={{ once: true, amount: 0.25 }}
     >
       <div className="grid gap-12 lg:grid-cols-[minmax(0,0.75fr),minmax(0,1.25fr)]">
+
+        {/* Left label */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -148,87 +150,120 @@ export default function Experience() {
           </p>
         </motion.div>
 
-        <div className="divide-y divide-gray-200 dark:divide-card-dark">
+        {/* Timeline */}
+        <div className="flex flex-col">
           {visibleExperiences.map((role, index) => {
             const isOpen = openIndex === index;
+            const isLast = index === visibleExperiences.length - 1;
+
             return (
-              <motion.article
+              <motion.div
                 key={role.key}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.05 }}
                 viewport={{ once: true, amount: 0.2 }}
-                className="py-6"
+                className="grid grid-cols-[44px_1fr] gap-x-4"
               >
-                <button
-                  onClick={() => toggleIndex(index)}
-                  className="w-full flex flex-col gap-4 text-left sm:flex-row sm:items-center sm:justify-between"
-                  aria-expanded={isOpen}
-                >
-                  <div className="flex items-center gap-4">
-                    <span className="flex items-center justify-center overflow-hidden">
-                      <img
-                        src={role.logo.src}
-                        alt={role.logo.alt}
-                        loading="lazy"
-                        className={`object-contain ${
-                          role.logo.shape === "circle"
-                            ? "w-10 h-10 rounded-full object-cover"
-                            : role.key === "BMEAS"
-                              ? "w-10 h-10"
-                              : "w-9 h-9"
-                        }`}
-                      />
-                    </span>
-                    <div>
-                      <p className="text-base font-semibold text-gray-900 dark:text-white">{role.title}</p>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">
+                {/* Logo + spine */}
+                <div className="flex flex-col items-center">
+                  <div
+                    className="w-12 h-12 flex items-center justify-center flex-shrink-0 overflow-hidden mt-3"
+                  >
+                    <img
+                      src={role.logo.src}
+                      alt={role.logo.alt}
+                      loading="lazy"
+                      className={`object-contain ${
+                        role.logo.shape === "circle"
+                          ? "w-10 h-10 rounded-full object-cover"
+                          : role.key === "BMEAS"
+                          ? "w-11 h-11"
+                          : "w-9 h-9"
+                      }`}
+                    />
+                  </div>
+                  {!isLast && (
+                    <div className="w-0.5 flex-1 mt-1.5 bg-gray-200 dark:bg-neutral-800" />
+                  )}
+                </div>
+
+                {/* Content */}
+                <div className="pb-2">
+                  <button
+                    onClick={() => toggleIndex(index)}
+                    className="w-full flex items-start justify-between gap-4
+                               text-left pt-3 pb-4 group"
+                    aria-expanded={isOpen}
+                  >
+                    <div className="flex-1 min-w-0">
+                      <p className="text-lg font-semibold text-gray-900 dark:text-white leading-snug">
+                        {role.title}
+                      </p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
                         <a
                           href={role.link}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-block text-gray-800 dark:text-gray-200 font-semibold border-b border-transparent hover:border-gray-800 dark:hover:border-white transition-colors duration-200"
+                          onClick={(e) => e.stopPropagation()}
+                          className="text-gray-700 dark:text-gray-300 font-medium
+                                     border-b border-transparent
+                                     hover:border-gray-700 dark:hover:border-gray-300
+                                     transition-colors duration-200"
                         >
                           {role.company}
                         </a>
-                        <span className="px-2 text-gray-400 dark:text-gray-500">|</span>
+                        <span className="px-2 text-gray-300 dark:text-gray-700">·</span>
                         {role.location}
                       </p>
                     </div>
-                  </div>
-                  <span className="text-sm uppercase tracking-wide text-gray-500 dark:text-gray-400">
-                    {role.duration}
-                  </span>
-                </button>
+                    <div className="flex flex-col items-end gap-1.5 flex-shrink-0 pt-0.5">
+                      <span className="text-sm font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                        {role.duration}
+                      </span>
+                    </div>
+                  </button>
 
-                <AnimatePresence initial={false}>
-                  {isOpen && (
-                    <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: "auto" }}
-                      exit={{ opacity: 0, height: 0 }}
-                      transition={{ duration: 0.35, ease: "easeInOut" }}
-                      className="mt-4 overflow-hidden text-gray-600 dark:text-gray-300 text-sm leading-relaxed"
-                    >
-                      <ul className="space-y-2">
-                        {role.bullets.map((bullet, idx) => (
-                          <li key={idx}>{bullet}</li>
-                        ))}
-                      </ul>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </motion.article>
+                  <AnimatePresence initial={false}>
+                    {isOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
+                        className="overflow-hidden"
+                      >
+                        <div className="pb-6 space-y-2">
+                          {role.bullets.map((bullet, idx) => (
+                            <p
+                              key={idx}
+                              className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed"
+                            >
+                              {bullet}
+                            </p>
+                          ))}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              </motion.div>
             );
           })}
 
+          {/* Show more / less */}
           {experiences.length > 3 && (
-            <div className="pt-4 flex justify-center">
+            <div className="pt-2 flex justify-center">
               <button
                 onClick={() => setShowAll((prev) => !prev)}
-                className="text-sm font-medium text-teal-600 dark:text-cyan-400 hover:underline flex items-center gap-2 transition-colors duration-200"
+                className="text-sm font-medium text-teal-600 dark:text-cyan-400
+                           hover:underline flex items-center gap-2
+                           transition-colors duration-200"
               >
-                {showAll ? "Show less roles ↑" : "Show more roles ↓"}
+                {showAll
+                  ? (<>Show less roles <ChevronUp className="w-4 h-4" /></>)
+                  : (<>Show more roles <ChevronDown className="w-4 h-4" /></>)
+                }
               </button>
             </div>
           )}

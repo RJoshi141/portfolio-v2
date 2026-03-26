@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Heart } from "lucide-react";
+import { Heart, ChevronLeft, ChevronRight } from "lucide-react";
 import ScrollFloat from "../components/ScrollFloat";
 import ShinyText from "../components/ShinyText";
 
 export default function Leadership() {
-  const [activeAccolade, setActiveAccolade] = useState(null);
+  const [accoladeIndex, setAccoladeIndex] = useState(0);
 
   const leadershipRoles = [
     {
@@ -71,10 +71,6 @@ export default function Leadership() {
     },
   ];
 
-  const toggleAccolade = (index) => {
-    setActiveAccolade((prev) => (prev === index ? null : index));
-  };
-
   return (
     <motion.section
       id="leadership"
@@ -107,7 +103,7 @@ export default function Leadership() {
             {/* Left label — mirrors accolades left column exactly */}
             <div className="text-center md:text-left space-y-4">
               <ShinyText
-                text="On-campus Experience"
+                text="Experience"
                 disabled={false}
                 speed={3}
                 className="text-sm font-semibold uppercase tracking-[0.3em]"
@@ -129,7 +125,7 @@ export default function Leadership() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, amount: 0.2 }}
                   transition={{ duration: 0.45, delay: posIndex * 0.08 }}
-                  className="group grid grid-cols-[16px_1fr] gap-x-4"
+                  className="group grid grid-cols-[44px_1fr] gap-x-4"
                 >
                   {/* Spine */}
                   <div className="flex flex-col items-center">
@@ -141,7 +137,7 @@ export default function Leadership() {
                                   transition-all duration-200"
                     />
                     {posIndex < role.positions.length - 1 && (
-                      <div className="w-px flex-1 mt-1 bg-gray-200 dark:bg-gray-800" />
+                      <div className="w-0.5 flex-1 mt-1.5 bg-gray-200 dark:bg-neutral-800" />
                     )}
                   </div>
 
@@ -161,7 +157,7 @@ export default function Leadership() {
                       {pos.bullets.map((bullet, i) => (
                         <li
                           key={i}
-                          className="text-gray-600 dark:text-gray-300 text-base leading-relaxed"
+                          className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed"
                         >
                           {bullet}
                         </li>
@@ -196,48 +192,65 @@ export default function Leadership() {
             </p>
           </motion.div>
 
-          <div className="bg-transparent">
-            {accolades.map((a, i) => (
-              <div
-                key={a.title}
-                className={`transition-colors duration-300 ${
-                  i !== 0 ? "border-t border-gray-200 dark:border-card-dark" : ""
-                }`}
-              >
-                <button
-                  onClick={() => toggleAccolade(i)}
-                  className="w-full flex flex-col md:flex-row md:items-center justify-between gap-3 py-5 text-left hover:text-teal-600 dark:hover:text-cyan-400 transition-colors duration-300"
+          <div className="flex flex-col gap-6">
+            {/* Carousel card */}
+            <div className="border-t border-gray-200 dark:border-card-dark pt-5 min-h-[160px]">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={accoladeIndex}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
                 >
-                  <div className="flex-1">
-                    <p className="text-lg font-semibold text-gray-900 dark:text-white">{a.title}</p>
+                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-3">
+                    <p className="text-lg font-semibold text-gray-900 dark:text-white">
+                      {accolades[accoladeIndex].title}
+                    </p>
+                    <span className="text-sm font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400 flex-shrink-0">
+                      {accolades[accoladeIndex].date}
+                    </span>
                   </div>
-                  <span className="text-sm font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400 flex-shrink-0">
-                    {a.date}
-                  </span>
-                </button>
-                <AnimatePresence initial={false}>
-                  {activeAccolade === i && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{
-                        duration: 0.4,
-                        ease: [0.4, 0, 0.2, 1],
-                        opacity: { duration: 0.3 },
-                      }}
-                      className="overflow-hidden"
-                    >
-                      <div className="pb-5 md:pb-6">
-                        <p className="text-gray-600 dark:text-gray-300 text-base leading-relaxed">
-                          {a.description}
-                        </p>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                  <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+                    {accolades[accoladeIndex].description}
+                  </p>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+            {/* Controls */}
+            <div className="flex items-center justify-between md:-mt-4">
+              <button
+                onClick={() => setAccoladeIndex((prev) => (prev - 1 + accolades.length) % accolades.length)}
+                className="flex items-center gap-1.5 text-sm font-medium text-gray-500 dark:text-gray-400
+                           hover:text-gray-900 dark:hover:text-white transition-colors duration-200"
+              >
+                <ChevronLeft className="w-4 h-4" /> Prev
+              </button>
+
+              {/* Dots */}
+              <div className="flex items-center gap-2">
+                {accolades.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setAccoladeIndex(i)}
+                    className={`rounded-full transition-all duration-300 ${
+                      i === accoladeIndex
+                        ? "w-5 h-1.5 bg-gray-900 dark:bg-white"
+                        : "w-1.5 h-1.5 bg-gray-300 dark:bg-neutral-600 hover:bg-gray-400 dark:hover:bg-neutral-500"
+                    }`}
+                  />
+                ))}
               </div>
-            ))}
+
+              <button
+                onClick={() => setAccoladeIndex((prev) => (prev + 1) % accolades.length)}
+                className="flex items-center gap-1.5 text-sm font-medium text-gray-500 dark:text-gray-400
+                           hover:text-gray-900 dark:hover:text-white transition-colors duration-200"
+              >
+                Next <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
           </div>
         </div>
       </div>

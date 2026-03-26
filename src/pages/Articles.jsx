@@ -80,7 +80,24 @@ function useFlip(total) {
     });
   }, []);
 
-  return { current, pagesRef, flipNext, flipPrev };
+  const goTo = useCallback((target) => {
+    if (animating.current) return;
+    animating.current = true;
+    pagesRef.current.forEach((p, i) => {
+      if (!p) return;
+      p.style.transition = "none";
+      p.style.transformOrigin = "left center";
+      p.style.transform = i < target ? "rotateY(180deg)" : "rotateY(0deg)";
+      p.style.zIndex = i === target ? 10 : i < target ? 1 : 10 - (i - target);
+      p.getBoundingClientRect();
+    });
+    setTimeout(() => {
+      animating.current = false;
+      setCurrent(target);
+    }, 30);
+  }, []);
+
+  return { current, pagesRef, flipNext, flipPrev, goTo };
 }
 
 export default function Articles() {
@@ -88,7 +105,7 @@ export default function Articles() {
     {
       title: "I Interviewed at Atlassian — Here's Everything You Need to Know",
       description:
-        "When I got the chance to interview at Atlassian for a Full Stack Software Engineer role, I wasn't sure what to expect. I'd heard about their unique team-based hiring process.",
+        "When I got the chance to interview at Atlassian for a Full Stack Software Engineer role, I wasn't sure what to expect. I'd heard about their unique team-based hiring process...",
       link: "https://medium.com/@ritikajoshi141/i-interviewed-at-atlassian-heres-everything-you-need-to-know-b126553a03d5",
       author: "Ritika Joshi",
       date: "Dec 2025",
@@ -97,7 +114,7 @@ export default function Articles() {
     {
       title: "AWS Front End Interview Series: From Application to Phone Screen — Part 1",
       description:
-        "A recent CS grad who went through the full front-end engineering interview process at Amazon Web Services. Here's everything I wish I'd known going in.",
+        "A recent CS grad who went through the full front-end engineering interview process at Amazon Web Services. Here's everything I wish I'd known going in...",
       link: "https://medium.com/@ritikajoshi141/aws-front-end-interview-series-from-application-to-phone-screen-part-1-of-2-8bd24350fc41",
       author: "Ritika Joshi",
       date: "Jun 2024",
@@ -106,7 +123,7 @@ export default function Articles() {
     {
       title: "Marking Milestones",
       description:
-        "In my student address, I shared how our class navigated the twists and turns of UC together — united as Bearcats through Juncta Juvant and Next Lives Here.",
+        "In my student address, I shared how our class navigated the twists and turns of UC together — united as Bearcats through Juncta Juvant and Next Lives Here...",
       link: "https://www.uc.edu/news/articles/2024/04/uc-recognizes-its-largest-graduating-class-in-history-in-three-days-of-commencement.html",
       author: "University of Cincinnati News",
       date: "Apr 2024",
@@ -115,7 +132,7 @@ export default function Articles() {
   ];
 
   const N = articles.length;
-  const { current, pagesRef, flipNext, flipPrev } = useFlip(N);
+  const { current, pagesRef, flipNext, flipPrev, goTo } = useFlip(N);
 
   return (
     <motion.section
@@ -127,7 +144,7 @@ export default function Articles() {
       viewport={{ once: true, amount: 0.3 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
     >
-      <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr),minmax(0,1.2fr)] items-start">
+      <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr),minmax(0,1fr)] items-center">
 
         {/* Left column */}
         <motion.div
@@ -169,11 +186,14 @@ export default function Articles() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.15 }}
           viewport={{ once: true }}
-          className="flex flex-col gap-5"
+          className="flex flex-col items-center lg:items-end gap-5"
         >
-          {/* Book — no shadow boxes, auto height */}
-          <div className="relative w-full" style={{ perspective: "1600px" }}>
-            <div className="relative w-full" style={{ minHeight: "320px" }}>
+          {/* Book — mobile: max-w-[360px], desktop: max-w-[460px] taller */}
+          <div
+            className="relative w-full max-w-[360px] lg:max-w-[460px]"
+            style={{ perspective: "1400px" }}
+          >
+            <div className="relative w-full h-[320px] lg:h-[400px]">
               {articles.map((article, i) => (
                 <div
                   key={i}
@@ -184,7 +204,6 @@ export default function Articles() {
                     transformOrigin: "left center",
                     transform: "rotateY(0deg)",
                     zIndex: 10 - i,
-                    borderRadius: "4px 12px 12px 4px",
                     willChange: "transform",
                   }}
                   onClick={() => {
@@ -193,165 +212,146 @@ export default function Articles() {
                 >
                   {/* Front face */}
                   <div
-                    className="absolute inset-0 bg-white dark:bg-neutral-900 border border-gray-100 dark:border-neutral-800 flex flex-col overflow-hidden"
+                    className="absolute inset-0 bg-gray-50 dark:bg-neutral-900 flex flex-col overflow-hidden border-2 border-gray-200 dark:border-neutral-700"
                     style={{
                       backfaceVisibility: "hidden",
                       WebkitBackfaceVisibility: "hidden",
-                      borderRadius: "4px 12px 12px 4px",
-                      padding: "clamp(1.25rem, 4vw, 2rem)",
+                      borderRadius: "2px 10px 10px 2px",
                     }}
                   >
                     {/* Spine */}
-                    <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-gray-200 dark:bg-neutral-700 rounded-tl-sm rounded-bl-sm" />
-
-                    {/* Dark-mode-only gloss */}
                     <div
-                      className="absolute inset-0 pointer-events-none z-10 hidden dark:block"
+                      className="absolute left-0 top-0 bottom-0 w-[3px] bg-gray-300 dark:bg-neutral-600"
+                      style={{ borderRadius: "2px 0 0 2px" }}
+                    />
+
+                    {/* Gloss */}
+                    <div
+                      className="absolute inset-0 pointer-events-none z-10"
                       style={{
-                        background:
-                          "linear-gradient(135deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.02) 40%, transparent 100%)",
+                        background: "linear-gradient(135deg, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.08) 35%, transparent 70%)",
                         borderRadius: "inherit",
                       }}
                     />
 
-                    {/* Content */}
-                    <div className="relative z-20 flex flex-col h-full justify-between pl-3">
-                      <div>
-                        {/* Meta row */}
-                        <div className="flex items-center justify-between mb-4">
-                          <span className="text-xs font-medium tracking-[0.14em] text-gray-500 dark:text-gray-400 uppercase">
-                            {String(i + 1).padStart(2, "0")} / {String(N).padStart(2, "0")}
-                          </span>
-                          <span className="text-xs text-gray-500 dark:text-gray-400">
-                            {article.readTime}
-                          </span>
-                        </div>
+                    {/* Top band */}
+                    <div className="flex items-center justify-between px-5 py-3 pl-6 lg:py-4 border-b border-gray-100 dark:border-neutral-800 flex-shrink-0">
+                      <span className="text-[10px] lg:text-xs font-medium tracking-[0.14em] uppercase text-gray-400 dark:text-gray-500">
+                        {String(i + 1).padStart(2, "0")} / {String(N).padStart(2, "0")}
+                      </span>
+                      <span className="text-[10px] lg:text-xs text-gray-400 dark:text-gray-500">
+                        {article.readTime}
+                      </span>
+                    </div>
 
-                        {/* Rule */}
-                        <div className="w-6 h-px bg-gray-200 dark:bg-neutral-700 mb-4" />
+                    {/* Body */}
+                    <div className="flex-1 flex flex-col gap-2 lg:gap-3 px-5 py-4 pl-6 lg:px-6 lg:py-5 lg:pl-7 overflow-hidden">
+                      <p className="text-[10px] lg:text-xs font-medium tracking-[0.12em] uppercase text-gray-400 dark:text-gray-500">
+                        {article.date}
+                      </p>
+                      <h3 className="text-base lg:text-lg font-semibold text-gray-900 dark:text-white leading-snug tracking-tight">
+                        {article.title}
+                      </h3>
+                      <div className="w-6 h-px bg-gray-200 dark:bg-neutral-700 flex-shrink-0" />
+                      <p className="text-xs lg:text-sm font-normal text-gray-600 dark:text-gray-300 leading-relaxed flex-1">
+                        {article.description}
+                      </p>
+                    </div>
 
-                        {/* Date */}
-                        <p className="text-xs font-medium tracking-[0.12em] uppercase text-gray-500 dark:text-gray-400 mb-2">
-                          {article.date}
-                        </p>
-
-                        {/* Title */}
-                        <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white leading-snug mb-3 tracking-tight">
-                          {article.title}
-                        </h3>
-
-                        {/* Description */}
-                        <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
-                          {article.description}
-                        </p>
-                      </div>
-
-                      {/* Footer */}
-                      <div className="flex items-center justify-between border-t border-gray-100 dark:border-neutral-800 pt-4 mt-4 flex-wrap gap-2">
-                        <span className="text-xs text-gray-700 dark:text-gray-300">
-                          {article.author}
-                        </span>
-                        <a
-                          href={article.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={(e) => e.stopPropagation()}
-                          className="text-xs font-semibold text-teal-600 dark:text-cyan-400 hover:translate-x-0.5 transition-transform duration-200 inline-flex items-center gap-1"
-                        >
-                          Read article →
-                        </a>
-                      </div>
+                    {/* Footer band */}
+                    <div className="flex items-center justify-between px-5 py-3 pl-6 lg:px-6 lg:py-4 lg:pl-7 border-t border-gray-100 dark:border-neutral-800 flex-shrink-0">
+                      <span className="text-[11px] lg:text-xs text-gray-400 dark:text-gray-500">
+                        {article.author}
+                      </span>
+                      <a
+                        href={article.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        className="text-[11px] lg:text-xs font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors duration-200 inline-flex items-center gap-1 tracking-wide"
+                      >
+                        Read article
+                        <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                          <path d="M2 8L8 2M8 2H4M8 2v4" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      </a>
                     </div>
 
                     {/* Folded corner */}
-                    <div className="absolute bottom-0 right-0 w-7 h-7 pointer-events-none z-20 overflow-hidden">
-                      <div
-                        style={{
-                          position: "absolute", bottom: 0, right: 0,
-                          width: 0, height: 0,
-                          borderStyle: "solid",
-                          borderWidth: "0 0 28px 28px",
-                          borderColor: "transparent transparent #e5e7eb transparent",
-                          opacity: 0.7,
-                        }}
-                        className="dark:!border-b-neutral-700"
-                      />
-                    </div>
+                    <div
+                      className="absolute bottom-0 right-0 pointer-events-none"
+                      style={{
+                        width: 0, height: 0,
+                        borderStyle: "solid",
+                        borderWidth: "0 0 20px 20px",
+                        borderColor: "transparent transparent #e5e7eb transparent",
+                        opacity: 0.6,
+                      }}
+                    />
                   </div>
 
                   {/* Back face */}
                   <div
-                    className="absolute inset-0 bg-gray-50 dark:bg-neutral-800 border border-gray-100 dark:border-neutral-700 flex items-center justify-center overflow-hidden"
+                    className="absolute inset-0 bg-gray-50 dark:bg-neutral-900 flex items-center justify-center border-2 border-gray-200 dark:border-neutral-700"
                     style={{
                       backfaceVisibility: "hidden",
                       WebkitBackfaceVisibility: "hidden",
                       transform: "rotateY(-180deg)",
-                      borderRadius: "4px 12px 12px 4px",
+                      borderRadius: "10px 2px 2px 10px",
                     }}
-                  >
-                    {/* Dark-mode-only gloss on back */}
-                    <div
-                      className="absolute inset-0 pointer-events-none hidden dark:block"
-                      style={{
-                        background: "linear-gradient(135deg, rgba(255,255,255,0.06) 0%, transparent 60%)",
-                        borderRadius: "inherit",
-                      }}
-                    />
-                    <span className="text-7xl font-light text-gray-200 dark:text-neutral-700 tracking-tighter select-none">
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                  </div>
+                  />
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Controls */}
-          <div className="flex items-center justify-between px-1 mt-2">
+          {/* Controls — match book width */}
+          <div className="flex items-center gap-6 w-full max-w-[360px] lg:max-w-[460px] justify-between">
             <button
-              onClick={() => flipPrev(current)}
-              disabled={current === 0}
-              className="flex items-center gap-2 text-xs font-medium tracking-wide
-                         text-gray-400 dark:text-gray-500 disabled:opacity-25
+              onClick={() => {
+                if (current === 0) goTo(N - 1);
+                else flipPrev(current);
+              }}
+              className="flex items-center gap-1.5 text-[11px] font-medium tracking-wide
+                         text-gray-400 dark:text-gray-500
                          hover:text-gray-900 dark:hover:text-white transition-colors duration-200
-                         border border-gray-200 dark:border-neutral-800 rounded-full px-4 py-2
-                         disabled:cursor-not-allowed hover:border-gray-400 dark:hover:border-neutral-600"
+                         border border-gray-200 dark:border-neutral-800 rounded-full px-4 py-1.5
+                         hover:border-gray-400 dark:hover:border-neutral-600"
             >
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                <path d="M8 2L4 6l4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                <path d="M7 1L3 5l4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
               Prev
             </button>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5">
               {articles.map((_, i) => (
                 <button
                   key={i}
-                  onClick={() => {
-                    if (i > current) flipNext(current);
-                    else if (i < current) flipPrev(current);
-                  }}
-                  className={`h-1.5 rounded-full transition-all duration-300 ${
+                  onClick={() => goTo(i)}
+                  className={`h-[5px] rounded-full transition-all duration-300 ${
                     i === current
-                      ? "w-5 bg-gray-900 dark:bg-white"
-                      : "w-1.5 bg-gray-300 dark:bg-neutral-600 hover:bg-gray-400 dark:hover:bg-neutral-500"
+                      ? "w-4 bg-gray-900 dark:bg-white"
+                      : "w-[5px] bg-gray-300 dark:bg-neutral-600 hover:bg-gray-400"
                   }`}
                 />
               ))}
             </div>
 
             <button
-              onClick={() => flipNext(current)}
-              disabled={current === N - 1}
-              className="flex items-center gap-2 text-xs font-medium tracking-wide
-                         text-gray-400 dark:text-gray-500 disabled:opacity-25
+              onClick={() => {
+                if (current === N - 1) goTo(0);
+                else flipNext(current);
+              }}
+              className="flex items-center gap-1.5 text-[11px] font-medium tracking-wide
+                         text-gray-400 dark:text-gray-500
                          hover:text-gray-900 dark:hover:text-white transition-colors duration-200
-                         border border-gray-200 dark:border-neutral-800 rounded-full px-4 py-2
-                         disabled:cursor-not-allowed hover:border-gray-400 dark:hover:border-neutral-600"
+                         border border-gray-200 dark:border-neutral-800 rounded-full px-4 py-1.5
+                         hover:border-gray-400 dark:hover:border-neutral-600"
             >
               Next
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                <path d="M4 2l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                <path d="M3 1l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </button>
           </div>
