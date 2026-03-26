@@ -3,6 +3,9 @@ import { motion } from "framer-motion";
 import ScrollFloat from "../components/ScrollFloat";
 import { FaMedium } from "react-icons/fa";
 import ShinyText from "../components/ShinyText";
+import atlassianImg from "../assets/atlassian.png";
+import amazonImg from "../assets/amazon.png";
+import ucImg from "../assets/uc.png";
 
 const DURATION = 680;
 
@@ -101,37 +104,52 @@ function useFlip(total) {
 }
 
 export default function Articles() {
-  const articles = [
+  // Page 0 = cover, pages 1-3 = articles
+  // Back face of page 0 = atlassian image
+  // Back face of page 1 = amazon image
+  // Back face of page 2 = uc image
+  const pages = [
+    { type: "cover" },
     {
+      type: "article",
       title: "I Interviewed at Atlassian — Here's Everything You Need to Know",
       description:
-        "When I got the chance to interview at Atlassian for a Full Stack Software Engineer role, I wasn't sure what to expect. I'd heard about their unique team-based hiring process...",
+        "When I got the chance to interview at Atlassian for a Full Stack Software Engineer role, I wasn't sure what to expect. I'd heard about their unique team-based hiring process.",
       link: "https://medium.com/@ritikajoshi141/i-interviewed-at-atlassian-heres-everything-you-need-to-know-b126553a03d5",
       author: "Ritika Joshi",
       date: "Dec 2025",
       readTime: "8 min read",
+      backImage: atlassianImg,
+      backImageAlt: "Atlassian",
     },
     {
+      type: "article",
       title: "AWS Front End Interview Series: From Application to Phone Screen — Part 1",
       description:
-        "A recent CS grad who went through the full front-end engineering interview process at Amazon Web Services. Here's everything I wish I'd known going in...",
+        "A recent CS grad who went through the full front-end engineering interview process at Amazon Web Services. Here's everything I wish I'd known going in.",
       link: "https://medium.com/@ritikajoshi141/aws-front-end-interview-series-from-application-to-phone-screen-part-1-of-2-8bd24350fc41",
       author: "Ritika Joshi",
       date: "Jun 2024",
       readTime: "7 min read",
+      backImage: amazonImg,
+      backImageAlt: "Amazon Web Services",
     },
     {
+      type: "article",
       title: "Marking Milestones",
       description:
-        "In my student address, I shared how our class navigated the twists and turns of UC together — united as Bearcats through Juncta Juvant and Next Lives Here...",
+        "In my student address, I shared how our class navigated the twists and turns of UC together — united as Bearcats through Juncta Juvant and Next Lives Here.",
       link: "https://www.uc.edu/news/articles/2024/04/uc-recognizes-its-largest-graduating-class-in-history-in-three-days-of-commencement.html",
       author: "University of Cincinnati News",
       date: "Apr 2024",
       readTime: "9 min read",
+      backImage: ucImg,
+      backImageAlt: "University of Cincinnati",
     },
   ];
 
-  const N = articles.length;
+  const articles = pages.filter((p) => p.type === "article");
+  const N = pages.length;
   const { current, pagesRef, flipNext, flipPrev, goTo } = useFlip(N);
 
   return (
@@ -188,13 +206,12 @@ export default function Articles() {
           viewport={{ once: true }}
           className="flex flex-col items-center lg:items-end gap-5"
         >
-          {/* Book — mobile: max-w-[360px], desktop: max-w-[460px] taller */}
           <div
             className="relative w-full max-w-[360px] lg:max-w-[460px]"
             style={{ perspective: "1400px" }}
           >
             <div className="relative w-full h-[320px] lg:h-[400px]">
-              {articles.map((article, i) => (
+              {pages.map((page, i) => (
                 <div
                   key={i}
                   ref={(el) => (pagesRef.current[i] = el)}
@@ -234,78 +251,128 @@ export default function Articles() {
                       }}
                     />
 
-                    {/* Top band */}
-                    <div className="flex items-center justify-between px-5 py-3 pl-6 lg:py-4 border-b border-gray-100 dark:border-neutral-800 flex-shrink-0">
-                      <span className="text-[10px] lg:text-xs font-medium tracking-[0.14em] uppercase text-gray-400 dark:text-gray-500">
-                        {String(i + 1).padStart(2, "0")} / {String(N).padStart(2, "0")}
-                      </span>
-                      <span className="text-[10px] lg:text-xs text-gray-400 dark:text-gray-500">
-                        {article.readTime}
-                      </span>
-                    </div>
+                    {page.type === "cover" ? (
+                      /* Cover page */
+                      <div className="relative z-20 flex flex-col items-center justify-center h-full px-8 text-center gap-4">
+                        <div className="w-10 h-px bg-gray-300 dark:bg-neutral-600" />
+                        <p className="text-base font-semibold text-gray-700 dark:text-gray-200 leading-snug tracking-tight">
+                          Writing & Press
+                        </p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
+                          Flip through the pages to read articles Ritika has written and been featured in.
+                        </p>
+                        <button
+                          onClick={(e) => { e.stopPropagation(); flipNext(current); }}
+                          className="inline-flex items-center gap-1.5 text-xs font-medium tracking-widest uppercase
+                                     text-gray-400 dark:text-gray-500
+                                     hover:text-gray-900 dark:hover:text-white transition-colors duration-200
+                                     border border-gray-200 dark:border-neutral-700 rounded-full px-4 py-1.5
+                                     hover:border-gray-400 dark:hover:border-neutral-500 mt-1"
+                        >
+                          Start reading
+                          <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                            <path d="M3 1l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                        </button>
+                        <div className="w-10 h-px bg-gray-300 dark:bg-neutral-600" />
+                      </div>
+                    ) : (
+                      /* Article page */
+                      <>
+                        {/* Top band */}
+                        <div className="flex items-center justify-between px-5 py-3 pl-6 lg:py-4 border-b border-gray-100 dark:border-neutral-800 flex-shrink-0 relative z-20">
+                          <span className="text-[10px] lg:text-xs font-medium tracking-[0.14em] uppercase text-gray-400 dark:text-gray-500">
+                            {String(i).padStart(2, "0")} / {String(N - 1).padStart(2, "0")}
+                          </span>
+                          <span className="text-[10px] lg:text-xs text-gray-400 dark:text-gray-500">
+                            {page.readTime}
+                          </span>
+                        </div>
 
-                    {/* Body */}
-                    <div className="flex-1 flex flex-col gap-2 lg:gap-3 px-5 py-4 pl-6 lg:px-6 lg:py-5 lg:pl-7 overflow-hidden">
-                      <p className="text-[10px] lg:text-xs font-medium tracking-[0.12em] uppercase text-gray-400 dark:text-gray-500">
-                        {article.date}
-                      </p>
-                      <h3 className="text-base lg:text-lg font-semibold text-gray-900 dark:text-white leading-snug tracking-tight">
-                        {article.title}
-                      </h3>
-                      <div className="w-6 h-px bg-gray-200 dark:bg-neutral-700 flex-shrink-0" />
-                      <p className="text-xs lg:text-sm font-normal text-gray-600 dark:text-gray-300 leading-relaxed flex-1">
-                        {article.description}
-                      </p>
-                    </div>
+                        {/* Body */}
+                        <div className="flex-1 flex flex-col gap-2 lg:gap-3 px-5 py-4 pl-6 lg:px-6 lg:py-5 lg:pl-7 overflow-hidden relative z-20">
+                          <p className="text-[10px] lg:text-xs font-medium tracking-[0.12em] uppercase text-gray-400 dark:text-gray-500">
+                            {page.date}
+                          </p>
+                          <h3 className="text-base lg:text-lg font-semibold text-gray-900 dark:text-white leading-snug tracking-tight">
+                            {page.title}
+                          </h3>
+                          <div className="w-6 h-px bg-gray-200 dark:bg-neutral-700 flex-shrink-0" />
+                          <p className="text-xs lg:text-sm font-normal text-gray-600 dark:text-gray-300 leading-relaxed flex-1">
+                            {page.description}
+                          </p>
+                        </div>
 
-                    {/* Footer band */}
-                    <div className="flex items-center justify-between px-5 py-3 pl-6 lg:px-6 lg:py-4 lg:pl-7 border-t border-gray-100 dark:border-neutral-800 flex-shrink-0">
-                      <span className="text-[11px] lg:text-xs text-gray-400 dark:text-gray-500">
-                        {article.author}
-                      </span>
-                      <a
-                        href={article.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={(e) => e.stopPropagation()}
-                        className="text-[11px] lg:text-xs font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors duration-200 inline-flex items-center gap-1 tracking-wide"
-                      >
-                        Read article
-                        <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                          <path d="M2 8L8 2M8 2H4M8 2v4" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                      </a>
-                    </div>
+                        {/* Company logo watermark — visible on all screen sizes */}
+                        {page.backImage && (
+                          <div className="absolute bottom-14 right-4 z-20 opacity-70 dark:opacity-50 pointer-events-none lg:hidden">
+                            <img
+                              src={page.backImage}
+                              alt={page.backImageAlt}
+                              className="h-12 w-auto object-contain"
+                            />
+                          </div>
+                        )}
 
-                    {/* Folded corner */}
-                    <div
-                      className="absolute bottom-0 right-0 pointer-events-none"
-                      style={{
-                        width: 0, height: 0,
-                        borderStyle: "solid",
-                        borderWidth: "0 0 20px 20px",
-                        borderColor: "transparent transparent #e5e7eb transparent",
-                        opacity: 0.6,
-                      }}
-                    />
+                        {/* Footer band */}
+                        <div className="flex items-center justify-between px-5 py-3 pl-6 lg:px-6 lg:py-4 lg:pl-7 border-t border-gray-100 dark:border-neutral-800 flex-shrink-0 relative z-20">
+                          <span className="text-[11px] lg:text-xs text-gray-400 dark:text-gray-500">
+                            {page.author}
+                          </span>
+                          <a
+                            href={page.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className="text-[11px] lg:text-xs font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors duration-200 inline-flex items-center gap-1 tracking-wide"
+                          >
+                            Read article
+                            <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                              <path d="M2 8L8 2M8 2H4M8 2v4" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                          </a>
+                        </div>
+
+                        {/* Folded corner */}
+                        <div
+                          className="absolute bottom-0 right-0 pointer-events-none z-20"
+                          style={{
+                            width: 0, height: 0,
+                            borderStyle: "solid",
+                            borderWidth: "0 0 20px 20px",
+                            borderColor: "transparent transparent #e5e7eb transparent",
+                            opacity: 0.6,
+                          }}
+                        />
+                      </>
+                    )}
                   </div>
 
-                  {/* Back face */}
+                  {/* Back face — image for cover page back, and for article pages */}
                   <div
-                    className="absolute inset-0 bg-gray-50 dark:bg-neutral-900 flex items-center justify-center border-2 border-gray-200 dark:border-neutral-700"
+                    className="absolute inset-0 bg-gray-50 dark:bg-neutral-900 flex items-center justify-center border-2 border-gray-200 dark:border-neutral-700 overflow-hidden"
                     style={{
                       backfaceVisibility: "hidden",
                       WebkitBackfaceVisibility: "hidden",
                       transform: "rotateY(-180deg)",
                       borderRadius: "10px 2px 2px 10px",
                     }}
-                  />
+                  >
+                    {/* Cover back = atlassian, page 1 back = amazon, page 2 back = uc */}
+                    {pages[i + 1]?.backImage && (
+                      <img
+                        src={pages[i + 1].backImage}
+                        alt={pages[i + 1]?.backImageAlt}
+                        className="w-full h-full object-cover opacity-80 dark:opacity-60"
+                      />
+                    )}
+                  </div>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Controls — match book width */}
+          {/* Controls */}
           <div className="flex items-center gap-6 w-full max-w-[360px] lg:max-w-[460px] justify-between">
             <button
               onClick={() => {
@@ -325,7 +392,7 @@ export default function Articles() {
             </button>
 
             <div className="flex items-center gap-1.5">
-              {articles.map((_, i) => (
+              {pages.map((_, i) => (
                 <button
                   key={i}
                   onClick={() => goTo(i)}
