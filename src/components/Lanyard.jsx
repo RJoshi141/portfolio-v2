@@ -215,7 +215,7 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, cardImage = null,
             <group position={[0, 0, 0.015]}>
               {/* Profile image */}
               <mesh position={[0, 0.63, 0.001]}>
-                <planeGeometry args={[0.4, 0.4]} />
+                <planeGeometry args={[0.42, 0.42]} />
                 <meshBasicMaterial 
                   map={backTexture} 
                   toneMapped={false}
@@ -225,7 +225,7 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, cardImage = null,
               {/* Name text */}
               <Text
                 position={[0, 0.3, 0]}
-                fontSize={0.05}
+                fontSize={0.06}
                 color={textColor}
                 anchorX="center"
                 anchorY="middle"
@@ -235,14 +235,14 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, cardImage = null,
               </Text>
               {/* Role text */}
               <Text
-                position={[0, 0.22, 0]}
-                fontSize={0.038}
+                position={[0, 0.21, 0]}
+                fontSize={0.039}
                 color={subtitleColor}
                 anchorX="center"
                 anchorY="middle"
                 maxWidth={0.55}
               >
-                Full-Stack Developer
+                Founding Engineer @ Joydrop
               </Text>
             </group>
             
