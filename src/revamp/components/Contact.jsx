@@ -105,7 +105,7 @@ export default function Contact() {
           >
             {status === "sending" ? "Sending" : status === "sent" ? "Sent" : "Send"}
           </button>
-          {error && <p className="text-sm text-carnation">{error}</p>}
+          {error && <p className="text-sm text-neutral-300">{error}</p>}
         </div>
       </form>
     </section>

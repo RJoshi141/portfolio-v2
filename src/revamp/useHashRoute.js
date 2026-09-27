@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-// Tiny hash router: "#/work/utter" -> { page: "work", slug: "utter" }
+// Tiny hash router: "#/work/utter" -> { page: "work", slug: "utter" }, "#/about" -> { page: "about" }
 // Hash routes survive refreshes on GitHub Pages with no 404 hacks.
 const parse = () => {
   const [, page = "", slug = ""] = window.location.hash.replace(/^#/, "").split("/");
@@ -20,12 +20,19 @@ export default function useHashRoute() {
   return route;
 }
 
-// Scroll to a section on the home page, hopping home first if we're on a case study
+const onHome = () => parse().page === "";
+
+// Scroll to a section on the home page, hopping home first from any other page
 export const goToSection = (id) => {
-  if (window.location.hash.startsWith("#/work")) {
-    window.location.hash = "#/";
-    setTimeout(() => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" }), 50);
-  } else {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-  }
+  const scroll = () => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+  if (onHome()) return scroll();
+  window.location.hash = "#/";
+  setTimeout(scroll, 120); // let the home page render first
+};
+
+// Home: scroll to top if already there, otherwise navigate home
+export const goHome = (e) => {
+  e?.preventDefault();
+  if (onHome()) window.scrollTo({ top: 0, behavior: "smooth" });
+  else window.location.hash = "#/";
 };

@@ -20,7 +20,7 @@ const companies = [
 
 export default function Companies() {
   return (
-    <section className="px-5 md:px-12 pt-24 md:pt-32">
+    <div className="pt-20 md:pt-28">
       <p className="text-center text-base md:text-lg text-neutral-400">Companies I've worked with</p>
       {/* named group so hovering the row dims + blurs every logo except the hovered one */}
       <ul className="group/logos mt-10 md:mt-12 flex flex-wrap items-center justify-center gap-x-12 md:gap-x-16 gap-y-8">
@@ -40,6 +40,6 @@ export default function Companies() {
           </li>
         ))}
       </ul>
-    </section>
+    </div>
   );
 }

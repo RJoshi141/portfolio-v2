@@ -9,13 +9,13 @@ import { SiGithub, SiMedium } from "react-icons/si";
 import { FaLinkedinIn } from "react-icons/fa";
 import { Mail } from "lucide-react";
 import { findProject } from "../data/projects";
+import { goToSection } from "../useHashRoute";
 
 const BIO = {
-  title: "Ritika Joshi",
+  title: "My home screen",
   body: [
-    "I'm a founding product engineer at Joydrop, where I built the platform from 0 to 1 across web, iOS, and Android.",
-    "Outside work I make Apple platform apps and small experiments. Based in San Francisco, CS at the University of Cincinnati.",
-    "This is my home screen. Tap around.",
+    "Every app here is something I built or somewhere to find me.",
+    "Tap one to see what it is.",
   ],
 };
 
@@ -26,7 +26,7 @@ const projectApp = (slug, Icon, bg) => {
 };
 
 const APPS = [
-  projectApp("utter", Mic, "#f46565"),
+  projectApp("utter", Mic, "#f5b400"),
   projectApp("zoomies", Dog, "#3f8f4f"),
   projectApp("cinemate", Clapperboard, "#4b4bb8"),
   projectApp("harmoni", Music2, "#1db954"),
@@ -40,7 +40,7 @@ const DOCK = [
   { id: "github", label: "GitHub", Icon: SiGithub, bg: "#24292f", title: "GitHub", body: ["Source for everything on this site, plus experiments that didn't make the cut."], href: "https://github.com/RJoshi141", cta: "github.com/RJoshi141", external: true },
   { id: "linkedin", label: "LinkedIn", Icon: FaLinkedinIn, bg: "#0a66c2", title: "LinkedIn", body: ["The formal version of all this."], href: "https://www.linkedin.com/in/ritika-joshi-9395591a7/", cta: "Connect", external: true },
   { id: "medium", label: "Medium", Icon: SiMedium, bg: "#f2f2f2", fg: "#000", title: "Medium", body: ["I write about interviewing, building, and what I learn along the way."], href: "https://medium.com/@ritikajoshi141", cta: "Read", external: true },
-  { id: "mail", label: "Mail", Icon: Mail, bg: "#2f7df6", title: "Mail", body: ["Fastest way to reach me."], href: "#contact", cta: "Write to me" },
+  { id: "mail", label: "Mail", Icon: Mail, bg: "#2f7df6", title: "Mail", body: ["Fastest way to reach me."], href: "#/", section: "contact", cta: "Write to me" },
 ];
 
 const ALL = [...APPS, ...DOCK];
@@ -130,8 +130,9 @@ export default function HomeScreen() {
             {app.href && (
               <a
                 href={app.href}
+                onClick={app.section ? (e) => { e.preventDefault(); goToSection(app.section); } : undefined}
                 {...(app.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                className="mt-8 inline-flex items-center gap-2 text-white hover:text-carnation transition-colors"
+                className="mt-8 inline-flex items-center gap-2 text-white hover:text-neutral-400 transition-colors"
               >
                 {app.cta} {app.external ? <ArrowUpRight className="w-4 h-4" /> : <ArrowRight className="w-4 h-4" />}
               </a>
