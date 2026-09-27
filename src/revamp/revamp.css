@@ -1,0 +1,7 @@
+/* Scoped to the revamp only. Overrides the global GeneralSans heading rule in index.css
+   with Inter (already loaded in revamp/index.html) for the lighter, tighter look. */
+.revamp h1,
+.revamp h2,
+.revamp h3 {
+  font-family: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+}
