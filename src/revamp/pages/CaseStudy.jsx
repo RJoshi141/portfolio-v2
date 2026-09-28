@@ -36,10 +36,10 @@ const Media = ({ items, caption, alt, inset }) => {
       {list.length === 1 ? (
         <Tile src={list[0]} alt={alt} inset={inset} />
       ) : (
-        <div className={`grid gap-3 md:gap-6 ${list.length === 2 ? "md:grid-cols-2" : "grid-cols-3"}`}>
+        <div className={`grid gap-3 md:gap-6 ${list.length === 2 ? "md:grid-cols-2 md:gap-8" : "grid-cols-3"}`}>
           {list.map((item, i) => {
             // item is a src, or { src, caption, inset } for a note under that panel
-            const { src, caption: note, inset: own } = typeof item === "object" && item.src ? item : { src: item };
+            const { src, caption: note, inset: own, tall } = typeof item === "object" && item.src ? item : { src: item };
             // pairs are usually wide shots, so they get landscape panels; rows of 3 are phone screens
             const pair = list.length === 2;
             return (
@@ -47,8 +47,9 @@ const Media = ({ items, caption, alt, inset }) => {
                 <Tile
                   src={src}
                   alt={`${alt} ${i + 1}`}
-                  aspect={pair ? "aspect-[4/3]" : "aspect-[3/4]"}
-                  ratio={pair ? 4 / 3 : 3 / 4}
+                  // `tall` pairs (portrait phone screenshots) get portrait panels so the phones can be bigger
+                  aspect={pair && !tall ? "aspect-[4/3]" : pair ? "aspect-[4/5]" : "aspect-[3/4]"}
+                  ratio={pair && !tall ? 4 / 3 : pair ? 4 / 5 : 3 / 4}
                   inset={own || inset || "w-[80%] h-[80%]"}
                 />
                 {note && <p className="mt-3 md:mt-4 text-sm md:text-base font-light leading-[1.5] text-neutral-400">{note}</p>}

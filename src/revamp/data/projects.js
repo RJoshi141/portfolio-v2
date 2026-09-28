@@ -62,6 +62,8 @@ import zArtRules from "../../assets/case-studies/zoomies/art/rules-button.png";
 import zArtCredits from "../../assets/case-studies/zoomies/art/credits-button.png";
 import zArtExit from "../../assets/case-studies/zoomies/art/exit-button.png";
 import zArtMenu from "../../assets/case-studies/zoomies/art/menu-button.png";
+import joydropNotifLock from "../../assets/case-studies/joydrop/notifications-lockscreen.jpg";
+import joydropNotifBanner from "../../assets/case-studies/joydrop/notifications-banner.jpg";
 import iphoneFrame from "../../assets/case-studies/iphone-frame.png";
 import utterPhoneMp4 from "../../assets/case-studies/utter/iphone-demo.mp4";
 import utterPhoneWebm from "../../assets/case-studies/utter/iphone-demo.webm";
@@ -135,8 +137,8 @@ export const projects = [
         },
         // before/after side by side, each on its own grey panel
         images: [
-          { src: joydropLoginBefore, inset: "w-[70%] h-[86%]", caption: "Before. The web app's login, viewed on a phone." },
-          { src: joydropLoginAfter, inset: "w-[70%] h-[86%]", caption: "After. The native iOS login." },
+          { src: joydropLoginBefore, tall: true, inset: "w-[90%] h-[86%]", caption: "Before. The web app's login, viewed on a phone." },
+          { src: joydropLoginAfter, tall: true, inset: "w-[90%] h-[86%]", caption: "After. The native iOS login." },
         ],
       },
       {
@@ -180,7 +182,16 @@ export const projects = [
       },
       {
         heading: "Notifications",
-        body: "Push notifications with Expo and NestJS across 8+ trigger types, shipped alongside the iOS release.",
+        // TODO: rewrite in your words
+        body: [
+          "Push notifications with Expo and NestJS across 8+ trigger types, shipped alongside the iOS release.",
+          "Each trigger has its own title so you can tell what happened without opening the app: a Joydrop received, a new post in one of your communities, a community invite, a connection request, or a reply to your comment.",
+        ],
+        // real device screenshots in iPhone frames, each in its own grey box
+        phones: [
+          { frame: iphoneFrame, poster: joydropNotifLock, caption: "Grouped on the lock screen: Joydrops, community posts, invites, connection requests, and replies." },
+          { frame: iphoneFrame, poster: joydropNotifBanner, caption: "The first test push landing as a banner outside the app, with the badge count on the icon." },
+        ],
       },
     ],
     metrics: [

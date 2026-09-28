@@ -23,6 +23,14 @@ export default function HomePage() {
         >
           Engineer with a designer's eye.
         </motion.h1>
+        {/* supporting line under the headline */}
+        <motion.p
+          {...fadeUp(0.1)}
+          className="mt-6 md:mt-8 max-w-3xl text-lg md:text-2xl tracking-tight leading-relaxed text-neutral-400"
+        >
+          I design in the same place I build, so the details that make an app feel good don't get lost
+          between Figma and code.
+        </motion.p>
 
         <Companies />
       </section>
