@@ -151,6 +151,55 @@ const WatchDemo = ({ frame, mp4, webm, phone }) => (
   </motion.figure>
 );
 
+// One iPhone playing a screen recording (or a still until the recording exists).
+// Same screen box as the Utter phone: the frame's screen is transparent, so media sits underneath.
+const PhoneScreen = ({ frame, mp4, webm, poster, className = "" }) => (
+  <div className={`relative h-[86%] aspect-[2025/4139] ${className}`}>
+    <div
+      className="absolute overflow-hidden bg-black rounded-[18%/8.5%]"
+      style={{ left: "5.2%", top: "2.3%", width: "89.6%", height: "95.4%" }}
+    >
+      {mp4 ? (
+        <video autoPlay muted loop playsInline poster={poster} className="w-full h-full object-cover">
+          {webm && <source src={webm} type="video/webm" />}
+          <source src={mp4} type="video/mp4" />
+        </video>
+      ) : (
+        <img src={poster} alt="" className="w-full h-full object-cover object-top" />
+      )}
+    </div>
+    <img src={frame} alt="" className="absolute inset-0 w-full h-full" />
+  </div>
+);
+
+// One iPhone on a wide grey panel, or several iPhones each in their own grey box side by side
+// (captions sit under each box).
+const PhoneDemo = ({ phones, ...single }) => {
+  if (!phones) {
+    return (
+      <motion.figure {...rise()} className="my-12 md:my-20">
+        <Zoomable ratio={16 / 9} className="aspect-[4/3] md:aspect-[16/9]">
+          <PhoneScreen {...single} />
+        </Zoomable>
+      </motion.figure>
+    );
+  }
+  return (
+    <motion.div {...rise()} className="my-12 md:my-20 grid md:grid-cols-2 gap-6 md:gap-8">
+      {phones.map((p, i) => (
+        <figure key={i}>
+          <Zoomable ratio={4 / 5} className="aspect-[4/5]">
+            <PhoneScreen {...p} />
+          </Zoomable>
+          {p.caption && (
+            <figcaption className="mt-4 md:mt-5 text-sm md:text-base font-light leading-[1.6] text-neutral-400">{p.caption}</figcaption>
+          )}
+        </figure>
+      ))}
+    </motion.div>
+  );
+};
+
 // Compact figure row: label + note on the left, sketch on the right, panel sized to the
 // sketch's wide shape so it doesn't eat vertical space.
 const FigureRow = ({ label, text, src, inset = "w-[92%] h-[86%]" }) => (
@@ -233,7 +282,8 @@ const Team = ({ people }) => (
 // Brand system panel: type specimen on top, color swatches below (used on Joydrop)
 const BrandPanel = ({ colors = [], display, mono }) => (
   <motion.figure {...rise()} className="my-12 md:my-20 bg-[#1a1a1a] p-6 md:p-12">
-    <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-end">
+    {(display || mono) && (
+    <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-end mb-10 md:mb-14">
       <div>
         <p className="font-mono text-[11px] md:text-xs uppercase tracking-wider text-neutral-500">Fraunces · Display</p>
         <p className="mt-3 text-[#F5F0E8] leading-[0.95] tracking-[-0.02em] text-5xl md:text-7xl"
@@ -248,7 +298,8 @@ const BrandPanel = ({ colors = [], display, mono }) => (
         </p>
       </div>
     </div>
-    <ul className="mt-10 md:mt-14 grid grid-cols-3 md:grid-cols-6 gap-3 md:gap-4">
+    )}
+    <ul className="grid grid-cols-3 md:grid-cols-6 gap-3 md:gap-4">
       {colors.map((c) => (
         <li key={c.hex}>
           {/* thin ring so the near-black swatches still read against the grey panel */}
@@ -341,7 +392,9 @@ export default function CaseStudy({ slug }) {
       )}
 
       {/* Hero media */}
-      {project.demo ? (
+      {project.phoneDemo ? (
+        <PhoneDemo {...project.phoneDemo} />
+      ) : project.demo ? (
         <WatchDemo {...project.demo} />
       ) : (
         (project.hero || project.frame) && (
@@ -365,6 +418,7 @@ export default function CaseStudy({ slug }) {
             <Media items={s.images || s.video || s.image} caption={s.caption} inset={s.inset} alt={s.heading || project.name} />
           )}
           {s.brand && <BrandPanel {...s.brand} />}
+          {s.phones && <PhoneDemo phones={s.phones} />}
           {s.media?.map((m, n) =>
             m.label ? (
               <FigureRow key={n} label={m.label} text={m.text} src={m.src} inset={m.inset} />

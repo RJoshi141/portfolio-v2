@@ -21,6 +21,15 @@ import utterWatchRecordReview from "../../assets/case-studies/utter/watch-final-
 import utterWatchSyncConfirm from "../../assets/case-studies/utter/watch-final-sync-confirm.png";
 import joydropLoginBefore from "../../assets/case-studies/joydrop/login-before-web.png";
 import joydropLoginAfter from "../../assets/case-studies/joydrop/login-after-ios.png";
+import joydropCommunitiesBefore from "../../assets/case-studies/joydrop/communities-before.png";
+import joydropCommunitiesAfter from "../../assets/case-studies/joydrop/communities-after.png";
+import joydropFeedPoster from "../../assets/case-studies/joydrop/feed-poster-first-frame.jpg";
+import joydropFeedMp4 from "../../assets/case-studies/joydrop/feed-demo.mp4";
+import joydropQuestionnaireMp4 from "../../assets/case-studies/joydrop/onboarding-questionnaire.mp4";
+import joydropQuestionnairePoster from "../../assets/case-studies/joydrop/onboarding-questionnaire-poster.jpg";
+import joydropTourMp4 from "../../assets/case-studies/joydrop/onboarding-tour.mp4";
+import joydropTourPoster from "../../assets/case-studies/joydrop/onboarding-tour-poster.jpg";
+import joydropOnboardingBefore from "../../assets/case-studies/joydrop/onboarding-before.png";
 import iphoneFrame from "../../assets/case-studies/iphone-frame.png";
 import utterPhoneMp4 from "../../assets/case-studies/utter/iphone-demo.mp4";
 import utterPhoneWebm from "../../assets/case-studies/utter/iphone-demo.webm";
@@ -51,6 +60,9 @@ export const projects = [
     platform: "iOS, Web",
     year: "2025 – Now",
     site: "https://app.joydrop.me/",
+    // iPhone at the top of the case study, right before "The product"
+    // feed scroll + comments, 14s loop; poster is its first frame so the start is seamless
+    phoneDemo: { frame: iphoneFrame, mp4: joydropFeedMp4, poster: joydropFeedPoster },
     siteLabel: "joydrop.me",
     stack: ["Expo", "React Native", "NestJS", "Next.js", "Firebase", "EAS"],
     sections: [
@@ -85,13 +97,27 @@ export const projects = [
             { name: "Grain", hex: "#C9B99A", note: "Metadata" },
             { name: "Ash", hex: "#8A7F74", note: "Body on dark" },
           ],
-          display: "Seen starts here.",
-          mono: "EMAIL · PASSWORD · LOG IN",
         },
         // before/after side by side, each on its own grey panel
         images: [
           { src: joydropLoginBefore, inset: "w-[70%] h-[86%]", caption: "Before. The web app's login, viewed on a phone." },
           { src: joydropLoginAfter, inset: "w-[70%] h-[86%]", caption: "After. The native iOS login." },
+        ],
+      },
+      {
+        heading: "Onboarding",
+        // TODO: rewrite in your words
+        body: [
+          "I added two pieces to onboarding. Before sign-up, a short questionnaire asks about the last time you saw someone do something great, and where that recognition usually ends up. By the time you reach the login screen, you already know why Joydrop exists. After sign-up, a 30-second tour walks you through the feed, sending your first Joydrop, and finding a community to join.",
+        ],
+        // before: the old four-slide carousel (web + mobile), shown above the new recordings
+        image: joydropOnboardingBefore,
+        inset: "w-[78%] h-[76%]",
+        caption: "Before. Four swipeable slides shared by web and mobile, each explaining a feature before you'd used the app.",
+        // after: two recordings, each in its own grey box
+        phones: [
+          { frame: iphoneFrame, mp4: joydropQuestionnaireMp4, poster: joydropQuestionnairePoster, caption: "After. The questionnaire: a few quick questions that answer the why before you sign up." },
+          { frame: iphoneFrame, mp4: joydropTourMp4, poster: joydropTourPoster, caption: "After. The app tour: coach marks for the feed, sending a Joydrop, and joining a community." },
         ],
       },
       {
@@ -101,6 +127,20 @@ export const projects = [
           "Public and private groups",
           "Invites",
           "Join requests the group can manage itself",
+        ],
+        // before (old web UI) then after (new iOS UI), each full width with a caption
+        // TODO: rewrite captions in your words
+        media: [
+          {
+            src: joydropCommunitiesBefore,
+            inset: "w-[94%] h-[90%]",
+            caption: "Before. The first version of Communities: browse your groups and recommended ones, create a community with an icon, description and public or private vibe, accept the guidelines to send it for admin approval, then see it in My Communities. Deleting asks for confirmation and spells out what gets removed.",
+          },
+          {
+            src: joydropCommunitiesAfter,
+            inset: "w-[90%] h-[88%]",
+            caption: "After. The same flow on iOS in the new brand. An empty state that points you to Discover Communities, a create sheet with default icons and a 20-character name limit, communities as cards with Send joydrop right on them, and a delete sheet that also covers pending invites.",
+          },
         ],
       },
       {
