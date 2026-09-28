@@ -230,6 +230,38 @@ const Team = ({ people }) => (
   </div>
 );
 
+// Brand system panel: type specimen on top, color swatches below (used on Joydrop)
+const BrandPanel = ({ colors = [], display, mono }) => (
+  <motion.figure {...rise()} className="my-12 md:my-20 bg-[#1a1a1a] p-6 md:p-12">
+    <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-end">
+      <div>
+        <p className="font-mono text-[11px] md:text-xs uppercase tracking-wider text-neutral-500">Fraunces · Display</p>
+        <p className="mt-3 text-[#F5F0E8] leading-[0.95] tracking-[-0.02em] text-5xl md:text-7xl"
+           style={{ fontFamily: "'Fraunces', serif", fontWeight: 900 }}>
+          {display}
+        </p>
+      </div>
+      <div>
+        <p className="font-mono text-[11px] md:text-xs uppercase tracking-wider text-neutral-500">Space Mono · System</p>
+        <p className="mt-3 text-[#C9B99A] text-base md:text-lg tracking-[0.12em]" style={{ fontFamily: "'Space Mono', monospace" }}>
+          {mono}
+        </p>
+      </div>
+    </div>
+    <ul className="mt-10 md:mt-14 grid grid-cols-3 md:grid-cols-6 gap-3 md:gap-4">
+      {colors.map((c) => (
+        <li key={c.hex}>
+          {/* thin ring so the near-black swatches still read against the grey panel */}
+          <div className="aspect-square ring-1 ring-white/10" style={{ backgroundColor: c.hex }} />
+          <p className="mt-3 text-sm md:text-base text-white">{c.name}</p>
+          <p className="font-mono text-[11px] md:text-xs uppercase tracking-wider text-neutral-500">{c.hex}</p>
+          {c.note && <p className="mt-1 text-xs md:text-sm font-light text-neutral-500">{c.note}</p>}
+        </li>
+      ))}
+    </ul>
+  </motion.figure>
+);
+
 // Mono uppercase label column, Grandstand-style
 const MetaRow = ({ label, children }) => (
   <div className="grid grid-cols-[96px_1fr] md:grid-cols-[120px_1fr] gap-4 items-start">
@@ -332,6 +364,7 @@ export default function CaseStudy({ slug }) {
           {(s.images || s.image || s.video) && (
             <Media items={s.images || s.video || s.image} caption={s.caption} inset={s.inset} alt={s.heading || project.name} />
           )}
+          {s.brand && <BrandPanel {...s.brand} />}
           {s.media?.map((m, n) =>
             m.label ? (
               <FigureRow key={n} label={m.label} text={m.text} src={m.src} inset={m.inset} />

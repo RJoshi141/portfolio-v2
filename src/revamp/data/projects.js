@@ -19,6 +19,8 @@ import utterPhoneInbox from "../../assets/case-studies/utter/iphone-inbox.png";
 import utterWatchIntro from "../../assets/case-studies/utter/watch-intro-3up.png";
 import utterWatchRecordReview from "../../assets/case-studies/utter/watch-final-record-review.png";
 import utterWatchSyncConfirm from "../../assets/case-studies/utter/watch-final-sync-confirm.png";
+import joydropLoginBefore from "../../assets/case-studies/joydrop/login-before-web.png";
+import joydropLoginAfter from "../../assets/case-studies/joydrop/login-after-ios.png";
 import iphoneFrame from "../../assets/case-studies/iphone-frame.png";
 import utterPhoneMp4 from "../../assets/case-studies/utter/iphone-demo.mp4";
 import utterPhoneWebm from "../../assets/case-studies/utter/iphone-demo.webm";
@@ -37,7 +39,8 @@ export const projects = [
     name: "Joydrop",
     hidden: true,
     tags: ["iOS", "Web"],
-    summary: "Taking Joydrop from a web product to a shipped iOS app, redesigning the UI along the way, and building Communities end to end.",
+    tagline: "Joy, uncontained.",
+    summary: "Joydrop helps people recognize each other and keep those moments. I took it from a web product to a shipped iOS app, redesigned the UI along the way, and built Communities end to end.",
     // teammates: add `photo: someImport` to swap initials for a headshot
     team: [
       { name: "Dina-Marie Lam", linkedin: "https://www.linkedin.com/in/dina-marie-lam/" },
@@ -53,7 +56,10 @@ export const projects = [
     sections: [
       {
         heading: "The product",
-        body: "[What Joydrop is and who it's for, in a line or two.]",
+        body: [
+          "A friend shows up for you. A coworker handles something hard. You notice, you mean to say something, and the moment passes. Joydrop catches it: find the person, say the thing, send. It takes about 30 seconds, and they keep it for good.",
+          "It's not a feed and it's not a group chat, so nothing competes with the message. Communities give a team, club, or friend group a shared record of who showed up and how.",
+        ],
       },
       {
         heading: "Getting to iOS",
@@ -64,7 +70,29 @@ export const projects = [
       },
       {
         heading: "Redesigning the UI",
-        body: "[What the app looked like before, what felt off, and what you changed. Before/after screens work well here.]",
+        // TODO: rewrite in your words
+        body: [
+          "The first version was the web app squeezed onto a phone: a white screen, a stock blue button, and a generic welcome that could belong to any product.",
+          "For iOS I rebuilt it on the new brand system: a warm near-black canvas, Fraunces for headlines, Space Mono for labels and inputs, and Volt, a single electric violet, as the only accent. The copy follows the brand voice too. \"Seen starts here.\" says what the app is for before you've even logged in.",
+        ],
+        // brand swatches + type specimen, rendered under the before/after
+        brand: {
+          colors: [
+            { name: "Dark", hex: "#0D0B09", note: "Background" },
+            { name: "Ink", hex: "#1C1612", note: "Surfaces" },
+            { name: "Volt", hex: "#7B2FFF", note: "The only accent" },
+            { name: "White", hex: "#F5F0E8", note: "Warm white" },
+            { name: "Grain", hex: "#C9B99A", note: "Metadata" },
+            { name: "Ash", hex: "#8A7F74", note: "Body on dark" },
+          ],
+          display: "Seen starts here.",
+          mono: "EMAIL · PASSWORD · LOG IN",
+        },
+        // before/after side by side, each on its own grey panel
+        images: [
+          { src: joydropLoginBefore, inset: "w-[70%] h-[86%]", caption: "Before. The web app's login, viewed on a phone." },
+          { src: joydropLoginAfter, inset: "w-[70%] h-[86%]", caption: "After. The native iOS login." },
+        ],
       },
       {
         heading: "Shipping Communities",
