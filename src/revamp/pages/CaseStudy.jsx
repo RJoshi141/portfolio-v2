@@ -200,6 +200,120 @@ const PhoneDemo = ({ phones, ...single }) => {
   );
 };
 
+// Landscape iPhone with a looping recording. The recordings have their own Dynamic Island baked in,
+// so the screen box is nudged left to sit exactly under the frame's island (measured off the PNG).
+const LandscapePhone = ({ frame, mp4, poster, className = "" }) => (
+  <div className={`relative aspect-[895/438] ${className}`}>
+    <video
+      autoPlay muted loop playsInline poster={poster}
+      // rounded to the screen's corner radius so the square video corners don't poke past the bezel
+      className="absolute object-cover bg-black rounded-[7%/15%]"
+      style={{ left: "2.46%", top: "5.48%", width: "94.97%", height: "89.27%" }}
+    >
+      <source src={mp4} type="video/mp4" />
+    </video>
+    <img src={frame} alt="" className="absolute inset-0 w-full h-full" />
+  </div>
+);
+
+// One big landscape phone on a wide panel, or several in their own boxes side by side (with captions)
+const LandscapeDemo = ({ phones, ...single }) => {
+  if (!phones) {
+    return (
+      <motion.figure {...rise()} className="my-12 md:my-20">
+        <Zoomable ratio={16 / 9} className="aspect-[4/3] md:aspect-[16/9]">
+          <LandscapePhone {...single} className="w-[78%]" />
+        </Zoomable>
+      </motion.figure>
+    );
+  }
+  return (
+    <motion.div {...rise()} className={`my-12 md:my-20 grid gap-6 md:gap-8 ${phones.length === 3 ? "md:grid-cols-3" : "md:grid-cols-2"}`}>
+      {phones.map((p, i) => (
+        <figure key={i}>
+          <Zoomable ratio={16 / 10} className="aspect-[16/10]">
+            <LandscapePhone {...p} className="w-[88%]" />
+          </Zoomable>
+          {p.caption && (
+            <figcaption className="mt-4 md:mt-5 text-sm md:text-base font-light leading-[1.6] text-neutral-400">{p.caption}</figcaption>
+          )}
+        </figure>
+      ))}
+    </motion.div>
+  );
+};
+
+// Hand-drawn sprite sheets: each plays live at the game's own frame timing, with the full strip underneath.
+// image-rendering: pixelated keeps the 48px cells crisp when scaled up (same idea as .nearest filtering in SpriteKit).
+// `hold` (ms) freezes on the last frame before looping: the play runs through `play`% of the cycle,
+// then sits on the final frame for the rest (per-sprite keyframes, since the split differs per sheet).
+const SpriteSheet = ({ name, src, frames, ms, note, hold = 0 }) => {
+  const play = frames * ms;
+  const total = play + hold;
+  const id = `sprite-${name.toLowerCase().replace(/[^a-z0-9]/g, "")}`;
+  const anim = hold
+    ? `${id} ${total}ms linear infinite`
+    : `sprite-play ${play}ms steps(${frames}, jump-none) infinite`;
+  return (
+  <figure>
+    {hold > 0 && (
+      <style>{`@keyframes ${id} {
+        0% { background-position-x: 0%; animation-timing-function: steps(${frames}, jump-none); }
+        ${((play / total) * 100).toFixed(2)}% { background-position-x: 100%; }
+        100% { background-position-x: 100%; }
+      }`}</style>
+    )}
+    <div className="aspect-[4/3] bg-[#1a1a1a] flex flex-col items-center justify-center gap-[8%]">
+      <div
+        role="img"
+        aria-label={`${name} animation`}
+        className="w-[38%] aspect-square"
+        style={{
+          backgroundImage: `url(${src})`,
+          backgroundSize: `${frames * 100}% 100%`,
+          backgroundRepeat: "no-repeat",
+          imageRendering: "pixelated",
+          animation: anim,
+        }}
+      />
+      <img src={src} alt={`${name} sprite sheet`} className="w-[86%] h-auto" style={{ imageRendering: "pixelated" }} />
+    </div>
+    <figcaption className="mt-4 md:mt-5">
+      <p className="text-base md:text-lg text-white">{name}</p>
+      <p className="mt-1 font-mono text-xs md:text-sm uppercase tracking-wider text-neutral-500">
+        {frames} frames · {ms}ms per frame
+      </p>
+      {note && <p className="mt-2 text-sm md:text-base font-light leading-[1.6] text-neutral-400">{note}</p>}
+    </figcaption>
+  </figure>
+  );
+};
+
+// Pixel-art pieces on one grey panel, scaled up crisp, each with a label and a short spec line
+const AssetShelf = ({ items }) => (
+  <motion.figure {...rise()} className="my-12 md:my-20 bg-[#1a1a1a] px-6 md:px-12 py-10 md:py-14">
+    {/* centered row: fixed-width slots so short sets (like 3 clouds) sit in the middle */}
+    <ul className="flex flex-wrap justify-center gap-y-10">
+      {items.map((a) => (
+        <li key={a.label} className="w-1/2 md:w-1/5 flex flex-col items-center text-center">
+          {/* same integer scale for every piece, so relative sizes stay true and pixels stay square */}
+          <div className="h-16 md:h-24 flex items-center justify-center">
+            <img src={a.src} alt={a.label} className="[zoom:3] md:[zoom:4]" style={{ imageRendering: "pixelated" }} />
+          </div>
+          <p className="mt-4 text-sm md:text-base text-white">{a.label}</p>
+          {a.note && <p className="mt-1 font-mono text-[11px] md:text-xs uppercase tracking-wider text-neutral-500">{a.note}</p>}
+        </li>
+      ))}
+    </ul>
+  </motion.figure>
+);
+
+const Sprites = ({ sheets }) => (
+  <motion.div {...rise()} className="my-12 md:my-20 grid md:grid-cols-2 gap-x-6 md:gap-x-8 gap-y-10 md:gap-y-14">
+    {sheets.map((s) => <SpriteSheet key={s.name} {...s} />)}
+  </motion.div>
+);
+
 // Compact figure row: label + note on the left, sketch on the right, panel sized to the
 // sketch's wide shape so it doesn't eat vertical space.
 const FigureRow = ({ label, text, src, inset = "w-[92%] h-[86%]" }) => (
@@ -392,7 +506,9 @@ export default function CaseStudy({ slug }) {
       )}
 
       {/* Hero media */}
-      {project.phoneDemo ? (
+      {project.landscapeDemo ? (
+        <LandscapeDemo {...project.landscapeDemo} />
+      ) : project.phoneDemo ? (
         <PhoneDemo {...project.phoneDemo} />
       ) : project.demo ? (
         <WatchDemo {...project.demo} />
@@ -419,6 +535,10 @@ export default function CaseStudy({ slug }) {
           )}
           {s.brand && <BrandPanel {...s.brand} />}
           {s.phones && <PhoneDemo phones={s.phones} />}
+          {s.landscapes && <LandscapeDemo phones={s.landscapes} />}
+          {s.sprites && <Sprites sheets={s.sprites} />}
+          {s.assets && <AssetShelf items={s.assets} />}
+          {s.steps?.map((st, n) => <CodeStep key={st.label} n={n + 1} {...st} />)}
           {s.media?.map((m, n) =>
             m.label ? (
               <FigureRow key={n} label={m.label} text={m.text} src={m.src} inset={m.inset} />

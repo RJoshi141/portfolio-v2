@@ -42,3 +42,11 @@ html,
 body {
   scroll-behavior: auto !important;
 }
+
+
+/* Sprite sheet playback: one cell shown, background slides frame by frame.
+   background-size is (frames x 100%), so 0%..100% covers first..last frame; steps(n, jump-none) lands on each. */
+@keyframes sprite-play {
+  from { background-position-x: 0%; }
+  to { background-position-x: 100%; }
+}

@@ -18,6 +18,20 @@ export default function ProjectCard({ project, size = "md", index = 0 }) {
                     ${lg ? "aspect-[4/3] md:aspect-[16/10]" : "aspect-[4/3]"}`}
         style={{ backgroundColor: project.tint }}
       >
+        {project.cardDemo ? (
+          // laptop frame with a looping recording in its display; screen box measured off macbook-frame.png
+          <div className={`relative aspect-[1400/846] ${lg ? "w-[80%]" : "w-[84%]"}`}>
+            <video
+              autoPlay muted loop playsInline
+              poster={project.cardDemo.poster}
+              className="absolute object-cover bg-black"
+              style={{ left: "10.8%", top: "2.8%", width: "78.5%", height: "84.4%" }}
+            >
+              <source src={project.cardDemo.mp4} type="video/mp4" />
+            </video>
+            <img src={project.cardDemo.frame} alt="" className="absolute inset-0 w-full h-full" />
+          </div>
+        ) : (
         <img
           src={project.frame}
           alt={`${project.name} preview`}
@@ -25,6 +39,7 @@ export default function ProjectCard({ project, size = "md", index = 0 }) {
           // rail cards stay still on hover (the arrow is the cue); grid cards keep the gentle zoom
           className={`object-contain ${lg ? "w-[78%] h-[78%]" : "w-[80%] h-[80%] transition-transform duration-700 ease-out group-hover:scale-[1.04]"}`}
         />
+        )}
         {/* Gabriel-style round arrow that fades in bottom-right on hover */}
         {lg && (
           <span className="absolute right-5 bottom-5 md:right-8 md:bottom-8 w-12 h-12 md:w-14 md:h-14 rounded-full bg-white text-black flex items-center justify-center opacity-0 translate-y-1 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">

@@ -30,6 +30,38 @@ import joydropQuestionnairePoster from "../../assets/case-studies/joydrop/onboar
 import joydropTourMp4 from "../../assets/case-studies/joydrop/onboarding-tour.mp4";
 import joydropTourPoster from "../../assets/case-studies/joydrop/onboarding-tour-poster.jpg";
 import joydropOnboardingBefore from "../../assets/case-studies/joydrop/onboarding-before.png";
+import macbookFrame from "../../assets/case-studies/macbook-frame.png";
+import joydropWebMp4 from "../../assets/case-studies/joydrop/web-demo.mp4";
+import joydropWebPoster from "../../assets/case-studies/joydrop/web-demo-poster.jpg";
+import iphoneLandscapeFrame from "../../assets/case-studies/iphone-landscape-frame.png";
+import zoomiesGameplayMp4 from "../../assets/case-studies/zoomies/gameplay.mp4";
+import zoomiesGameplayPoster from "../../assets/case-studies/zoomies/gameplay-poster.jpg";
+import zoomiesStartMp4 from "../../assets/case-studies/zoomies/start.mp4";
+import zoomiesStartPoster from "../../assets/case-studies/zoomies/start-poster.jpg";
+import zoomiesSplashMp4 from "../../assets/case-studies/zoomies/splash.mp4";
+import zoomiesSplashPoster from "../../assets/case-studies/zoomies/splash-poster.jpg";
+import zoomiesMenuMp4 from "../../assets/case-studies/zoomies/menu.mp4";
+import zoomiesMenuPoster from "../../assets/case-studies/zoomies/menu-poster.jpg";
+import zoomiesSpriteIdle from "../../assets/case-studies/zoomies/sprite-idle.png";
+import zoomiesSpriteRun from "../../assets/case-studies/zoomies/sprite-run.png";
+import zoomiesSpriteBark from "../../assets/case-studies/zoomies/sprite-bark.png";
+import zoomiesSpriteHurt from "../../assets/case-studies/zoomies/sprite-hurt.png";
+import zoomiesSpriteJump from "../../assets/case-studies/zoomies/sprite-jump.png";
+import zoomiesSpriteDie from "../../assets/case-studies/zoomies/sprite-die.png";
+import zoomiesSpriteSit from "../../assets/case-studies/zoomies/sprite-sit.png";
+import zArtCloud1 from "../../assets/case-studies/zoomies/art/cloud1.png";
+import zArtCloud2 from "../../assets/case-studies/zoomies/art/cloud2.png";
+import zArtCloud3 from "../../assets/case-studies/zoomies/art/cloud3.png";
+import zArtLog from "../../assets/case-studies/zoomies/art/wooden-log.png";
+import zArtBone from "../../assets/case-studies/zoomies/art/dog-bone.png";
+import zArtBoneYellow from "../../assets/case-studies/zoomies/art/dog-bone-yellow.png";
+import zArtHeart from "../../assets/case-studies/zoomies/art/heart.png";
+import zArtSkull from "../../assets/case-studies/zoomies/art/health-skull.png";
+import zArtResume from "../../assets/case-studies/zoomies/art/resume-button.png";
+import zArtRules from "../../assets/case-studies/zoomies/art/rules-button.png";
+import zArtCredits from "../../assets/case-studies/zoomies/art/credits-button.png";
+import zArtExit from "../../assets/case-studies/zoomies/art/exit-button.png";
+import zArtMenu from "../../assets/case-studies/zoomies/art/menu-button.png";
 import iphoneFrame from "../../assets/case-studies/iphone-frame.png";
 import utterPhoneMp4 from "../../assets/case-studies/utter/iphone-demo.mp4";
 import utterPhoneWebm from "../../assets/case-studies/utter/iphone-demo.webm";
@@ -42,12 +74,15 @@ import lumonFrame from "../../assets/project-frames/lumon-imac.png";
 
 export const projects = [
   {
-    // Work case study, linked from the Joydrop role on About (hidden from the Work list)
+    // Work case study; first card in the home rail (also linked from the Joydrop role on About)
     // TODO: add screenshots (image/images on any section) and fill the bracketed bits
     slug: "joydrop",
     name: "Joydrop",
-    hidden: true,
+    featured: true,
     tags: ["iOS", "Web"],
+    tint: "#1a1a1a",
+    // home rail card: web app recording playing inside a MacBook
+    cardDemo: { frame: macbookFrame, mp4: joydropWebMp4, poster: joydropWebPoster },
     tagline: "Joy, uncontained.",
     summary: "Joydrop helps people recognize each other and keep those moments. I took it from a web product to a shipped iOS app, redesigned the UI along the way, and built Communities end to end.",
     // teammates: add `photo: someImport` to swap initials for a headshot
@@ -354,6 +389,8 @@ task = recognizer.recognitionTask(with: request) { result, error in
     platform: "iOS",
     year: "", // TODO
     stack: ["Swift", "SpriteKit", "Xcode"],
+    // gameplay loop in a landscape iPhone at the top of the case study
+    landscapeDemo: { frame: iphoneLandscapeFrame, mp4: zoomiesGameplayMp4, poster: zoomiesGameplayPoster },
     sections: [
       {
         heading: "Why I made it",
@@ -365,6 +402,143 @@ task = recognizer.recognitionTask(with: request) { result, error in
           "Hand-drawn pixel sprites packed into texture atlases",
           "Physics and collisions using SpriteKit category bit masks",
           "Endless spawning, scoring, and custom game UI",
+        ],
+        // the rest of the game's screens, each in its own box
+        // TODO: rewrite captions in your words
+        landscapes: [
+          { frame: iphoneLandscapeFrame, mp4: zoomiesSplashMp4, poster: zoomiesSplashPoster, caption: "Splash. The pixel dog and wordmark on launch." },
+          { frame: iphoneLandscapeFrame, mp4: zoomiesStartMp4, poster: zoomiesStartPoster, caption: "Tap to start. Five hearts, a distance counter, and a bone to grab back a heart." },
+          { frame: iphoneLandscapeFrame, mp4: zoomiesMenuMp4, poster: zoomiesMenuPoster, caption: "Menu and rules. Resume, rules, credits, and exit, all in custom pixel buttons." },
+        ],
+      },
+      {
+        heading: "The sprites",
+        // TODO: rewrite in your words
+        body: [
+          "Every frame of the dog is drawn by hand on a 48 by 48 pixel grid, one strip per action.",
+          "In the game, each strip is sliced into SpriteKit textures at runtime and played with its own timing. Filtering is set to nearest so the pixels stay sharp at any size, the same way they play below.",
+        ],
+        // frame counts and timings match GameScene.swift
+        sprites: [
+          { name: "Idle", src: zoomiesSpriteIdle, frames: 16, ms: 120, note: "Waiting on the start screen, tail going." },
+          { name: "Run", src: zoomiesSpriteRun, frames: 8, ms: 65, note: "The main loop, fast enough to feel like a sprint." },
+          { name: "Jump", src: zoomiesSpriteJump, frames: 7, ms: 40, note: "A quick leap over the log while the dog arcs up and back down." },
+          { name: "Bark", src: zoomiesSpriteBark, frames: 13, ms: 120, note: "Plays beside the Zoomies title on the splash screen." },
+          { name: "Hurt", src: zoomiesSpriteHurt, frames: 4, ms: 50, note: "Flashes red when the dog hits a log and loses a heart." },
+          { name: "Die", src: zoomiesSpriteDie, frames: 8, ms: 120, hold: 1000, note: "Out of hearts: a stumble and a flop before the game over screen." },
+          { name: "Sit", src: zoomiesSpriteSit, frames: 9, ms: 90, note: "Keeps you company on the credits screen." },
+        ],
+      },
+      {
+        heading: "The world",
+        // TODO: rewrite in your words
+        body: [
+          "The background is deliberately plain: one flat sky blue, a thick black road line, and nothing else fighting the dog for attention.",
+          "Clouds give the scene depth without clutter. There are three hand-drawn shapes, and the bigger they are, the further back they sit. Each one drifts across in 40 to 60 seconds with a slow 4px bob, so the sky feels alive while the road keeps its speed.",
+        ],
+        assets: [
+          { src: zArtCloud1, label: "Cloud 1", note: "Front · 1.8x" },
+          { src: zArtCloud2, label: "Cloud 2", note: "Middle · 2.3x" },
+          { src: zArtCloud3, label: "Cloud 3", note: "Back · 2.8x" },
+        ],
+      },
+      {
+        heading: "Obstacles and pickups",
+        // TODO: rewrite in your words
+        body: [
+          "There is one thing to avoid and one thing to chase. A new log rolls in every 3 to 4 seconds, and each one crosses the screen at its own random speed, so the rhythm never settles into a pattern you can tap along to.",
+          "Bones float at a fixed height above the road, so the only way to grab one is to jump for it. Each bone flashes yellow and gives back a heart, up to a max of five. Lose them all and the health bar turns into a skull.",
+        ],
+        assets: [
+          { src: zArtLog, label: "Log", note: "Obstacle · −1 heart" },
+          { src: zArtBone, label: "Bone", note: "Pickup · +1 heart" },
+          { src: zArtBoneYellow, label: "Bone, collected", note: "2 quick blinks" },
+          { src: zArtHeart, label: "Heart", note: "Up to 5" },
+          { src: zArtSkull, label: "Skull", note: "Out of hearts" },
+        ],
+      },
+      {
+        heading: "Physics",
+        // TODO: rewrite in your words
+        body: "Zoomies doesn't simulate much, on purpose. Nothing actually collides or falls. SpriteKit's physics engine is only there to report contacts, and the dog's movement is choreographed so every jump feels the same.",
+        steps: [
+          {
+            label: "Contacts, not collisions",
+            text: "Each body gets a category bit: dog 1, logs 2, bones 4. The dog listens for contact with 2 and 4 but has a collision mask of 0, so nothing ever shoves it around.",
+            file: "GameScene.swift",
+            code: String.raw`dog.physicsBody?.affectedByGravity = false
+dog.physicsBody?.categoryBitMask = 1
+dog.physicsBody?.contactTestBitMask = 2 | 4   // logs + bones
+dog.physicsBody?.collisionBitMask = 0`,
+          },
+          {
+            label: "Forgiving hitboxes",
+            text: "Hitboxes are much smaller than the art: about a third of the dog, and roughly 60% of a log. A near miss that looks like a miss counts as a miss.",
+            file: "GameScene.swift",
+            code: String.raw`dog.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: dog.size.width / 2.8,
+                                                    height: dog.size.height / 3))
+
+log.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: log.size.width / 1.6,
+                                                    height: log.size.height / 1.8))`,
+          },
+          {
+            label: "A scripted jump",
+            text: "Instead of gravity, the jump is an arc: up 110px in half a second, back down in 0.3s, with the 7-frame jump sprite playing on top. Same height, same timing, every tap.",
+            file: "GameScene.swift",
+            code: String.raw`let jumpAnimation = SKAction.animate(with: jumpFrames, timePerFrame: 0.04)
+let moveUp = SKAction.moveBy(x: 0, y: 110, duration: 0.5)
+let moveDown = SKAction.moveBy(x: 0, y: -105, duration: 0.3)
+
+let jumpMotion = SKAction.sequence([moveUp, moveDown])
+let jumpGroup = SKAction.group([jumpAnimation, jumpMotion])`,
+          },
+          {
+            label: "One place to decide",
+            text: "Every contact lands in didBegin. It finds which body is the dog, then either hurts it and clears the log, or collects the bone.",
+            file: "GameScene.swift",
+            code: String.raw`func didBegin(_ contact: SKPhysicsContact) {
+    let otherBody: SKPhysicsBody
+    if contact.bodyA.categoryBitMask == 1 {
+        otherBody = contact.bodyB
+    } else if contact.bodyB.categoryBitMask == 1 {
+        otherBody = contact.bodyA
+    } else {
+        return
+    }
+
+    if otherBody.categoryBitMask == 2 {          // log
+        startHurt()
+        otherBody.node?.removeFromParent()
+    } else if otherBody.categoryBitMask == 4 {   // bone
+        if let node = otherBody.node { handleBoneCollected(node) }
+    }
+}`,
+          },
+        ],
+      },
+      {
+        heading: "Color and restraint",
+        // TODO: rewrite in your words, especially the why
+        body: [
+          "Arcade runners live or die on readability. You have a split second to spot a log, so the palette does the sorting for you: a cool, flat sky; a warm brown dog; darker browns and a hint of green on the logs; red only for health; and yellow only when something good happens.",
+          "Keeping the game small was the point. One tap to jump, one thing to dodge, one thing to collect. Every extra rule would have been one more thing to explain on a phone held sideways.",
+        ],
+        brand: {
+          colors: [
+            { name: "Sky", hex: "#87CFFA", note: "Flat background" },
+            { name: "Road", hex: "#000000", note: "Ground line" },
+            { name: "Coat", hex: "#875E48", note: "The dog" },
+            { name: "Log", hex: "#6B421E", note: "Obstacles" },
+            { name: "Heart", hex: "#CC121C", note: "Health only" },
+            { name: "Glow", hex: "#FFD600", note: "Rewards only" },
+          ],
+        },
+        assets: [
+          { src: zArtMenu, label: "Menu" },
+          { src: zArtResume, label: "Resume" },
+          { src: zArtRules, label: "Rules" },
+          { src: zArtCredits, label: "Credits" },
+          { src: zArtExit, label: "Exit" },
         ],
       },
     ],
