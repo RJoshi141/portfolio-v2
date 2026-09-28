@@ -38,6 +38,12 @@ export const projects = [
     hidden: true,
     tags: ["iOS", "Web"],
     summary: "Taking Joydrop from a web product to a shipped iOS app, redesigning the UI along the way, and building Communities end to end.",
+    // teammates: add `photo: someImport` to swap initials for a headshot
+    team: [
+      { name: "Dina-Marie Lam", linkedin: "https://www.linkedin.com/in/dina-marie-lam/" },
+      { name: "Lalitha Pullabhatla", linkedin: "https://www.linkedin.com/in/lalithapullabhatla/" },
+      { name: "Rachandeep Kaur", linkedin: "https://www.linkedin.com/in/rachandeep-kaur/" },
+    ],
     role: "Founding Product Engineer",
     platform: "iOS, Web",
     year: "2025 – Now",

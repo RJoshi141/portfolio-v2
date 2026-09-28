@@ -1,6 +1,6 @@
 // About page (#/about): big title, intro, then each role with what I actually did there
 import { motion } from "framer-motion";
-import { ArrowRight, ArrowUpRight } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { experience } from "../data/content";
 
 const ease = [0.22, 1, 0.36, 1];
@@ -35,6 +35,15 @@ const Role = ({ company, title, when, where, link, caseStudy, bullets = [] }) =>
       </a>
       <p className="mt-2 font-mono text-xs md:text-sm uppercase tracking-wider text-neutral-500">{when}</p>
       {where && <p className="mt-1 font-mono text-xs md:text-sm uppercase tracking-wider text-neutral-600">{where}</p>}
+      {/* same pill as the contact form's Send button */}
+      {caseStudy && (
+        <a
+          href={caseStudy}
+          className="mt-6 inline-block px-7 py-3 rounded-full border border-neutral-700 text-base md:text-lg text-white hover:bg-white hover:text-black transition-colors"
+        >
+          View work
+        </a>
+      )}
     </div>
     <div>
       <p className="text-lg md:text-[1.35rem] text-neutral-200">{title}</p>
@@ -46,15 +55,6 @@ const Role = ({ company, title, when, where, link, caseStudy, bullets = [] }) =>
           </li>
         ))}
       </ul>
-      {caseStudy && (
-        <a
-          href={caseStudy}
-          className="group mt-7 inline-flex items-center gap-2 text-base md:text-lg text-white"
-        >
-          View work
-          <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-        </a>
-      )}
     </div>
   </motion.li>
 );

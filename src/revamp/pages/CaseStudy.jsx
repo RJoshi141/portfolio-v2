@@ -197,6 +197,39 @@ const CodeStep = ({ n, label, text, file, code }) => (
   </motion.div>
 );
 
+// Team avatars (Gabriel's Twinsi page): photo or initials, name tooltip on hover, links to LinkedIn
+// first + last name initials ("Dina-Marie Lam" -> "DL")
+const initials = (name) => {
+  const w = name.trim().split(/\s+/);
+  return (w[0][0] + (w.length > 1 ? w[w.length - 1][0] : "")).toUpperCase();
+};
+const Team = ({ people }) => (
+  <div className="flex flex-wrap gap-2.5">
+    {people.map((p) => (
+      <a
+        key={p.name}
+        href={p.linkedin}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={`${p.name} on LinkedIn`}
+        className="group relative block w-10 h-10 md:w-11 md:h-11 rounded-full"
+      >
+        {p.photo ? (
+          <img src={p.photo} alt={p.name} className="w-full h-full rounded-full object-cover" />
+        ) : (
+          <span className="w-full h-full rounded-full bg-neutral-800 text-neutral-200 flex items-center justify-center text-xs md:text-sm font-medium tracking-wide">
+            {initials(p.name)}
+          </span>
+        )}
+        {/* tooltip */}
+        <span className="pointer-events-none absolute left-1/2 bottom-full mb-2.5 -translate-x-1/2 translate-y-1 whitespace-nowrap rounded-md bg-white px-2.5 py-1 text-sm text-black opacity-0 transition-all duration-200 group-hover:opacity-100 group-hover:translate-y-0 group-focus-visible:opacity-100">
+          {p.name}
+        </span>
+      </a>
+    ))}
+  </div>
+);
+
 // Mono uppercase label column, Grandstand-style
 const MetaRow = ({ label, children }) => (
   <div className="grid grid-cols-[96px_1fr] md:grid-cols-[120px_1fr] gap-4 items-start">
@@ -245,6 +278,7 @@ export default function CaseStudy({ slug }) {
       >
         <p className="text-xl md:text-[1.7rem] tracking-[-0.01em] leading-[1.45] text-neutral-200">{project.summary}</p>
         <dl className="space-y-6">
+          {project.team?.length > 0 && <MetaRow label="Team"><Team people={project.team} /></MetaRow>}
           {project.role && <MetaRow label="Role">{project.role}</MetaRow>}
           {project.platform && <MetaRow label="Platform">{project.platform}</MetaRow>}
           <MetaRow label="Stack">
