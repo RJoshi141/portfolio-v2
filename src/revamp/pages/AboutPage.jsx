@@ -2,6 +2,14 @@
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { experience } from "../data/content";
+// raw markup so the icon's fill="currentColor" matches the location text color
+import sfIcon from "../../assets/city-sf.svg?raw";
+import singaporeIcon from "../../assets/city-singapore.svg?raw";
+import cincinnatiIcon from "../../assets/city-cincinnati.svg?raw";
+import georgetownIcon from "../../assets/city-georgetown-icon.svg?raw"; // cleaned copy of city-georgetown.svg
+
+// landmark line icons shown before each role's location
+const ICONS = { sf: sfIcon, singapore: singaporeIcon, cincinnati: cincinnatiIcon, kentucky: georgetownIcon };
 
 const ease = [0.22, 1, 0.36, 1];
 const fadeUp = (delay = 0) => ({
@@ -21,7 +29,7 @@ const SectionLabel = ({ children }) => (
 );
 
 // One role: company, dates and place on the left; title and bullets on the right
-const Role = ({ company, title, when, where, link, caseStudy, bullets = [] }) => (
+const Role = ({ company, title, when, where, whereIcon, link, caseStudy, bullets = [] }) => (
   <motion.li {...rise} className="py-10 md:py-14 border-t border-neutral-900 grid md:grid-cols-[minmax(0,1fr)_minmax(0,1.9fr)] gap-4 md:gap-16">
     <div>
       <a
@@ -34,7 +42,18 @@ const Role = ({ company, title, when, where, link, caseStudy, bullets = [] }) =>
         <ArrowUpRight className="w-5 h-5 text-neutral-600 group-hover:text-white transition-colors" />
       </a>
       <p className="mt-2 font-mono text-xs md:text-sm uppercase tracking-wider text-neutral-500">{when}</p>
-      {where && <p className="mt-1 font-mono text-xs md:text-sm uppercase tracking-wider text-neutral-600">{where}</p>}
+      {where && (
+        <p className="mt-1 flex items-center gap-2 font-mono text-xs md:text-sm uppercase tracking-wider text-neutral-600">
+          {whereIcon && ICONS[whereIcon] && (
+            <span
+              aria-hidden
+              className="inline-flex h-6 md:h-7 shrink-0 [&>svg]:h-full [&>svg]:w-auto"
+              dangerouslySetInnerHTML={{ __html: ICONS[whereIcon] }}
+            />
+          )}
+          {where}
+        </p>
+      )}
       {/* same pill as the contact form's Send button */}
       {caseStudy && (
         <a

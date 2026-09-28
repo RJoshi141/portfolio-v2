@@ -1,8 +1,8 @@
 // Case study: giant title + intro/meta split (Gabriel's Grandstand), then
 // headed story sections with full-width or side-by-side media (Blake's Randori).
 import { motion } from "framer-motion";
-import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
-import { projects, findProject } from "../data/projects";
+import { ArrowUpRight } from "lucide-react";
+import { findProject } from "../data/projects";
 import { LightboxProvider, Zoomable } from "../components/Lightbox";
 
 const ease = [0.22, 1, 0.36, 1];
@@ -249,11 +249,6 @@ export default function CaseStudy({ slug }) {
     );
   }
 
-  // hidden case studies (e.g. Joydrop, linked from About) aren't in the Work list, so step through listed ones
-  const listed = projects.filter((p) => !p.hidden);
-  const i = listed.indexOf(project);
-  const prev = listed[(i - 1 + listed.length) % listed.length];
-  const next = listed[(i + 1) % listed.length];
 
   return (
     <LightboxProvider>
@@ -365,16 +360,6 @@ export default function CaseStudy({ slug }) {
         <Media key={n} items={img} alt={`${project.name} ${n + 1}`} caption={String(n + 1).padStart(2, "0")} />
       ))}
 
-      <nav className="mt-24 grid grid-cols-2 border-t border-neutral-900">
-        <a href={`#/work/${prev.slug}`} className="group py-12 pr-4">
-          <p className="flex items-center gap-2 text-sm text-neutral-500"><ArrowLeft className="w-4 h-4" /> Previous</p>
-          <p className="mt-3 text-2xl md:text-5xl tracking-tight text-white group-hover:text-neutral-400 transition-colors">{prev.name}</p>
-        </a>
-        <a href={`#/work/${next.slug}`} className="group py-12 pl-4 text-right border-l border-neutral-900">
-          <p className="flex items-center justify-end gap-2 text-sm text-neutral-500">Next <ArrowRight className="w-4 h-4" /></p>
-          <p className="mt-3 text-2xl md:text-5xl tracking-tight text-white group-hover:text-neutral-400 transition-colors">{next.name}</p>
-        </a>
-      </nav>
     </article>
     </LightboxProvider>
   );

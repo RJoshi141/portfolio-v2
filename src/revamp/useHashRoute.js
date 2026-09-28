@@ -11,8 +11,10 @@ export default function useHashRoute() {
   const [route, setRoute] = useState(parse);
   useEffect(() => {
     const onChange = () => {
+      // jump to the top in the same frame the new page renders, so there's no visible scroll
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" });
       setRoute(parse());
-      window.scrollTo(0, 0);
+      requestAnimationFrame(() => window.scrollTo({ top: 0, left: 0, behavior: "instant" }));
     };
     window.addEventListener("hashchange", onChange);
     return () => window.removeEventListener("hashchange", onChange);

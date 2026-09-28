@@ -29,7 +29,7 @@ export default function HomePage() {
 
       {/* Featured rail: bleeds off the right edge like the reference */}
       <section>
-        <div className="flex gap-4 md:gap-8 overflow-x-auto snap-x snap-mandatory px-5 md:px-12 pb-4 scroll-px-5 md:scroll-px-12
+        <div className="flex gap-4 md:gap-8 overflow-x-auto snap-x snap-mandatory md:snap-none px-5 md:px-12 pb-4 scroll-px-5 md:scroll-px-12
                         [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {featured.map((p, i) => (
             <ProjectCard key={p.slug} project={p} size="lg" index={i} />

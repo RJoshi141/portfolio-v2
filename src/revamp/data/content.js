@@ -1,3 +1,7 @@
+import atlassianImg from "../../assets/atlassian.png";
+import amazonImg from "../../assets/amazon.png";
+import ucImg from "../../assets/uc.png";
+
 // Copy for About / Experience / Writing / footer
 // bullets come from the main site's Experience page
 export const experience = [
@@ -6,6 +10,7 @@ export const experience = [
     title: "Founding Product Engineer",
     when: "Sep 2025 – Now",
     where: "San Francisco, CA",
+    whereIcon: "sf", // Golden Gate icon next to the location
     link: "https://app.joydrop.me/",
     caseStudy: "#/work/joydrop",
     bullets: [
@@ -21,6 +26,7 @@ export const experience = [
     title: "UI/UX Web Developer",
     when: "Sep 2024 – Jul 2025",
     where: "San Francisco, CA",
+    whereIcon: "sf",
     link: "https://brightmindenrichment.org/",
     bullets: [
       "Built and maintained donation pages with smoother, secure payment flows, lifting conversions by 20%.",
@@ -34,6 +40,7 @@ export const experience = [
     title: "Full Stack Developer, Production Control",
     when: "May – Aug 2023",
     where: "Georgetown, KY",
+    whereIcon: "kentucky",
     link: "https://pressroom.toyota.com/facility/toyota-motor-manufacturing-kentucky/",
     bullets: [
       "Designed and deployed SQL pipelines for Supplier Change Requests, reducing manual errors by 20%.",
@@ -47,6 +54,7 @@ export const experience = [
     title: "UI Process Engineer",
     when: "Sep – Dec 2022",
     where: "Singapore",
+    whereIcon: "singapore",
     link: "https://beco-ventures.com/",
     bullets: [
       "Built a cloud data pipeline for real-time monitoring of 10K+ greenhouse sensor readings.",
@@ -60,6 +68,7 @@ export const experience = [
     title: "Data Analyst, UC Simulation Center",
     when: "Jan – Apr 2022",
     where: "Cincinnati, OH",
+    whereIcon: "cincinnati",
     link: "https://us.pg.com/",
     bullets: [
       "Automated analytics with Excel VBA and REST APIs, cutting processing time by 40% for global warehouse operations.",
@@ -73,6 +82,7 @@ export const experience = [
     title: "CS Intern, Virtual Innovation Studio",
     when: "Jan – Apr 2020",
     where: "Cincinnati, OH",
+    whereIcon: "cincinnati",
     link: "https://apps.apple.com/us/app/kroger/id403901186",
     bullets: [
       "Enhanced Kroger Plus iOS features based on usage data, raising engagement 15% and retention 10%.",
@@ -83,23 +93,33 @@ export const experience = [
   },
 ];
 
+// images + blurbs carried over from the main site's Articles page
 export const writing = [
   {
     title: "I Interviewed at Atlassian. Here's Everything You Need to Know",
+    description: "What the Full Stack Software Engineer loop at Atlassian was actually like, from their team-based hiring process to every round.",
     where: "Medium",
     when: "Dec 2025",
+    read: "8 min read",
+    image: atlassianImg,
     link: "https://medium.com/@ritikajoshi141/i-interviewed-at-atlassian-heres-everything-you-need-to-know-b126553a03d5",
   },
   {
     title: "AWS Front End Interview Series: From Application to Phone Screen, Part 1",
+    description: "A recent CS grad's walkthrough of the front-end engineering interview process at Amazon Web Services, and everything I wish I'd known going in.",
     where: "Medium",
     when: "Jun 2024",
+    read: "7 min read",
+    image: amazonImg,
     link: "https://medium.com/@ritikajoshi141/aws-front-end-interview-series-from-application-to-phone-screen-part-1-of-2-8bd24350fc41",
   },
   {
     title: "Marking Milestones: my UC commencement student address",
+    description: "How our class navigated the twists and turns of UC together, united as Bearcats through Juncta Juvant and Next Lives Here.",
     where: "UC News",
     when: "Apr 2024",
+    read: "9 min read",
+    image: ucImg,
     link: "https://www.uc.edu/news/articles/2024/04/uc-recognizes-its-largest-graduating-class-in-history-in-three-days-of-commencement.html",
   },
 ];

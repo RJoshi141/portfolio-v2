@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { ArrowRight } from "lucide-react";
 
 // size "lg" = featured rail card, "md" = grid card
 export default function ProjectCard({ project, size = "md", index = 0 }) {
@@ -21,9 +22,15 @@ export default function ProjectCard({ project, size = "md", index = 0 }) {
           src={project.frame}
           alt={`${project.name} preview`}
           loading="lazy"
-          className={`object-contain transition-transform duration-700 ease-out group-hover:scale-[1.04]
-                      ${lg ? "w-[78%] h-[78%]" : "w-[80%] h-[80%]"}`}
+          // rail cards stay still on hover (the arrow is the cue); grid cards keep the gentle zoom
+          className={`object-contain ${lg ? "w-[78%] h-[78%]" : "w-[80%] h-[80%] transition-transform duration-700 ease-out group-hover:scale-[1.04]"}`}
         />
+        {/* Gabriel-style round arrow that fades in bottom-right on hover */}
+        {lg && (
+          <span className="absolute right-5 bottom-5 md:right-8 md:bottom-8 w-12 h-12 md:w-14 md:h-14 rounded-full bg-white text-black flex items-center justify-center opacity-0 translate-y-1 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
+            <ArrowRight className="w-5 h-5 md:w-6 md:h-6" />
+          </span>
+        )}
       </div>
       <div className="mt-4 flex flex-wrap items-baseline gap-x-3 gap-y-1">
         <h3 className={`${lg ? "text-lg md:text-xl" : "text-base md:text-lg"} text-white`}>{project.name}</h3>
