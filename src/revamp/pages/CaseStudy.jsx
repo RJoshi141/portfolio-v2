@@ -216,9 +216,11 @@ export default function CaseStudy({ slug }) {
     );
   }
 
-  const i = projects.indexOf(project);
-  const prev = projects[(i - 1 + projects.length) % projects.length];
-  const next = projects[(i + 1) % projects.length];
+  // hidden case studies (e.g. Joydrop, linked from About) aren't in the Work list, so step through listed ones
+  const listed = projects.filter((p) => !p.hidden);
+  const i = listed.indexOf(project);
+  const prev = listed[(i - 1 + listed.length) % listed.length];
+  const next = listed[(i + 1) % listed.length];
 
   return (
     <LightboxProvider>
@@ -255,12 +257,20 @@ export default function CaseStudy({ slug }) {
             </div>
           </MetaRow>
           {project.year && <MetaRow label="Date">{project.year}</MetaRow>}
-          <MetaRow label="Code">
+          {project.github && <MetaRow label="Code">
             <a href={project.github} target="_blank" rel="noopener noreferrer"
                className="inline-flex items-center gap-1 hover:text-neutral-400 transition-colors">
               GitHub <ArrowUpRight className="w-4 h-4" />
             </a>
-          </MetaRow>
+          </MetaRow>}
+          {project.site && (
+            <MetaRow label="Live">
+              <a href={project.site} target="_blank" rel="noopener noreferrer"
+                 className="inline-flex items-center gap-1 hover:text-neutral-400 transition-colors">
+                {project.siteLabel || "Visit"} <ArrowUpRight className="w-4 h-4" />
+              </a>
+            </MetaRow>
+          )}
         </dl>
       </motion.div>
 
@@ -273,7 +283,9 @@ export default function CaseStudy({ slug }) {
       {project.demo ? (
         <WatchDemo {...project.demo} />
       ) : (
-        <Media items={project.hero || project.frame} alt={`${project.name} preview`} inset="w-[62%] h-[62%]" />
+        (project.hero || project.frame) && (
+          <Media items={project.hero || project.frame} alt={`${project.name} preview`} inset="w-[62%] h-[62%]" />
+        )
       )}
 
       {/* How data moves through the app: heading + body, then numbered code steps */}

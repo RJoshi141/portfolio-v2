@@ -31,6 +31,57 @@ import lumonFrame from "../../assets/project-frames/lumon-imac.png";
 
 export const projects = [
   {
+    // Work case study, linked from the Joydrop role on About (hidden from the Work list)
+    // TODO: add screenshots (image/images on any section) and fill the bracketed bits
+    slug: "joydrop",
+    name: "Joydrop",
+    hidden: true,
+    tags: ["iOS", "Web"],
+    summary: "Taking Joydrop from a web product to a shipped iOS app, redesigning the UI along the way, and building Communities end to end.",
+    role: "Founding Product Engineer",
+    platform: "iOS, Web",
+    year: "2025 – Now",
+    site: "https://app.joydrop.me/",
+    siteLabel: "joydrop.me",
+    stack: ["Expo", "React Native", "NestJS", "Next.js", "Firebase", "EAS"],
+    sections: [
+      {
+        heading: "The product",
+        body: "[What Joydrop is and who it's for, in a line or two.]",
+      },
+      {
+        heading: "Getting to iOS",
+        body: [
+          "Joydrop started on the web. Getting it onto phones meant an Expo app, and a few native problems standing between us and real devices.",
+          "I fixed 4+ iOS build and toolchain blockers (Xcode signing, CocoaPods, compiler bugs) so QA could run on real hardware, then set up EAS and CI/CD and released builds to TestFlight myself.",
+        ],
+      },
+      {
+        heading: "Redesigning the UI",
+        body: "[What the app looked like before, what felt off, and what you changed. Before/after screens work well here.]",
+      },
+      {
+        heading: "Shipping Communities",
+        body: "Communities let people create public or private groups, invite others, and handle join requests on their own. I built it end to end, from the backend to the screens.",
+        list: [
+          "Public and private groups",
+          "Invites",
+          "Join requests the group can manage itself",
+        ],
+      },
+      {
+        heading: "Notifications",
+        body: "Push notifications with Expo and NestJS across 8+ trigger types, shipped alongside the iOS release.",
+      },
+    ],
+    metrics: [
+      { value: "~30%", label: "Faster app performance" },
+      { value: "8+", label: "Push notification triggers" },
+      { value: "4+", label: "iOS build blockers fixed" },
+    ],
+    gallery: [],
+  },
+  {
     slug: "utter",
     name: "Utter",
     tagline: "Voice capture for your wrist",
@@ -337,6 +388,6 @@ task = recognizer.recognitionTask(with: request) { result, error in
   },
 ];
 
-export const featured = projects.filter((p) => p.featured);
-export const selected = projects.filter((p) => !p.featured);
+export const featured = projects.filter((p) => p.featured && !p.hidden);
+export const selected = projects.filter((p) => !p.featured && !p.hidden);
 export const findProject = (slug) => projects.find((p) => p.slug === slug);

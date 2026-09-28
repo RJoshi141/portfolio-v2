@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import ProjectCard from "../components/ProjectCard";
-import HomeScreen from "../components/HomeScreen";
 import Contact from "../components/Contact";
 import Companies from "../components/Companies";
 import { featured } from "../data/projects";
@@ -12,9 +11,6 @@ const fadeUp = (delay = 0) => ({
   transition: { duration: 0.8, delay, ease: [0.22, 1, 0.36, 1] },
 });
 
-const SectionLabel = ({ children }) => (
-  <p className="text-xs md:text-sm uppercase tracking-[0.2em] text-neutral-500 mb-8">{children}</p>
-);
 
 export default function HomePage() {
   return (
@@ -25,7 +21,7 @@ export default function HomePage() {
           {...fadeUp(0)}
           className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-medium tracking-[-0.035em] leading-[1.02] text-white max-w-6xl"
         >
-          I build first versions of products, end to end.
+          Engineer with a designer's eye.
         </motion.h1>
 
         <Companies />
@@ -47,12 +43,6 @@ export default function HomePage() {
           All work <ArrowRight className="w-4 h-4" />
         </a>
       </div>
-
-      {/* Tappable home screen (moved here from About) */}
-      <section className="px-5 md:px-12 pt-24 md:pt-32">
-        <SectionLabel>Tap around</SectionLabel>
-        <HomeScreen />
-      </section>
 
       <Contact />
     </>
