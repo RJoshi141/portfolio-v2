@@ -20,11 +20,22 @@ export default function ResumePage() {
         </a>
       </div>
 
-      {/* inline preview; phones that can't embed PDFs get the fallback link */}
+      {/* Phones: a crisp image of the page, sized to fit exactly (mobile browsers only draw the
+          first PDF page inside a fixed box, leaving empty grey below it).
+          resume-preview.png is rendered from Resume.pdf; regenerate it when the resume changes. */}
+      <a href={PDF} download="Ritika-Joshi-Resume.pdf" className="md:hidden block mt-10">
+        <img
+          src={`${import.meta.env.BASE_URL}resume-preview.png`}
+          alt="Ritika Joshi's resume"
+          className="w-full h-auto rounded-xl bg-white"
+        />
+      </a>
+
+      {/* Desktop: the live PDF, one letter-size page tall, with the fallback link if embedding fails */}
       <object
         data={`${PDF}#view=FitH&toolbar=0`}
         type="application/pdf"
-        className="mt-12 md:mt-16 w-full h-[80vh] md:h-[120vh] rounded-2xl md:rounded-3xl bg-neutral-900"
+        className="hidden md:block mt-16 w-full aspect-[8.5/11] max-h-[140vh] rounded-3xl bg-neutral-900"
       >
         <div className="mt-12 rounded-2xl bg-neutral-900 p-10 text-neutral-400">
           Your browser can't preview PDFs here.{" "}
