@@ -327,6 +327,26 @@ const Sprites = ({ sheets }) => (
   </motion.div>
 );
 
+// MacBook with a looping screen recording on a wide grey panel, optional caption underneath.
+// Screen box measured off macbook-frame.png (the frame's screen is transparent, so the video sits behind it).
+const LaptopDemo = ({ frame, mp4, poster, caption }) => (
+  <motion.figure {...rise()} className="my-12 md:my-20">
+    <Zoomable ratio={16 / 9} className="aspect-[4/3] md:aspect-[16/9]">
+      <div className="relative w-[80%] aspect-[1400/846]">
+        <video
+          autoPlay muted loop playsInline poster={poster}
+          className="absolute object-cover bg-black"
+          style={{ left: "10.8%", top: "2.8%", width: "78.5%", height: "84.4%" }}
+        >
+          <source src={mp4} type="video/mp4" />
+        </video>
+        <img src={frame} alt="" className="absolute inset-0 w-full h-full" />
+      </div>
+    </Zoomable>
+    {caption && <figcaption className="mt-4 md:mt-5 max-w-3xl text-sm md:text-base font-light leading-[1.6] text-neutral-400">{caption}</figcaption>}
+  </motion.figure>
+);
+
 // Compact figure row: label + note on the left, sketch on the right, panel sized to the
 // sketch's wide shape so it doesn't eat vertical space.
 const FigureRow = ({ label, text, src, inset = "w-[92%] h-[86%]" }) => (
@@ -551,6 +571,7 @@ export default function CaseStudy({ slug }) {
           {s.phonesBefore && <PhoneDemo phones={s.phonesBefore} compact={s.compactPhones} />}
           {s.phones && <PhoneDemo phones={s.phones} compact={s.compactPhones} />}
           {s.landscapes && <LandscapeDemo phones={s.landscapes} />}
+          {s.laptop && <LaptopDemo {...s.laptop} />}
           {s.sprites && <Sprites sheets={s.sprites} />}
           {s.assets && <AssetShelf items={s.assets} />}
           {s.steps?.map((st, n) => <CodeStep key={st.label} n={n + 1} {...st} />)}

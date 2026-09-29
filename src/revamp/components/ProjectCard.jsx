@@ -18,7 +18,33 @@ export default function ProjectCard({ project, size = "md", index = 0 }) {
                     ${lg ? "aspect-[4/3] md:aspect-[16/10]" : "aspect-[4/3]"}`}
         style={{ backgroundColor: project.tint }}
       >
-        {project.cardDemo ? (
+        {project.cardDemo?.kind === "landscape" ? (
+          // landscape iPhone with the gameplay loop (same screen box as the Zoomies case study)
+          <div className="relative w-[70%] aspect-[895/438]">
+            <video
+              autoPlay muted loop playsInline poster={project.cardDemo.poster}
+              className="absolute object-cover bg-black rounded-[7%/15%]"
+              style={{ left: "2.46%", top: "5.48%", width: "94.97%", height: "89.27%" }}
+            >
+              <source src={project.cardDemo.mp4} type="video/mp4" />
+            </video>
+            <img src={project.cardDemo.frame} alt="" className="absolute inset-0 w-full h-full" />
+          </div>
+        ) : project.cardDemo?.kind === "watch" ? (
+          // band-less Watch Ultra case with the recording inset from the bezel (measured off watch-ultra-case.png)
+          <div className="relative h-[58%] aspect-[1347/1496]">
+            <img src={project.cardDemo.frame} alt="" className="absolute inset-0 w-full h-full" />
+            <div
+              className="absolute overflow-hidden bg-black rounded-[14%/11.5%]"
+              style={{ left: "9.5%", top: "9.1%", width: "75.3%", height: "81.6%" }}
+            >
+              <video autoPlay muted loop playsInline className="w-full h-full object-cover">
+                {project.cardDemo.webm && <source src={project.cardDemo.webm} type="video/webm" />}
+                <source src={project.cardDemo.mp4} type="video/mp4" />
+              </video>
+            </div>
+          </div>
+        ) : project.cardDemo ? (
           // laptop frame with a looping recording in its display; screen box measured off macbook-frame.png
           <div className={`relative aspect-[1400/846] ${lg ? "w-[80%]" : "w-[84%]"}`}>
             <video

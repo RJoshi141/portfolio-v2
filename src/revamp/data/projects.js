@@ -57,17 +57,15 @@ import zArtBone from "../../assets/case-studies/zoomies/art/dog-bone.png";
 import zArtBoneYellow from "../../assets/case-studies/zoomies/art/dog-bone-yellow.png";
 import zArtHeart from "../../assets/case-studies/zoomies/art/heart.png";
 import zArtSkull from "../../assets/case-studies/zoomies/art/health-skull.png";
-import zArtResume from "../../assets/case-studies/zoomies/art/resume-button.png";
-import zArtRules from "../../assets/case-studies/zoomies/art/rules-button.png";
-import zArtCredits from "../../assets/case-studies/zoomies/art/credits-button.png";
-import zArtExit from "../../assets/case-studies/zoomies/art/exit-button.png";
-import zArtMenu from "../../assets/case-studies/zoomies/art/menu-button.png";
 import joydropNotifLock from "../../assets/case-studies/joydrop/notifications-lockscreen.jpg";
 import joydropNotifBanner from "../../assets/case-studies/joydrop/notifications-banner.jpg";
 import joydropInappForYou from "../../assets/case-studies/joydrop/inapp-foryou.jpg";
 import joydropInappBeforeList from "../../assets/case-studies/joydrop/inapp-before-list.jpg";
 import joydropSearchBefore from "../../assets/case-studies/joydrop/search-before.jpg";
 import joydropSearchAfter from "../../assets/case-studies/joydrop/search-after.jpg";
+import watchUltraCase from "../../assets/case-studies/watch-ultra-case.png";
+import zoomiesPixilartMp4 from "../../assets/case-studies/zoomies/pixilart.mp4";
+import zoomiesPixilartPoster from "../../assets/case-studies/zoomies/pixilart-poster.jpg";
 import iphoneFrame from "../../assets/case-studies/iphone-frame.png";
 import utterPhoneMp4 from "../../assets/case-studies/utter/iphone-demo.mp4";
 import utterPhoneWebm from "../../assets/case-studies/utter/iphone-demo.webm";
@@ -241,6 +239,8 @@ export const projects = [
     featured: true,
     tags: ["watchOS", "iOS", "Swift"],
     frame: utterFrame,
+    // work card: the watch recording playing inside the Watch Ultra frame
+    cardDemo: { kind: "watch", frame: watchUltraCase, mp4: utterDemoMp4, webm: utterDemoWebm },
     tint: "#1b1712", // card background behind the device frame
     github: "https://github.com/RJoshi141/utter",
     summary:
@@ -425,6 +425,8 @@ task = recognizer.recognitionTask(with: request) { result, error in
     featured: true,
     tags: ["iOS", "SpriteKit", "Swift"],
     frame: zoomiesFrame,
+    // work card: the gameplay loop in the landscape iPhone from the case study
+    cardDemo: { kind: "landscape", frame: iphoneLandscapeFrame, mp4: zoomiesGameplayMp4, poster: zoomiesGameplayPoster },
     tint: "#101a13",
     github: "https://github.com/RJoshi141/Zoomies",
     summary:
@@ -459,9 +461,16 @@ task = recognizer.recognitionTask(with: request) { result, error in
         heading: "The sprites",
         // TODO: rewrite in your words
         body: [
-          "Every frame of the dog is drawn by hand on a 48 by 48 pixel grid, one strip per action.",
+          "Every frame of the dog is drawn by hand in Pixilart on a 48 by 48 pixel grid, one strip per action. Each action starts from the idle pose and gets redrawn a few pixels at a time, previewed on loop, and exported as a single sprite sheet.",
           "In the game, each strip is sliced into SpriteKit textures at runtime and played with its own timing. Filtering is set to nearest so the pixels stay sharp at any size, the same way they play below.",
         ],
+        // behind the scenes: drawing the run cycle in Pixilart, shown before the finished sheets
+        laptop: {
+          frame: macbookFrame,
+          mp4: zoomiesPixilartMp4,
+          poster: zoomiesPixilartPoster,
+          caption: "Behind the scenes in Pixilart: the sprite gallery, then the run cycle frame by frame on the timeline, with the preview playing it back.",
+        },
         // frame counts and timings match GameScene.swift
         sprites: [
           { name: "Idle", src: zoomiesSpriteIdle, frames: 16, ms: 120, note: "Waiting on the start screen, tail going." },
@@ -577,13 +586,6 @@ let jumpGroup = SKAction.group([jumpAnimation, jumpMotion])`,
             { name: "Glow", hex: "#FFD600", note: "Rewards only" },
           ],
         },
-        assets: [
-          { src: zArtMenu, label: "Menu" },
-          { src: zArtResume, label: "Resume" },
-          { src: zArtRules, label: "Rules" },
-          { src: zArtCredits, label: "Credits" },
-          { src: zArtExit, label: "Exit" },
-        ],
       },
     ],
     metrics: [],
