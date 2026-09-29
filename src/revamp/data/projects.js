@@ -64,6 +64,10 @@ import zArtExit from "../../assets/case-studies/zoomies/art/exit-button.png";
 import zArtMenu from "../../assets/case-studies/zoomies/art/menu-button.png";
 import joydropNotifLock from "../../assets/case-studies/joydrop/notifications-lockscreen.jpg";
 import joydropNotifBanner from "../../assets/case-studies/joydrop/notifications-banner.jpg";
+import joydropInappForYou from "../../assets/case-studies/joydrop/inapp-foryou.jpg";
+import joydropInappBeforeList from "../../assets/case-studies/joydrop/inapp-before-list.jpg";
+import joydropSearchBefore from "../../assets/case-studies/joydrop/search-before.jpg";
+import joydropSearchAfter from "../../assets/case-studies/joydrop/search-after.jpg";
 import iphoneFrame from "../../assets/case-studies/iphone-frame.png";
 import utterPhoneMp4 from "../../assets/case-studies/utter/iphone-demo.mp4";
 import utterPhoneWebm from "../../assets/case-studies/utter/iphone-demo.webm";
@@ -137,8 +141,8 @@ export const projects = [
         },
         // before/after side by side, each on its own grey panel
         images: [
-          { src: joydropLoginBefore, tall: true, inset: "w-[90%] h-[86%]", caption: "Before. The web app's login, viewed on a phone." },
-          { src: joydropLoginAfter, tall: true, inset: "w-[90%] h-[86%]", caption: "After. The native iOS login." },
+          { src: joydropLoginBefore, tall: true, inset: "w-[90%] h-[90%]", caption: "Before. The web app's login, viewed on a phone." },
+          { src: joydropLoginAfter, tall: true, inset: "w-[90%] h-[90%]", caption: "After. The native iOS login." },
         ],
       },
       {
@@ -149,9 +153,11 @@ export const projects = [
         ],
         // before: the old four-slide carousel (web + mobile), shown above the new recordings
         image: joydropOnboardingBefore,
-        inset: "w-[78%] h-[76%]",
+        wide: true,
+        inset: "w-[78%] h-[80%]",
         caption: "Before. Four swipeable slides shared by web and mobile, each explaining a feature before you'd used the app.",
         // after: two recordings, each in its own grey box
+        compactPhones: true,
         phones: [
           { frame: iphoneFrame, mp4: joydropQuestionnaireMp4, poster: joydropQuestionnairePoster, caption: "After. The questionnaire: a few quick questions that answer the why before you sign up." },
           { frame: iphoneFrame, mp4: joydropTourMp4, poster: joydropTourPoster, caption: "After. The app tour: coach marks for the feed, sending a Joydrop, and joining a community." },
@@ -170,11 +176,13 @@ export const projects = [
         media: [
           {
             src: joydropCommunitiesBefore,
+            wide: true,
             inset: "w-[94%] h-[90%]",
             caption: "Before. The first version of Communities: browse your groups and recommended ones, create a community with an icon, description and public or private vibe, accept the guidelines to send it for admin approval, then see it in My Communities. Deleting asks for confirmation and spells out what gets removed.",
           },
           {
             src: joydropCommunitiesAfter,
+            wide: true,
             inset: "w-[90%] h-[88%]",
             caption: "After. The same flow on iOS in the new brand. An empty state that points you to Discover Communities, a create sheet with default icons and a 20-character name limit, communities as cards with Send joydrop right on them, and a delete sheet that also covers pending invites.",
           },
@@ -188,9 +196,34 @@ export const projects = [
           "Each trigger has its own title so you can tell what happened without opening the app: a Joydrop received, a new post in one of your communities, a community invite, a connection request, or a reply to your comment.",
         ],
         // real device screenshots in iPhone frames, each in its own grey box
+        compactPhones: true,
         phones: [
           { frame: iphoneFrame, poster: joydropNotifLock, caption: "Grouped on the lock screen: Joydrops, community posts, invites, connection requests, and replies." },
           { frame: iphoneFrame, poster: joydropNotifBanner, caption: "The first test push landing as a banner outside the app, with the badge count on the icon." },
+        ],
+      },
+      {
+        heading: "In-app notifications",
+        // TODO: rewrite in your words; before screens coming
+        body: [
+          "Inside the app, notifications split into two tabs: For You for things that happened to you, and Community for the groups you're in. Each tab is grouped into Last 7 days, Last 30 days, and a collapsible Older section, so the recent stuff stays on top.",
+          "Every row puts the person or community first, with a small colored badge on the avatar that tells you what kind of notification it is at a glance: pink for a celebration, blue for a reply, green for a new connection or a welcome, red for an invite. Community names are set in the brand serif so they stand out from the monospace body, and the next step lives right on the row: send your first Joydrop to a new connection, or accept or decline an invite without opening anything.",
+        ],
+        compactPhones: true,
+        // before (old web list) and after (new For You tab), side by side
+        phones: [
+          { frame: iphoneFrame, poster: joydropInappBeforeList, caption: "Before. One flat list of cards grouped by age, with the same blue buttons on every row." },
+          { frame: iphoneFrame, poster: joydropInappForYou, caption: "After. Tabs for For You and Community, grouped by recency, with a colored badge for each type and the next step right on the row." },
+        ],
+      },
+      {
+        heading: "Search",
+        // TODO: rewrite in your words
+        body: "Search got the same treatment. It now opens as its own screen with Users and Communities tabs, and the recommendation cards keep one job each: send a Joydrop in violet, connect in black. Once you're already connected, the connect button drops away and send takes the full width.",
+        compactPhones: true,
+        phones: [
+          { frame: iphoneFrame, poster: joydropSearchBefore, caption: "Before. A single search box above a grid of recommendations, with the same blue buttons as every other screen." },
+          { frame: iphoneFrame, poster: joydropSearchAfter, caption: "After. Search by email or username, switch between Users and Communities, and act right from the card." },
         ],
       },
     ],

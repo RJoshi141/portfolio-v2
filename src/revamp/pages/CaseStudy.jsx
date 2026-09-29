@@ -29,14 +29,23 @@ const Tile = ({ src, alt, inset = "w-[80%] h-[80%]", aspect = "aspect-[4/3] md:a
 );
 
 // Full-width media, or a row of 2-3 (phone screens side by side)
-const Media = ({ items, caption, alt, inset }) => {
+// `wide`: a shorter, cinema-shaped panel for wide strips of screens (less empty grey above and below)
+const Media = ({ items, caption, alt, inset, wide, bare }) => {
   const list = Array.isArray(items) ? items : [items];
   return (
     <motion.figure {...rise()} className="my-12 md:my-20">
       {list.length === 1 ? (
-        <Tile src={list[0]} alt={alt} inset={inset} />
+        <Tile
+          src={list[0]}
+          alt={alt}
+          inset={inset}
+          {...(wide ? { aspect: "aspect-[16/9] md:aspect-[21/9]", ratio: 21 / 9 } : {})}
+          // `bare`: no grey panel, the image sits on the page background
+          {...(bare ? { aspect: "aspect-[4/3] md:aspect-[16/9] !bg-transparent" } : {})}
+        />
       ) : (
-        <div className={`grid gap-3 md:gap-6 ${list.length === 2 ? "md:grid-cols-2 md:gap-8" : "grid-cols-3"}`}>
+        // tall phone pairs sit in narrower, centered portrait boxes (Gabriel's Grandstand phone rows)
+        <div className={`grid gap-3 md:gap-6 ${list.length === 2 ? "md:grid-cols-2 md:gap-8" : "grid-cols-3"} ${list.every((it) => it?.tall) ? "md:max-w-[66%] md:mx-auto" : ""}`}>
           {list.map((item, i) => {
             // item is a src, or { src, caption, inset } for a note under that panel
             const { src, caption: note, inset: own, tall } = typeof item === "object" && item.src ? item : { src: item };
@@ -48,8 +57,8 @@ const Media = ({ items, caption, alt, inset }) => {
                   src={src}
                   alt={`${alt} ${i + 1}`}
                   // `tall` pairs (portrait phone screenshots) get portrait panels so the phones can be bigger
-                  aspect={pair && !tall ? "aspect-[4/3]" : pair ? "aspect-[4/5]" : "aspect-[3/4]"}
-                  ratio={pair && !tall ? 4 / 3 : pair ? 4 / 5 : 3 / 4}
+                  aspect={pair && !tall ? "aspect-[4/3]" : pair ? "aspect-[2/3]" : "aspect-[3/4]"}
+                  ratio={pair && !tall ? 4 / 3 : pair ? 2 / 3 : 3 / 4}
                   inset={own || inset || "w-[80%] h-[80%]"}
                 />
                 {note && <p className="mt-3 md:mt-4 text-sm md:text-base font-light leading-[1.5] text-neutral-400">{note}</p>}
@@ -175,22 +184,24 @@ const PhoneScreen = ({ frame, mp4, webm, poster, className = "" }) => (
 
 // One iPhone on a wide grey panel, or several iPhones each in their own grey box side by side
 // (captions sit under each box).
-const PhoneDemo = ({ phones, ...single }) => {
+// `compact`: narrower, centered portrait boxes (matches the login before/after row)
+const PhoneDemo = ({ phones, compact, ...single }) => {
   if (!phones) {
     return (
       <motion.figure {...rise()} className="my-12 md:my-20">
-        <Zoomable ratio={16 / 9} className="aspect-[4/3] md:aspect-[16/9]">
+        {/* no grey panel here: the phone sits straight on the page background */}
+        <Zoomable ratio={16 / 9} className="aspect-[4/3] md:aspect-[16/9] !bg-transparent">
           <PhoneScreen {...single} />
         </Zoomable>
       </motion.figure>
     );
   }
   return (
-    <motion.div {...rise()} className="my-12 md:my-20 grid md:grid-cols-2 gap-6 md:gap-8">
+    <motion.div {...rise()} className={`my-12 md:my-20 grid md:grid-cols-2 gap-6 md:gap-8 ${compact ? "md:max-w-[66%] md:mx-auto" : ""}`}>
       {phones.map((p, i) => (
         <figure key={i}>
-          <Zoomable ratio={4 / 5} className="aspect-[4/5]">
-            <PhoneScreen {...p} />
+          <Zoomable ratio={compact ? 2 / 3 : 4 / 5} className={compact ? "aspect-[2/3]" : "aspect-[4/5]"}>
+            <PhoneScreen {...p} className={compact ? "!h-[90%]" : ""} />
           </Zoomable>
           {p.caption && (
             <figcaption className="mt-4 md:mt-5 text-sm md:text-base font-light leading-[1.6] text-neutral-400">{p.caption}</figcaption>
@@ -222,8 +233,9 @@ const LandscapeDemo = ({ phones, ...single }) => {
   if (!phones) {
     return (
       <motion.figure {...rise()} className="my-12 md:my-20">
-        <Zoomable ratio={16 / 9} className="aspect-[4/3] md:aspect-[16/9]">
-          <LandscapePhone {...single} className="w-[78%]" />
+        {/* no grey panel: the phone sits straight on the page background */}
+        <Zoomable ratio={16 / 9} className="aspect-[4/3] md:aspect-[16/9] !bg-transparent">
+          <LandscapePhone {...single} className="w-[54%]" />
         </Zoomable>
       </motion.figure>
     );
@@ -503,7 +515,7 @@ export default function CaseStudy({ slug }) {
 
       {/* Intro still (e.g. the watch welcome screen), then the looping demos */}
       {project.intro && (
-        <Media items={project.intro.src} caption={project.intro.caption} alt={`${project.name} intro`} inset="w-[70%] h-[64%]" />
+        <Media items={project.intro.src} caption={project.intro.caption} alt={`${project.name} intro`} inset="w-[58%] h-[54%]" bare />
       )}
 
       {/* Hero media */}
@@ -532,10 +544,12 @@ export default function CaseStudy({ slug }) {
         <div key={s.heading || s.key}>
           {s.heading && <Section {...s} />}
           {(s.images || s.image || s.video) && (
-            <Media items={s.images || s.video || s.image} caption={s.caption} inset={s.inset} alt={s.heading || project.name} />
+            <Media items={s.images || s.video || s.image} caption={s.caption} inset={s.inset} wide={s.wide} alt={s.heading || project.name} />
           )}
           {s.brand && <BrandPanel {...s.brand} />}
-          {s.phones && <PhoneDemo phones={s.phones} />}
+          {/* optional "before" row of phones above the main one */}
+          {s.phonesBefore && <PhoneDemo phones={s.phonesBefore} compact={s.compactPhones} />}
+          {s.phones && <PhoneDemo phones={s.phones} compact={s.compactPhones} />}
           {s.landscapes && <LandscapeDemo phones={s.landscapes} />}
           {s.sprites && <Sprites sheets={s.sprites} />}
           {s.assets && <AssetShelf items={s.assets} />}
@@ -544,7 +558,7 @@ export default function CaseStudy({ slug }) {
             m.label ? (
               <FigureRow key={n} label={m.label} text={m.text} src={m.src} inset={m.inset} />
             ) : (
-              <Media key={n} items={m.src} caption={m.caption} inset={m.inset} alt={m.caption || `${s.heading} ${n + 1}`} />
+              <Media key={n} items={m.src} caption={m.caption} inset={m.inset} wide={m.wide} alt={m.caption || `${s.heading} ${n + 1}`} />
             )
           )}
         </div>
