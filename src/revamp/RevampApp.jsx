@@ -1,4 +1,4 @@
-// Revamp sandbox, served at /portfolio-v2/revamp/
+// The main site, served at /portfolio-v2/ (the previous site lives at /portfolio-v2/classic/)
 // Work-first redesign. Everything it needs lives in src/revamp/ so the live site is untouched.
 import { useEffect } from "react";
 import Nav from "./components/Nav";

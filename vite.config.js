@@ -9,10 +9,10 @@ export default defineConfig({
   assetsInclude: ['**/*.glb'],
   build: {
     rollupOptions: {
-      // two pages: live site + revamp sandbox
+      // two pages: the new site at /portfolio-v2/ and the previous one at /portfolio-v2/classic/
       input: {
         main: resolve(__dirname, 'index.html'),
-        revamp: resolve(__dirname, 'revamp/index.html'),
+        classic: resolve(__dirname, 'classic/index.html'),
       },
     },
   },
