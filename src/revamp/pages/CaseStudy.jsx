@@ -75,8 +75,8 @@ const Media = ({ items, caption, alt, inset, wide, bare }) => {
 // Heading in the left column, large readable copy on the right (Gabriel's Slingshot page)
 const Section = ({ heading, body, list }) => (
   <motion.section {...rise()} className="pt-20 md:pt-32 grid md:grid-cols-[minmax(0,1fr)_minmax(0,1.9fr)] gap-6 md:gap-16">
-    <h2 className="text-2xl md:text-[1.75rem] font-normal tracking-[-0.015em] leading-tight text-white">{heading}</h2>
-    <div className="text-lg md:text-[1.35rem] font-light tracking-[-0.005em] leading-[1.55] text-neutral-200 space-y-6">
+    <h2 className="text-xl md:text-[1.4rem] font-normal tracking-[-0.015em] leading-tight text-white">{heading}</h2>
+    <div className="text-base md:text-[1.1rem] font-light tracking-[-0.005em] leading-[1.65] text-neutral-200 space-y-6">
       {body && (Array.isArray(body) ? body : [body]).map((para) => <p key={para}>{para}</p>)}
       {list && (
         <ul className="space-y-4">
@@ -189,15 +189,17 @@ const PhoneDemo = ({ phones, compact, ...single }) => {
   if (!phones) {
     return (
       <motion.figure {...rise()} className="my-12 md:my-20">
-        {/* no grey panel here: the phone sits straight on the page background */}
-        <Zoomable ratio={16 / 9} className="aspect-[4/3] md:aspect-[16/9] !bg-transparent">
-          <PhoneScreen {...single} />
+        {/* no grey panel here: the phone sits straight on the page background.
+            On phones the box is 2:3 with the phone at 90%, the same size as the before/after phone rows. */}
+        <Zoomable ratio={16 / 9} className="aspect-[2/3] md:aspect-[16/9] !bg-transparent">
+          <PhoneScreen {...single} className="!h-[90%] md:!h-[86%]" />
         </Zoomable>
       </motion.figure>
     );
   }
   return (
-    <motion.div {...rise()} className={`my-12 md:my-20 grid md:grid-cols-2 gap-6 md:gap-8 ${compact ? "md:max-w-[66%] md:mx-auto" : ""}`}>
+    // 3 phones: full width in thirds (each box then matches the size of a compact pair's box)
+    <motion.div {...rise()} className={`my-12 md:my-20 grid gap-6 md:gap-8 ${phones.length === 3 ? "md:grid-cols-3" : "md:grid-cols-2"} ${compact && phones.length !== 3 ? "md:max-w-[66%] md:mx-auto" : ""}`}>
       {phones.map((p, i) => (
         <figure key={i}>
           <Zoomable ratio={compact ? 2 / 3 : 4 / 5} className={compact ? "aspect-[2/3]" : "aspect-[4/5]"}>
@@ -347,6 +349,22 @@ const LaptopDemo = ({ frame, mp4, poster, caption }) => (
   </motion.figure>
 );
 
+// Section text and one iPhone in the same row: heading + copy on the left, phone on the right
+// (stacks on phones, with the phone at the same size as the before/after rows)
+const SectionWithPhone = ({ heading, body, phoneDemo }) => (
+  <motion.section {...rise()} className="pt-20 md:pt-32 grid md:grid-cols-2 gap-10 md:gap-16 items-center">
+    <div>
+      <h2 className="text-xl md:text-[1.4rem] font-normal tracking-[-0.015em] leading-tight text-white">{heading}</h2>
+      <div className="mt-6 md:mt-8 text-base md:text-[1.1rem] font-light tracking-[-0.005em] leading-[1.65] text-neutral-200 space-y-6">
+        {(Array.isArray(body) ? body : [body]).map((para) => <p key={para}>{para}</p>)}
+      </div>
+    </div>
+    <Zoomable ratio={2 / 3} className="aspect-[2/3] md:aspect-[4/5] !bg-transparent">
+      <PhoneScreen {...phoneDemo} className="!h-[90%]" />
+    </Zoomable>
+  </motion.section>
+);
+
 // Compact figure row: label + note on the left, sketch on the right, panel sized to the
 // sketch's wide shape so it doesn't eat vertical space.
 const FigureRow = ({ label, text, src, inset = "w-[92%] h-[86%]" }) => (
@@ -472,7 +490,7 @@ export default function CaseStudy({ slug }) {
   const project = findProject(slug);
   if (!project) {
     return (
-      <section className="px-5 md:px-12 py-32">
+      <section className="px-5 md:px-16 lg:px-20 py-32">
         <p className="text-3xl text-white">That project doesn't exist.</p>
         <a href="#/" className="mt-6 inline-block text-neutral-400 hover:text-white">Back to work</a>
       </section>
@@ -482,7 +500,7 @@ export default function CaseStudy({ slug }) {
 
   return (
     <LightboxProvider>
-    <article className="px-5 md:px-12">
+    <article className="px-5 md:px-16 lg:px-20">
       {/* Giant title, sized off viewport width */}
       <motion.h1
         initial={{ opacity: 0, y: 32 }}
@@ -501,7 +519,7 @@ export default function CaseStudy({ slug }) {
         transition={{ duration: 0.8, delay: 0.15, ease }}
         className="mt-14 md:mt-24 grid md:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] gap-12 md:gap-20"
       >
-        <p className="text-xl md:text-[1.7rem] tracking-[-0.01em] leading-[1.45] text-neutral-200">{project.summary}</p>
+        <p className="text-base md:text-[1.1rem] font-light tracking-[-0.005em] leading-[1.65] text-neutral-200">{project.summary}</p>
         <dl className="space-y-6">
           {project.team?.length > 0 && <MetaRow label="Team"><Team people={project.team} /></MetaRow>}
           {project.role && <MetaRow label="Role">{project.role}</MetaRow>}
@@ -545,6 +563,9 @@ export default function CaseStudy({ slug }) {
         <PhoneDemo {...project.phoneDemo} />
       ) : project.demo ? (
         <WatchDemo {...project.demo} />
+      ) : project.heroImage ? (
+        // full-bleed hero shot (image already has its own background)
+        <Media items={project.heroImage} alt={`${project.name} preview`} inset="w-full h-full object-cover" />
       ) : (
         (project.hero || project.frame) && (
           <Media items={project.hero || project.frame} alt={`${project.name} preview`} inset="w-[62%] h-[62%]" />
@@ -562,12 +583,13 @@ export default function CaseStudy({ slug }) {
       {/* Story: heading, text, then that section's media */}
       {project.sections.map((s) => (
         <div key={s.heading || s.key}>
-          {s.heading && <Section {...s} />}
+          {s.heading && (s.phoneBeside ? <SectionWithPhone {...s} /> : <Section {...s} />)}
           {(s.images || s.image || s.video) && (
             <Media items={s.images || s.video || s.image} caption={s.caption} inset={s.inset} wide={s.wide} alt={s.heading || project.name} />
           )}
           {s.brand && <BrandPanel {...s.brand} />}
           {/* optional "before" row of phones above the main one */}
+          {s.phoneDemo && !s.phoneBeside && <PhoneDemo {...s.phoneDemo} />}
           {s.phonesBefore && <PhoneDemo phones={s.phonesBefore} compact={s.compactPhones} />}
           {s.phones && <PhoneDemo phones={s.phones} compact={s.compactPhones} />}
           {s.landscapes && <LandscapeDemo phones={s.landscapes} />}

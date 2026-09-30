@@ -16,7 +16,7 @@ export default function HomePage() {
   return (
     <>
       {/* Hero: headline + companies */}
-      <section className="px-5 md:px-12 pt-20 md:pt-32 pb-20 md:pb-28">
+      <section className="px-5 md:px-16 lg:px-20 pt-20 md:pt-32 pb-20 md:pb-28">
         <motion.h1
           {...fadeUp(0)}
           className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-medium tracking-[-0.035em] leading-[1.02] text-white max-w-6xl"
@@ -37,7 +37,7 @@ export default function HomePage() {
 
       {/* Featured rail: bleeds off the right edge like the reference */}
       <section>
-        <div className="flex gap-4 md:gap-8 overflow-x-auto snap-x snap-mandatory md:snap-none px-5 md:px-12 pb-4 scroll-px-5 md:scroll-px-12
+        <div className="flex gap-4 md:gap-8 overflow-x-auto snap-x snap-mandatory md:snap-none px-5 md:px-16 lg:px-20 pb-4 scroll-px-5 md:scroll-px-16 lg:scroll-px-20
                         [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {featured.map((p, i) => (
             <ProjectCard key={p.slug} project={p} size="lg" index={i} />
@@ -46,7 +46,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <div className="px-5 md:px-12 pt-8">
+      <div className="px-5 md:px-16 lg:px-20 pt-8">
         <a href="#/work" className="inline-flex items-center gap-2 text-base md:text-lg text-neutral-400 hover:text-white transition-colors">
           All work <ArrowRight className="w-4 h-4" />
         </a>

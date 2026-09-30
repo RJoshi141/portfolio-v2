@@ -15,10 +15,23 @@ export default function ProjectCard({ project, size = "md", index = 0 }) {
     >
       <div
         className={`relative overflow-hidden rounded-2xl md:rounded-3xl flex items-center justify-center
-                    ${lg ? "aspect-[4/3] md:aspect-[16/10]" : "aspect-[4/3]"}`}
+                    ${lg ? "aspect-[4/3] md:aspect-[16/10]" : "aspect-square"}`}
         style={{ backgroundColor: project.tint }}
       >
-        {project.cardDemo?.kind === "landscape" ? (
+        {project.cardDemo?.kind === "phone" ? (
+          // portrait iPhone with a looping recording (same screen box as the case study phones)
+          <div className="relative h-[84%] aspect-[2025/4139]">
+            <div
+              className="absolute overflow-hidden bg-black rounded-[18%/8.5%]"
+              style={{ left: "5.2%", top: "2.3%", width: "89.6%", height: "95.4%" }}
+            >
+              <video autoPlay muted loop playsInline poster={project.cardDemo.poster} className="w-full h-full object-cover">
+                <source src={project.cardDemo.mp4} type="video/mp4" />
+              </video>
+            </div>
+            <img src={project.cardDemo.frame} alt="" className="absolute inset-0 w-full h-full" />
+          </div>
+        ) : project.cardDemo?.kind === "landscape" ? (
           // landscape iPhone with the gameplay loop (same screen box as the Zoomies case study)
           <div className="relative w-[70%] aspect-[895/438]">
             <video

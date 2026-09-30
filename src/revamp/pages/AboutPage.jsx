@@ -81,7 +81,7 @@ const Role = ({ company, title, when, where, whereIcon, link, caseStudy, bullets
 export default function AboutPage() {
   return (
     <>
-      <section className="px-5 md:px-12 pt-16 md:pt-28">
+      <section className="px-5 md:px-16 lg:px-20 pt-16 md:pt-28">
         <motion.h1
           {...fadeUp(0)}
           className="text-7xl md:text-9xl lg:text-[10rem] font-medium tracking-[-0.045em] leading-none text-white"
@@ -112,7 +112,7 @@ export default function AboutPage() {
       </section>
 
       {/* Experience, expanded */}
-      <section className="px-5 md:px-12 pt-24 md:pt-32">
+      <section className="px-5 md:px-16 lg:px-20 pt-24 md:pt-32">
         <SectionLabel>Experience</SectionLabel>
         <ul>
           {experience.map((e) => (

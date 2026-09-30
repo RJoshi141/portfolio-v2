@@ -6,7 +6,7 @@ const PDF = `${import.meta.env.BASE_URL}Resume.pdf`;
 
 export default function ResumePage() {
   return (
-    <section className="px-5 md:px-12 pt-16 md:pt-28">
+    <section className="px-5 md:px-16 lg:px-20 pt-16 md:pt-28">
       <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-8">
         <PageTitle>Resume</PageTitle>
         {/* `download` saves the file instead of opening it */}

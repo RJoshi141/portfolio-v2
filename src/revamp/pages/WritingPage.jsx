@@ -8,7 +8,7 @@ const ease = [0.22, 1, 0.36, 1];
 
 export default function WritingPage() {
   return (
-    <section className="px-5 md:px-12 pt-16 md:pt-28">
+    <section className="px-5 md:px-16 lg:px-20 pt-16 md:pt-28">
       <PageTitle>Writing</PageTitle>
       <ul className="mt-16 md:mt-24 grid md:grid-cols-2 lg:grid-cols-3 gap-x-6 md:gap-x-8 gap-y-14 md:gap-y-20">
         {writing.map((w, i) => (

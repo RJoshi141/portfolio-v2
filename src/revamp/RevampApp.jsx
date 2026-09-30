@@ -33,11 +33,15 @@ function RevampApp() {
 
   return (
     <div className="revamp bg-black text-white min-h-screen antialiased">
-      <Nav page={page} />
-      <main>
-        {isCase ? <CaseStudy slug={slug} /> : Page ? <Page /> : <HomePage />}
-      </main>
-      <Footer />
+      {/* Centered column: past 1360px wide (big screens, or zoomed out) the page stops stretching
+          and the extra space goes to the black margins, so the content edges move closer together. */}
+      <div className="mx-auto w-full max-w-[1360px]">
+        <Nav page={page} />
+        <main>
+          {isCase ? <CaseStudy slug={slug} /> : Page ? <Page /> : <HomePage />}
+        </main>
+        <Footer />
+      </div>
     </div>
   );
 }

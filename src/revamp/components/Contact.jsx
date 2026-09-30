@@ -62,7 +62,7 @@ export default function Contact() {
   };
 
   return (
-    <section id="contact" className="scroll-mt-24 px-5 md:px-12 pt-32 md:pt-44">
+    <section id="contact" className="scroll-mt-24 px-5 md:px-16 lg:px-20 pt-32 md:pt-44">
       <h2 className="text-center text-5xl md:text-7xl lg:text-8xl font-medium tracking-[-0.035em] leading-[1.05] text-white">
         Let's work together.
       </h2>

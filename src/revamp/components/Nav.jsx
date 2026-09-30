@@ -78,7 +78,7 @@ function NavCapsule({ page, items }) {
   const menu = [{ label: "Home", home: true }, ...links];
 
   return (
-    <div ref={ref} className="fixed top-2 right-3 md:top-6 md:right-10 z-50 flex flex-col items-end">
+    <div ref={ref} className="fixed top-2 right-3 md:top-6 md:right-[max(2.5rem,calc((100vw_-_1360px)/2_+_2.5rem))] z-50 flex flex-col items-end">
       {/* row and button share one 48px slot; the button is pinned to the right edge */}
       <div className="relative h-12 flex items-center justify-end">
         <AnimatePresence initial={false}>
@@ -172,7 +172,7 @@ export default function Nav({ page }) {
     <>
       {/* only the name lives in the flow, so it scrolls away with the page */}
       <header className="relative z-40">
-        <div className="flex items-center px-5 md:px-12 h-16 md:h-24">
+        <div className="flex items-center px-5 md:px-16 lg:px-20 h-16 md:h-24">
           <a href="#/" onClick={goHome} className="text-base md:text-2xl text-neutral-300 hover:text-white transition-colors">
             Ritika Joshi
           </a>

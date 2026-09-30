@@ -23,8 +23,8 @@ import joydropLoginBefore from "../../assets/case-studies/joydrop/login-before-w
 import joydropLoginAfter from "../../assets/case-studies/joydrop/login-after-ios.png";
 import joydropCommunitiesBefore from "../../assets/case-studies/joydrop/communities-before.png";
 import joydropCommunitiesAfter from "../../assets/case-studies/joydrop/communities-after.png";
-import joydropFeedPoster from "../../assets/case-studies/joydrop/feed-poster-first-frame.jpg";
-import joydropFeedMp4 from "../../assets/case-studies/joydrop/feed-demo.mp4";
+import joydropFeedPoster from "../../assets/case-studies/joydrop/app-scroll-poster.jpg";
+import joydropFeedMp4 from "../../assets/case-studies/joydrop/app-scroll.mp4";
 import joydropQuestionnaireMp4 from "../../assets/case-studies/joydrop/onboarding-questionnaire.mp4";
 import joydropQuestionnairePoster from "../../assets/case-studies/joydrop/onboarding-questionnaire-poster.jpg";
 import joydropTourMp4 from "../../assets/case-studies/joydrop/onboarding-tour.mp4";
@@ -66,6 +66,12 @@ import joydropSearchAfter from "../../assets/case-studies/joydrop/search-after.j
 import watchUltraCase from "../../assets/case-studies/watch-ultra-case.png";
 import zoomiesPixilartMp4 from "../../assets/case-studies/zoomies/pixilart.mp4";
 import zoomiesPixilartPoster from "../../assets/case-studies/zoomies/pixilart-poster.jpg";
+import joydropHomeBefore from "../../assets/case-studies/joydrop/home-before.png";
+import joydropHomeFeed from "../../assets/case-studies/joydrop/home-after-feed.jpg";
+import joydropHomeHighlight from "../../assets/case-studies/joydrop/home-after-highlight.jpg";
+import joydropHomeComments from "../../assets/case-studies/joydrop/home-after-comments.jpg";
+import joydropCardPhones from "../../assets/project-frames/joydrop-phones.png";
+import joydropHero from "../../assets/case-studies/joydrop/hero-v2.jpg";
 import iphoneFrame from "../../assets/case-studies/iphone-frame.png";
 import utterPhoneMp4 from "../../assets/case-studies/utter/iphone-demo.mp4";
 import utterPhoneWebm from "../../assets/case-studies/utter/iphone-demo.webm";
@@ -85,8 +91,10 @@ export const projects = [
     featured: true,
     tags: ["iOS", "Web"],
     tint: "#1a1a1a",
-    // home rail card: web app recording playing inside a MacBook
-    cardDemo: { frame: macbookFrame, mp4: joydropWebMp4, poster: joydropWebPoster },
+    // card: two tilted phones render (home feed + highlight)
+    frame: joydropCardPhones,
+    // cardDemo: { kind: "phone", frame: iphoneFrame, mp4: joydropFeedMp4, poster: joydropFeedPoster },
+    // cardDemo: { frame: macbookFrame, mp4: joydropWebMp4, poster: joydropWebPoster },
     tagline: "Joy, uncontained.",
     summary: "Joydrop helps people recognize each other and keep those moments. I took it from a web product to a shipped iOS app, redesigned the UI along the way, and built Communities end to end.",
     // teammates: add `photo: someImport` to swap initials for a headshot
@@ -99,9 +107,8 @@ export const projects = [
     platform: "iOS, Web",
     year: "2025 – Now",
     site: "https://app.joydrop.me/",
-    // iPhone at the top of the case study, right before "The product"
-    // feed scroll + comments, 14s loop; poster is its first frame so the start is seamless
-    phoneDemo: { frame: iphoneFrame, mp4: joydropFeedMp4, poster: joydropFeedPoster },
+    // top of the case study: three-phone render; the app scroll video now sits in "The product"
+    heroImage: joydropHero,
     siteLabel: "joydrop.me",
     stack: ["Expo", "React Native", "NestJS", "Next.js", "Firebase", "EAS"],
     sections: [
@@ -111,6 +118,9 @@ export const projects = [
           "A friend shows up for you. A coworker handles something hard. You notice, you mean to say something, and the moment passes. Joydrop catches it: find the person, say the thing, send. It takes about 30 seconds, and they keep it for good.",
           "It's not a feed and it's not a group chat, so nothing competes with the message. Communities give a team, club, or friend group a shared record of who showed up and how.",
         ],
+        // text and phone share one row
+        phoneBeside: true,
+        phoneDemo: { frame: iphoneFrame, mp4: joydropFeedMp4, poster: joydropFeedPoster },
       },
       {
         heading: "Getting to iOS",
@@ -141,6 +151,24 @@ export const projects = [
         images: [
           { src: joydropLoginBefore, tall: true, inset: "w-[90%] h-[90%]", caption: "Before. The web app's login, viewed on a phone." },
           { src: joydropLoginAfter, tall: true, inset: "w-[90%] h-[90%]", caption: "After. The native iOS login." },
+        ],
+      },
+      {
+        heading: "Home feed",
+        // TODO: rewrite in your words
+        body: [
+          "The home feed is where most Joydrops get read, so it got the biggest rework. The Figma version had a separate Highlights carousel sitting on top of the feed, which pushed the actual posts below the fold.",
+          "On iOS the feed leads with the posts. A dropdown switches between For You and Highlight, and highlighted Joydrops fill the card in violet instead of living in their own row. Cards sit at a slight tilt like notes pinned to a board, messages are set in monospace, and comments open in a sheet that supports GIFs and @ tags.",
+        ],
+        image: joydropHomeBefore,
+        wide: true,
+        inset: "w-[70%] h-[88%]",
+        caption: "Before. The Figma design: a Highlights carousel above the feed, and comments in a plain sheet.",
+        compactPhones: true,
+        phones: [
+          { frame: iphoneFrame, poster: joydropHomeFeed, caption: "After. The For You feed, with posts first and a quick search and send up top." },
+          { frame: iphoneFrame, poster: joydropHomeHighlight, caption: "After. Highlight view: featured Joydrops fill the card in violet, with the Dots and badge they came with." },
+          { frame: iphoneFrame, poster: joydropHomeComments, caption: "After. Comments with reactions, replies, GIFs, and @ tagging." },
         ],
       },
       {
