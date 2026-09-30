@@ -107,10 +107,10 @@ export default function AboutPage() {
 
         {/* Intro: short and product-focused */}
         <motion.div {...fadeUp(0.15)} className="mt-12 md:mt-20 max-w-4xl lg:max-w-[62%]">
-          <p className="text-2xl md:text-[2.25rem] font-medium tracking-[-0.025em] leading-[1.15] text-white">
+          <p className="text-lg md:text-[1.35rem] font-normal tracking-[-0.01em] leading-[1.55] text-white">
             I'm a product engineer who cares how things feel, not just whether they work.
           </p>
-          <div className="mt-6 md:mt-8 space-y-5 text-base md:text-[1.15rem] font-light leading-[1.65] text-neutral-400 max-w-3xl">
+          <div className="mt-5 md:mt-6 space-y-5 text-lg md:text-[1.35rem] font-normal tracking-[-0.01em] leading-[1.55] text-neutral-300">
             <p>
               I'm a founding product engineer at{" "}
               <a href="https://app.joydrop.me/" target="_blank" rel="noopener noreferrer"
