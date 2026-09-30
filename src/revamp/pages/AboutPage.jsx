@@ -1,5 +1,9 @@
 // About page (#/about): big title, intro, then each role with what I actually did there
+import { lazy, Suspense } from "react";
 import { motion } from "framer-motion";
+
+// 3D ID card on a lanyard (three.js), loaded only on the About page so it doesn't weigh down the rest
+const Lanyard = lazy(() => import("../../components/Lanyard"));
 import { ArrowUpRight } from "lucide-react";
 import { experience } from "../data/content";
 // raw markup so the icon's fill="currentColor" matches the location text color
@@ -36,7 +40,7 @@ const Role = ({ company, title, when, where, whereIcon, link, caseStudy, bullets
         href={link}
         target="_blank"
         rel="noopener noreferrer"
-        className="group inline-flex items-center gap-1.5 text-2xl md:text-[1.75rem] tracking-[-0.015em] text-white"
+        className="group inline-flex items-center gap-1.5 text-xl md:text-[1.4rem] tracking-[-0.015em] text-white"
       >
         {company}
         <ArrowUpRight className="w-5 h-5 text-neutral-600 group-hover:text-white transition-colors" />
@@ -65,10 +69,10 @@ const Role = ({ company, title, when, where, whereIcon, link, caseStudy, bullets
       )}
     </div>
     <div>
-      <p className="text-lg md:text-[1.35rem] text-neutral-200">{title}</p>
+      <p className="text-base md:text-[1.1rem] text-neutral-200">{title}</p>
       <ul className="mt-5 space-y-3">
         {bullets.map((b) => (
-          <li key={b} className="flex gap-4 text-base md:text-lg font-light leading-[1.6] text-neutral-400">
+          <li key={b} className="flex gap-4 text-sm md:text-base font-light leading-[1.65] text-neutral-400">
             <span className="mt-[0.7em] w-1 h-1 rounded-full bg-neutral-600 shrink-0" />
             <span>{b}</span>
           </li>
@@ -81,7 +85,7 @@ const Role = ({ company, title, when, where, whereIcon, link, caseStudy, bullets
 export default function AboutPage() {
   return (
     <>
-      <section className="px-5 md:px-16 lg:px-20 pt-16 md:pt-28">
+      <section className="relative px-5 md:px-16 lg:px-20 pt-16 md:pt-28">
         <motion.h1
           {...fadeUp(0)}
           className="text-7xl md:text-9xl lg:text-[10rem] font-medium tracking-[-0.045em] leading-none text-white"
@@ -89,26 +93,43 @@ export default function AboutPage() {
           About
         </motion.h1>
 
-        {/* Intro: headline left-aligned across the page, supporting copy below it */}
-        <motion.div {...fadeUp(0.15)} className="mt-12 md:mt-20 max-w-5xl">
-          <p className="text-3xl md:text-5xl font-medium tracking-[-0.025em] leading-[1.12] text-white">
-            I'm Ritika, a product engineer. I design and build apps for the web and iOS.
+        {/* Draggable ID card on a dark grey lanyard, pushed to the far right so the intro text has room */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 1, ease }}
+          className="hidden lg:block absolute top-0 -right-4 w-[32%] h-[720px] z-10"
+        >
+          <Suspense fallback={null}>
+            <Lanyard position={[0, 0, 25]} gravity={[0, -40, 0]} cardImage="/portfolio-v2/assets/comic-self.png" bandColor="#3a3a3a" />
+          </Suspense>
+        </motion.div>
+
+        {/* Intro: short and product-focused */}
+        <motion.div {...fadeUp(0.15)} className="mt-12 md:mt-20 max-w-4xl lg:max-w-[62%]">
+          <p className="text-2xl md:text-[2.25rem] font-medium tracking-[-0.025em] leading-[1.15] text-white">
+            I'm a product engineer who cares how things feel, not just whether they work.
           </p>
-          <div className="mt-8 space-y-6 text-lg md:text-2xl tracking-tight leading-relaxed text-neutral-400 max-w-4xl">
+          <div className="mt-6 md:mt-8 space-y-5 text-base md:text-[1.15rem] font-light leading-[1.65] text-neutral-400 max-w-3xl">
             <p>
               I'm a founding product engineer at{" "}
               <a href="https://app.joydrop.me/" target="_blank" rel="noopener noreferrer"
                  className="text-white underline decoration-neutral-600 underline-offset-4 hover:decoration-white">
                 Joydrop
               </a>
-              , where I build the product end to end across web, iOS, and Android with Next.js, Nest.js, and Firebase.
+              , building the app across web and iOS. Outside of work I'm usually tinkering on something
+              new just for fun.
             </p>
+            {/* background: degree, co-ops, and years of experience */}
             <p>
-              On the side I make Apple platform apps like Utter and Zoomies. I studied CS at the University of
-              Cincinnati and I'm based in San Francisco.
+              I studied Computer Science at the University of Cincinnati, where co-ops had me building at Kroger,
+              P&amp;G, BECO Ventures in Singapore, and Toyota before I graduated. Add in Bright Mind Enrichment and
+              Joydrop, and that's 2+ years of shipping real products across retail, manufacturing, nonprofits, and
+              startups.
             </p>
           </div>
         </motion.div>
+
       </section>
 
       {/* Experience, expanded */}

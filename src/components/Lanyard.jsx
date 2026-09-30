@@ -21,7 +21,8 @@ export default function Lanyard({
   fov = 20, 
   transparent = true,
   cardImage = null,
-  theme = 'dark'  // 'light' or 'dark'
+  theme = 'dark',  // 'light' or 'dark'
+  bandColor = RED  // strap color (revamp passes a dark grey)
 }) {
   const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768);
 
@@ -41,7 +42,7 @@ export default function Lanyard({
       >
         <ambientLight intensity={Math.PI} />
         <Physics gravity={gravity} timeStep={isMobile ? 1 / 30 : 1 / 60}>
-          <Band isMobile={isMobile} cardImage={cardImage} theme={theme} />
+          <Band isMobile={isMobile} cardImage={cardImage} theme={theme} bandColor={bandColor} />
         </Physics>
         <Environment blur={0.75}>
           <Lightformer
@@ -78,7 +79,7 @@ export default function Lanyard({
   );
 }
 
-function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, cardImage = null, theme = 'dark' }) {
+function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, cardImage = null, theme = 'dark', bandColor = RED }) {
   const band = useRef(),
     fixed = useRef(),
     j1 = useRef(),
@@ -273,7 +274,7 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, cardImage = null,
       <mesh ref={band}>
         <meshLineGeometry />
         <meshLineMaterial
-          color={RED}
+          color={bandColor}
           depthTest={false}
           resolution={isMobile ? [1000, 2000] : [1000, 1000]}
           lineWidth={1.5}
