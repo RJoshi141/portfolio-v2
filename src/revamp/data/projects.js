@@ -11,7 +11,7 @@ import duoFoldPoster from "../../assets/case-studies/duo/duo-fold-poster.jpg";
 import duoCardMp4 from "../../assets/case-studies/duo/duo-fold-card.mp4";
 import duoCardPoster from "../../assets/case-studies/duo/duo-fold-card-poster.jpg";
 import layerCard from "../../assets/case-studies/layer/card-3d.png";
-import layerHero2up from "../../assets/case-studies/layer/hero-2up.png";
+import layerHero3d from "../../assets/case-studies/layer/hero-3d.jpg";
 import layerShelf from "../../assets/case-studies/layer/shelf.png";
 import layerProduct from "../../assets/case-studies/layer/product.png";
 import layerRoutine from "../../assets/case-studies/layer/routine.png";
@@ -736,12 +736,8 @@ let jumpGroup = SKAction.group([jumpAnimation, jumpMotion])`,
     tags: ["iOS", "Swift", "On-device AI"],
     frame: layerCard,
     tint: "#1e231d", // Layer's dark-mode card color
-    hero: layerHero2up,
-    // phones match the Joydrop product phone: that one is 90% of a half-width 4:5 box,
-    // which works out to 90% of a full-width 8:5 box here
-    heroInset: "w-full h-[90%]",
-    heroBare: true, // phones sit right on the page, no grey panel
-    heroAspect: "aspect-[4/3] md:aspect-[8/5] !bg-transparent",
+    // full-bleed 3D render with its own green gradient background
+    heroImage: layerHero3d,
     github: "https://github.com/RJoshi141/layer",
     summary:
       "Skincare labels are dense ingredient lists in tiny type. Layer reads the bottle for you: scan a label, see what's actually inside, and get a morning and night routine in the right order, with clashes flagged before you use them. Everything runs on the phone.",
