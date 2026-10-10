@@ -6,7 +6,8 @@ export default function ProjectCard({ project, size = "md", index = 0 }) {
   const lg = size === "lg";
   return (
     <motion.a
-      href={`#/work/${project.slug}`}
+      href={project.link || `#/work/${project.slug}`}
+      {...(project.link ? { target: "_blank", rel: "noopener noreferrer" } : {})}
       initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.2 }}
@@ -18,7 +19,12 @@ export default function ProjectCard({ project, size = "md", index = 0 }) {
                     ${lg ? "aspect-[4/3] md:aspect-[16/10]" : "aspect-square"}`}
         style={{ backgroundColor: project.tint }}
       >
-        {project.cardDemo?.kind === "phone" ? (
+        {project.cardDemo?.kind === "video" ? (
+          // a loop that already has its own background: fill the whole card
+          <video autoPlay muted loop playsInline poster={project.cardDemo.poster} className={`object-contain ${lg ? "w-[72%] h-[72%]" : "w-[70%] h-[70%]"}`}>
+            <source src={project.cardDemo.mp4} type="video/mp4" />
+          </video>
+        ) : project.cardDemo?.kind === "phone" ? (
           // portrait iPhone with a looping recording (same screen box as the case study phones)
           <div className="relative h-[84%] aspect-[2025/4139]">
             <div
@@ -45,7 +51,7 @@ export default function ProjectCard({ project, size = "md", index = 0 }) {
           </div>
         ) : project.cardDemo?.kind === "watch" ? (
           // band-less Watch Ultra case with the recording inset from the bezel (measured off watch-ultra-case.png)
-          <div className="relative h-[58%] aspect-[1347/1496]">
+          <div className="relative h-[46%] aspect-[1347/1496]">
             <img src={project.cardDemo.frame} alt="" className="absolute inset-0 w-full h-full" />
             <div
               className="absolute overflow-hidden bg-black rounded-[14%/11.5%]"

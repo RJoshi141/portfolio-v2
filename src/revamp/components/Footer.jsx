@@ -60,7 +60,7 @@ export default function Footer() {
           <Column title="Projects">
             {featuredProjects.map((p) => (
               <li key={p.slug}>
-                <a href={`#/work/${p.slug}`} className={linkCls}>{p.name}</a>
+                <a href={p.link || `#/work/${p.slug}`} {...(p.link ? { target: "_blank", rel: "noopener noreferrer" } : {})} className={linkCls}>{p.name}</a>
               </li>
             ))}
             <li>

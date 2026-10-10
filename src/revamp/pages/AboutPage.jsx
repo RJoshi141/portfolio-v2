@@ -108,23 +108,23 @@ export default function AboutPage() {
         {/* Intro: short and product-focused */}
         <motion.div {...fadeUp(0.15)} className="mt-12 md:mt-20 max-w-4xl lg:max-w-[62%]">
           <p className="text-lg md:text-[1.35rem] font-normal tracking-[-0.01em] leading-[1.55] text-white">
-            I'm a product engineer who cares how things feel, not just whether they work.
+            I'm a software engineer who loves products and loves owning them, from the first idea to the version people use every day. I care how things feel, not just whether they work.
           </p>
           <div className="mt-5 md:mt-6 space-y-5 text-lg md:text-[1.35rem] font-normal tracking-[-0.01em] leading-[1.55] text-neutral-300">
             <p>
-              I'm a founding product engineer at{" "}
+              Right now that means building{" "}
               <a href="https://app.joydrop.me/" target="_blank" rel="noopener noreferrer"
                  className="text-white underline decoration-neutral-600 underline-offset-4 hover:decoration-white">
                 Joydrop
-              </a>
-              , building the app across web and iOS. Outside of work I'm usually tinkering on something
-              new just for fun.
+              </a>{" "}
+              as its founding product engineer, owning the app end to end across web and iOS. Outside of work
+              I'm usually tinkering on something new just for fun.
             </p>
             {/* background: degree, co-ops, and years of experience */}
             <p>
               I studied Computer Science at the University of Cincinnati, where co-ops had me building at Kroger,
               P&amp;G, BECO Ventures in Singapore, and Toyota before I graduated. Add in Bright Mind Enrichment and
-              Joydrop, and that's 2+ years of shipping real products across retail, manufacturing, nonprofits, and
+              Joydrop, and that's 2+ years of shipping real products across consumer goods, manufacturing, nonprofits, and
               startups.
             </p>
           </div>

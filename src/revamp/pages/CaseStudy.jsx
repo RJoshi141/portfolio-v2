@@ -30,7 +30,7 @@ const Tile = ({ src, alt, inset = "w-[80%] h-[80%]", aspect = "aspect-[4/3] md:a
 
 // Full-width media, or a row of 2-3 (phone screens side by side)
 // `wide`: a shorter, cinema-shaped panel for wide strips of screens (less empty grey above and below)
-const Media = ({ items, caption, alt, inset, wide, bare }) => {
+const Media = ({ items, caption, alt, inset, wide, bare, aspect }) => {
   const list = Array.isArray(items) ? items : [items];
   return (
     <motion.figure {...rise()} className="my-12 md:my-20">
@@ -42,6 +42,8 @@ const Media = ({ items, caption, alt, inset, wide, bare }) => {
           {...(wide ? { aspect: "aspect-[16/9] md:aspect-[21/9]", ratio: 21 / 9 } : {})}
           // `bare`: no grey panel, the image sits on the page background
           {...(bare ? { aspect: "aspect-[4/3] md:aspect-[16/9] !bg-transparent" } : {})}
+          // explicit panel shape wins (e.g. a hero sized to match another page's phones)
+          {...(aspect ? { aspect } : {})}
         />
       ) : (
         // tall phone pairs sit in narrower, centered portrait boxes (Gabriel's Grandstand phone rows)
@@ -378,7 +380,7 @@ const FigureRow = ({ label, text, src, inset = "w-[92%] h-[86%]" }) => (
 );
 
 // Tiny Swift highlighter: comments, strings, keywords. Everything else stays neutral.
-const SWIFT = /(\/\/.*$)|("(?:[^"\\]|\\.)*")|\b(let|var|func|guard|else|return|if|try|in|self|await)\b/gm;
+const SWIFT = /(\/\/.*$)|("(?:[^"\\]|\\.)*")|\b(let|var|func|guard|else|return|if|try|in|self|await|export|function|const)\b/gm;
 const highlight = (code) => {
   const out = [];
   let last = 0, m, k = 0;
@@ -402,12 +404,12 @@ const CodeStep = ({ n, label, text, file, code }) => (
       </p>
       {text && <p className="mt-2 md:mt-3 text-base md:text-lg font-light leading-[1.6] text-neutral-400">{text}</p>}
     </div>
-    <div className="bg-[#1a1a1a] min-w-0">
+    {code && <div className="bg-[#1a1a1a] min-w-0">
       {file && <p className="px-5 md:px-7 pt-4 md:pt-5 font-mono text-[11px] md:text-xs uppercase tracking-wider text-neutral-500">{file}</p>}
       <pre className="px-5 md:px-7 py-4 md:py-5 overflow-x-auto font-mono text-[12px] md:text-[13.5px] leading-[1.7] text-neutral-200">
         <code>{highlight(code)}</code>
       </pre>
-    </div>
+    </div>}
   </motion.div>
 );
 
@@ -568,7 +570,7 @@ export default function CaseStudy({ slug }) {
         <Media items={project.heroImage} alt={`${project.name} preview`} inset="w-full h-full object-cover" />
       ) : (
         (project.hero || project.frame) && (
-          <Media items={project.hero || project.frame} alt={`${project.name} preview`} inset="w-[62%] h-[62%]" />
+          <Media items={project.hero || project.frame} alt={`${project.name} preview`} inset={project.heroInset || "w-[62%] h-[62%]"} bare={project.heroBare} aspect={project.heroAspect} />
         )
       )}
 

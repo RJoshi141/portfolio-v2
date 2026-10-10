@@ -25,6 +25,17 @@ export default function Lanyard({
   bandColor = RED  // strap color (revamp passes a dark grey)
 }) {
   const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768);
+  // WebGL can be missing (no GPU / acceleration off) or the context can get dropped by Chrome
+  // (too many canvases after hot reloads). Remount on loss a couple of times, then give up quietly
+  // instead of leaving a white box with a sad face.
+  const [glOk] = useState(() => {
+    try {
+      const c = document.createElement('canvas');
+      return !!(c.getContext('webgl2') || c.getContext('webgl'));
+    } catch { return false; }
+  });
+  const [canvasKey, setCanvasKey] = useState(0);
+  const [failed, setFailed] = useState(false);
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -34,11 +45,19 @@ export default function Lanyard({
 
   return (
     <div className="lanyard-wrapper">
-      <Canvas
+      {glOk && !failed && <Canvas
+        key={canvasKey}
         camera={{ position: position, fov: fov }}
         dpr={[1, isMobile ? 1.5 : 2]}
         gl={{ alpha: transparent, toneMapping: THREE.NoToneMapping, outputColorSpace: THREE.SRGBColorSpace }}
-        onCreated={({ gl }) => gl.setClearColor(new THREE.Color(0x000000), transparent ? 0 : 1)}
+        onCreated={({ gl }) => {
+          gl.setClearColor(new THREE.Color(0x000000), transparent ? 0 : 1);
+          gl.domElement.addEventListener('webglcontextlost', (e) => {
+            e.preventDefault();
+            if (canvasKey >= 2) setFailed(true);
+            else setTimeout(() => setCanvasKey((k) => k + 1), 300);
+          }, { once: true });
+        }}
       >
         <ambientLight intensity={Math.PI} />
         <Physics gravity={gravity} timeStep={isMobile ? 1 / 30 : 1 / 60}>
@@ -74,7 +93,7 @@ export default function Lanyard({
             scale={[100, 10, 1]}
           />
         </Environment>
-      </Canvas>
+      </Canvas>}
     </div>
   );
 }

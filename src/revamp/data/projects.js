@@ -6,6 +6,29 @@
 //   (media = stacked full-width figures, e.g. sketch v1, v2, v3; optional inset like "w-[64%] h-[64%]" sizes the image)
 //   metrics[{ value, label }], gallery[img]
 import utterFrame from "../../assets/project-frames/utter-watch-ultra.png";
+import duoFoldMp4 from "../../assets/case-studies/duo/duo-fold.mp4";
+import duoFoldPoster from "../../assets/case-studies/duo/duo-fold-poster.jpg";
+import duoCardMp4 from "../../assets/case-studies/duo/duo-fold-card.mp4";
+import duoCardPoster from "../../assets/case-studies/duo/duo-fold-card-poster.jpg";
+import layerCard from "../../assets/case-studies/layer/card-3d.png";
+import layerHero2up from "../../assets/case-studies/layer/hero-2up.png";
+import layerShelf from "../../assets/case-studies/layer/shelf.png";
+import layerProduct from "../../assets/case-studies/layer/product.png";
+import layerRoutine from "../../assets/case-studies/layer/routine.png";
+import layerOnboarding from "../../assets/case-studies/layer/onboarding.png";
+import layerHomescreen from "../../assets/case-studies/layer/homescreen.png";
+import layerWidget from "../../assets/case-studies/layer/widget.png";
+import layerIcons from "../../assets/case-studies/layer/icons.png";
+import layerScanMp4 from "../../assets/case-studies/layer/scan-moisturizer.mp4";
+import layerScanPoster from "../../assets/case-studies/layer/scan-moisturizer-poster.jpg";
+import layerTourMp4 from "../../assets/case-studies/layer/intro-tour.mp4";
+import layerTourPoster from "../../assets/case-studies/layer/intro-tour-poster.jpg";
+import layerVoiceMp4 from "../../assets/case-studies/layer/voice-checkin.mp4";
+import layerVoicePoster from "../../assets/case-studies/layer/voice-checkin-poster.jpg";
+import layerReviewMp4 from "../../assets/case-studies/layer/routine-review.mp4";
+import layerReviewPoster from "../../assets/case-studies/layer/routine-review-poster.jpg";
+import layerEmptyShelf from "../../assets/case-studies/layer/empty-shelf.jpg";
+import layerEmptyRoutine from "../../assets/case-studies/layer/empty-routine.jpg";
 import utterSketchV1 from "../../assets/case-studies/utter/sketch-v1-idle.png";
 import utterSketchV2 from "../../assets/case-studies/utter/sketch-v2-recording.png";
 import utterSketchV3 from "../../assets/case-studies/utter/sketch-v3-review.png";
@@ -447,6 +470,92 @@ task = recognizer.recognitionTask(with: request) { result, error in
     gallery: [], // extra full-width screenshots, shown numbered
   },
   {
+    slug: "iphone-duo",
+    name: "iPhone Duo Case Study",
+    tagline: "Making Apple's foldable actually fold",
+    // card opens the standalone case study site instead of a #/work page
+    link: "https://iphone-duo-casestudy.vercel.app/",
+    featured: true,
+    tags: ["React", "Three.js", "GLSL"],
+    frame: duoFoldPoster,
+    // work card: the fold loop, already on its own dark background
+    cardDemo: { kind: "video", mp4: duoCardMp4, poster: duoCardPoster },
+    tint: "#201f1b",
+    hero: duoFoldMp4,
+    github: "https://github.com/RJoshi141/iphone-duo-casestudy",
+    summary:
+      "Apple shows the iPhone Duo on its site as a 3D model you can spin but not use. I wanted to see if I could make that same file actually fold: drag it open, stop it halfway, and watch the screens wake up and go soft as the hinge moves.",
+    role: "Solo: design, engineering",
+    platform: "Web",
+    year: "2026",
+    stack: ["React", "TypeScript", "Three.js", "GLSL", "Motion"],
+    sections: [
+      {
+        heading: "A still model, not a working phone",
+        body: "Apple's product page loads a glTF of the phone, slowly rotating, and responds to a drag. That's it. The screen is one image baked onto the mesh. I wanted the real file to behave like a real phone, with no pre-rendered animation and no video standing in for the display. Just Apple's model, driven by code.",
+      },
+      {
+        heading: "What's already in Apple's file",
+        body: [
+          "The file is more than a shape. One mesh is named folding-half, so the asset itself marks which part of the body rotates and around which hinge line. Everything else, how far it swings, how fast, what the screens do on the way, is up to whoever renders it.",
+          "I load it once with GLTFLoader, find that node by name, and from then on folding is one rotation value set every frame. The two screen materials are named too, so I swap in my own shader without touching the frame, glass, or camera bump. A baked RoomEnvironment map gives the titanium something to reflect.",
+        ],
+      },
+      {
+        heading: "Faking a screen that's really a photo",
+        body: [
+          "There's no video and no second render behind the glass. The screen is a flat wallpaper projected onto the curved display in real time. For every point on the glass, the shader finds where a ray from the camera would hit a plane facing the lens and samples the wallpaper there, so tilting the phone shifts the image like it sits behind the glass instead of painted on it.",
+          "The inner screen is one flat plane. The cover screen wraps further around the body, so it projects between two reference points along the hinge edge instead. Home screen icons blend on top through their own alpha.",
+          "Depth of field is faked too: a blurred mip level plus four jittered samples around each pixel, scaled by how open the phone is. The inner screen softens as you close it while the cover screen comes into focus.",
+        ],
+      },
+      {
+        heading: "One number drives the whole phone",
+        body: "Every visual change comes from a single 0 to 1 value: how far open the phone is.",
+        steps: [
+          {
+            label: "Fold choreography",
+            text: "Turns progress into the hinge angle, where the focus line sits on the cover screen, and how blurred the inner screen gets. The hinge finishes closing at 96% so the blur has a beat to settle instead of cutting off.",
+            file: "fold-choreography.ts",
+            code: `export function foldChoreography(progress: number) {
+  const p = Math.max(0, Math.min(1, progress))
+  const hinge = Math.min(1, p / 0.96)
+  return {
+    angle: (1 - hinge) * Math.PI,
+    coverFocusEdge: 1.25 - Math.min(1, p / 0.45) * 1.1,
+    innerDefocus: (1 - p) ** 0.65,
+  }
+}`,
+          },
+        ],
+      },
+      {
+        heading: "Drag it, scrub it, or click",
+        list: [
+          "A click flips between open and closed over a two second ease. Dragging tracks your pointer directly with no easing, so it feels like you're pulling the hinge yourself.",
+          "A press that moves more than five pixels counts as a drag, and the click that follows gets swallowed so letting go doesn't also toggle it.",
+          "The slider stops at an exact angle and doubles as the accessible control: screen readers hear degrees open, not a raw decimal.",
+          "As it closes, the model shifts sideways with the hinge angle so the fold stays centered instead of drifting out of frame.",
+          "With reduced motion on, the fold jumps straight to its new position, even mid-animation.",
+        ],
+      },
+      {
+        heading: "Where I'd take it next",
+        list: [
+          "Give the hinge resistance: swap the linear ease for a spring so it feels like a mechanism, not a slider.",
+          "Bake the crease into a normal map instead of faking it with shading, so it holds up close and under harsher light.",
+          "Drive progress from a real hinge sensor or accelerometer, so the page folds with the phone in your hand.",
+        ],
+      },
+      {
+        heading: "Credits",
+        body: "The 3D model and its textures are Apple's, used for an independent, non-commercial study. The fold component is adapted from an MIT-licensed open-source demo. Not affiliated with or endorsed by Apple.",
+      },
+    ],
+    metrics: [],
+    gallery: [],
+  },
+  {
     slug: "zoomies",
     name: "Zoomies",
     tagline: "Pixel-art endless runner",
@@ -614,6 +723,240 @@ let jumpGroup = SKAction.group([jumpAnimation, jumpMotion])`,
             { name: "Glow", hex: "#FFD600", note: "Rewards only" },
           ],
         },
+      },
+    ],
+    metrics: [],
+    gallery: [],
+  },
+  {
+    slug: "layer",
+    name: "Layer",
+    tagline: "Ingredient-smart skincare for iOS",
+    featured: true,
+    tags: ["iOS", "Swift", "On-device AI"],
+    frame: layerCard,
+    tint: "#1e231d", // Layer's dark-mode card color
+    hero: layerHero2up,
+    // phones match the Joydrop product phone: that one is 90% of a half-width 4:5 box,
+    // which works out to 90% of a full-width 8:5 box here
+    heroInset: "w-full h-[90%]",
+    heroBare: true, // phones sit right on the page, no grey panel
+    heroAspect: "aspect-[4/3] md:aspect-[8/5] !bg-transparent",
+    github: "https://github.com/RJoshi141/layer",
+    summary:
+      "Skincare labels are dense ingredient lists in tiny type. Layer reads the bottle for you: scan a label, see what's actually inside, and get a morning and night routine in the right order, with clashes flagged before you use them. Everything runs on the phone.",
+    role: "Solo: design, engineering",
+    platform: "iOS 26, widgets",
+    year: "2026",
+    stack: ["Swift", "SwiftUI", "SwiftData", "Vision", "Foundation Models", "SpeechAnalyzer", "WidgetKit"],
+    sections: [
+      {
+        heading: "Why I built it",
+        body: [
+          "Most people can't tell which of their products clash, what order to put them on in, or whether last spring's serum is still good. The answers are all printed on the bottle, just not in a form anyone can use.",
+          "Under the hood it's three problems I care about: pulling structured data out of messy real-world documents, an assistant that reasons over your own data instead of general knowledge, and voice as an input. No account, no backend.",
+        ],
+      },
+      {
+        heading: "Scan any label",
+        body: [
+          "Photograph a bottle, tube or box, two or three angles if the list wraps around. Vision reads the text, and Layer pulls out the ingredient list, product name, brand, type and shelf life.",
+          "Here it's a gel-cream moisturizer: front and back of the tube, then Layer reads the label, finds the real product photo and drafts everything for review, including what the camera actually read. The photo gets lifted off its background on device, so every shelf item is a clean cutout.",
+        ],
+        // text and the scan recording share one row, like Joydrop's product section
+        phoneBeside: true,
+        phoneDemo: { frame: iphoneFrame, mp4: layerScanMp4, poster: layerScanPoster },
+      },
+      {
+        heading: "Ingredients never touch the LLM",
+        body: "A model can helpfully invent an ingredient that isn't on the bottle. A parser can't. So the list goes through deterministic code, and the model only handles the fuzzy parts.",
+        steps: [
+          {
+            label: "Parse the INCI list",
+            text: "OCR breaks words across lines and photos cut names in half. The parser rejoins them, keeps 1,2-Hexanediol as one ingredient, and stitches lists from several angles together without duplicates.",
+            file: "INCIParser.swift",
+            code: `// Rejoins words that OCR broke across lines.
+// "Sodium Hyal-" + "uronate" → "Sodium Hyaluronate"
+static func joinLines(_ lines: [String]) -> String {
+    var out = ""
+    for raw in lines {
+        let line = raw.trimmingCharacters(in: .whitespaces)
+        guard !line.isEmpty else { continue }
+        if out.hasSuffix("-"), let first = line.first, first.isLowercase {
+            out.removeLast()
+            out += line
+        } else if out.isEmpty || out.hasSuffix("-") {
+            out += line   // "PEG-" + "40" keeps its hyphen
+        } else {
+            out += " " + line
+        }
+    }
+    return out
+}`,
+          },
+          {
+            label: "Match against a real database",
+            text: "Each name is matched to a 242-entry ingredient database with roles, plain-English summaries and tags, using alias and typo-tolerant lookup. Anything unknown gets classified from INCI naming rules and learned when you save.",
+          },
+          {
+            label: "Let the model fill the fuzzy fields",
+            text: "Name, brand and category come from guided generation, so the output is typed Swift, not JSON to parse. Regex and heuristics run first every time, and they're the full fallback on phones without Apple Intelligence.",
+            file: "LabelExtractor.swift",
+            code: `@Generable
+struct ProductDraft {
+    @Guide(description: "Product name as printed, without the brand.")
+    var name: String
+
+    @Guide(description: "Brand name. Empty string if not visible.")
+    var brand: String
+
+    @Guide(description: "What kind of product this is.", .anyOf([
+        "cleanser", "toner", "serum", "treatment", "moisturizer",
+        "sunscreen", "eyeCream", "mask", "oil", "other",
+    ]))
+    var category: String
+
+    @Guide(description: "Months it lasts after opening, from the open-jar symbol like '12M'.")
+    var monthsAfterOpening: Int
+}`,
+          },
+          {
+            label: "Human in the loop",
+            text: "Nothing is saved until you've reviewed and edited the draft.",
+          },
+        ],
+      },
+      {
+        heading: "Built around your skin",
+        body: [
+          "First launch is a five-card tour of what Layer does, then five quick questions: skin type, sensitivity, up to three concerns, experience with actives, and anything to avoid.",
+          "Those answers turn the same ingredient list into personal advice. A retinol can be \"good for breakouts\" for one person and \"start slow\" for someone new to actives. Drying alcohol near the top of the list, or fragrance, gets flagged when your skin is dry or sensitive.",
+        ],
+        // intro tour + skin questions, recorded on device
+        phoneBeside: true,
+        phoneDemo: { frame: iphoneFrame, mp4: layerTourMp4, poster: layerTourPoster },
+        // where the tour lands: empty states that point at the next step instead of a blank screen
+        compactPhones: true,
+        phones: [
+          { frame: iphoneFrame, poster: layerEmptyShelf, caption: "An empty shelf points straight at the first scan." },
+          { frame: iphoneFrame, poster: layerEmptyRoutine, caption: "An empty routine explains what it will do once you pick products." },
+        ],
+      },
+      {
+        heading: "Routines that put themselves in order",
+        body: "Toggle a product into morning or night and it slots into layering order by type, thinnest to thickest. Eleven conflict rules flag clashes, like retinol with acids, before you use them. The Routine check card shows tonight at a glance and opens the assistant's review.",
+        image: layerRoutine,
+        inset: "w-[40%] h-[92%]",
+        steps: [
+          {
+            label: "Rules make the safety calls",
+            text: "The checker is pure and testable, with no SwiftData and no model. An LLM only gets to explain a finding later, never decide it.",
+            file: "ConflictChecker.swift",
+            code: `// Deterministic on purpose. Safety calls come from rules;
+// an LLM only gets to explain them later.
+static func check(_ items: [RoutineItem], period: RoutinePeriod,
+                  rules: [ConflictRule]) -> [Finding] {
+    let findings = pairFindings(items, rules: rules)
+        + routineFindings(items, period: period)
+    // Most serious first: avoid → caution → fine
+    let rank: [ConflictRule.Severity: Int] = [.avoid: 0, .caution: 1, .fine: 2]
+    return findings.sorted { rank[$0.severity]! < rank[$1.severity]! }
+}`,
+          },
+        ],
+      },
+      {
+        heading: "An assistant that reads your shelf",
+        // routine review: suggestions for the morning, one tap adds Vitamin C to the routine
+        phoneBeside: true,
+        phoneDemo: { frame: iphoneFrame, mp4: layerReviewMp4, poster: layerReviewPoster },
+        body: "Ask anything about your routine and an on-device model answers through three tools: your current routine, rule-based suggestions, and your whole shelf. It answers from your data, not general knowledge, and only recommends products you already own. Without Apple Intelligence, a rule-based advisor gives the same review with step explanations, swaps, gaps and one-tap fixes, so the feature never disappears.",
+        steps: [
+          {
+            label: "A fresh session per question",
+            text: "A new snapshot every time, so the tools always see the routine as it is right now.",
+            file: "RoutineAssistant.swift",
+            code: `let session = LanguageModelSession(
+    tools: [
+        RoutineTool(context: context),
+        SuggestionsTool(context: context),
+        ShelfTool(context: context),
+    ],
+    instructions: """
+        You are Layer, a friendly skincare assistant inside an iOS app. \\
+        Always use the tools to look up the user's routines, shelf and \\
+        suggestions before answering. Only recommend products that are \\
+        on their shelf. Keep answers short and practical.
+        """
+)`,
+          },
+        ],
+      },
+      {
+        heading: "Voice check-ins",
+        body: [
+          "Tap the mic on the Routine tab and say how your skin feels. \"After using this sunscreen, I did find my skin become more oily and shiny than usual\" becomes a structured log: the sunscreen toggled on as used, skin feel set to oily, and your words saved underneath.",
+          "Speech is transcribed on device with SpeechAnalyzer, and keyword rules fill the form, so you can fix anything before saving. Check-ins show up under Recent on the Routine tab, the start of tracking how your skin actually responds over time.",
+        ],
+        phoneBeside: true,
+        phoneDemo: { frame: iphoneFrame, mp4: layerVoiceMp4, poster: layerVoicePoster },
+      },
+      {
+        heading: "Tonight, without opening the app",
+        body: "The widget flips between morning and night on its own and shows each step in order. Expired products are struck through, and a clash turns the side panel rust. It comes in small, medium and lock screen sizes.",
+        images: [
+          { src: layerWidget, inset: "w-[88%] h-[88%]", caption: "Tonight's three steps next to the app icon." },
+          { src: layerHomescreen, inset: "w-[46%] h-[92%]", caption: "On the home screen." },
+        ],
+        steps: [
+          {
+            label: "A tiny snapshot, not the database",
+            text: "The widget can't open the app's SwiftData store, so the app writes a small JSON snapshot to a shared App Group whenever the routine changes, and skips the reload if nothing did.",
+            file: "WidgetSync.swift",
+            code: `static func save(_ snapshot: WidgetSnapshot) {
+    guard let defaults = UserDefaults(suiteName: appGroup),
+          let data = try? JSONEncoder().encode(snapshot) else { return }
+    // Skip the reload if nothing changed,
+    // widget refreshes are budgeted by the system
+    if defaults.data(forKey: key) == data { return }
+    defaults.set(data, forKey: key)
+    WidgetCenter.shared.reloadAllTimelines()
+}`,
+          },
+        ],
+      },
+      {
+        heading: "Design",
+        body: "A small design system: sage-white pages, sage cards, dark green controls, forest feature tiles, and one loud lime saved for calls to action. Product names are set in Instrument Serif, section titles in a bold two-tone sans, with bracket labels and numbered rows. The icons are a custom line set drawn as template SVGs, and everything adapts to dark mode.",
+        brand: {
+          colors: [
+            { name: "Page", hex: "#F3F4EF", note: "Sage white" },
+            { name: "Card", hex: "#E4E7DC", note: "Surfaces" },
+            { name: "Ink", hex: "#1F261F", note: "Deep forest text" },
+            { name: "Primary", hex: "#2F3D2C", note: "Controls" },
+            { name: "Lime", hex: "#C4D97C", note: "Calls to action" },
+            { name: "Rust", hex: "#B4602F", note: "Warnings only" },
+          ],
+        },
+        image: layerIcons,
+        inset: "w-[88%] h-[80%]",
+        caption: "The custom line icon set, one per product type and step.",
+      },
+      {
+        heading: "Privacy and cost",
+        list: [
+          "Your shelf, profile and check-ins live in SwiftData on the phone. No account, no backend.",
+          "OCR, extraction, speech, background removal and the assistant all run on device.",
+          "The only network calls are for finding a product photo, and every source is free: Open Beauty Facts, UPCitemdb, and an optional Google Lens key.",
+          "Swift Testing suites cover the deterministic core: INCI parsing, classification, conflict rules, fit checks, check-in parsing and the advisor.",
+        ],
+      },
+      {
+        heading: "What's next",
+        list: [
+          "App Intents and Siri, so \"what's my routine tonight?\" works hands free.",
+          "Trends from check-ins over time, to see which products your skin actually likes.",
+        ],
       },
     ],
     metrics: [],
