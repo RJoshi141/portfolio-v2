@@ -22,10 +22,10 @@ export default function ResumePage() {
 
       {/* Phones: a crisp image of the page, sized to fit exactly (mobile browsers only draw the
           first PDF page inside a fixed box, leaving empty grey below it).
-          resume-preview.png is rendered from Resume.pdf; regenerate it when the resume changes. */}
+          resume-preview-v2.png is rendered from Resume.pdf; regenerate it when the resume changes. */}
       <a href={PDF} download="Ritika-Joshi-Resume.pdf" className="md:hidden block mt-10">
         <img
-          src={`${import.meta.env.BASE_URL}resume-preview.png`}
+          src={`${import.meta.env.BASE_URL}resume-preview-v2.png`}
           alt="Ritika Joshi's resume"
           className="w-full h-auto rounded-xl bg-white"
         />
