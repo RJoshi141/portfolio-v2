@@ -19,7 +19,10 @@ export default function ProjectCard({ project, size = "md", index = 0 }) {
                     ${lg ? "aspect-[4/3] md:aspect-[16/10]" : "aspect-square"}`}
         style={{ backgroundColor: project.tint }}
       >
-        {project.cardDemo?.kind === "video" ? (
+        {project.cardDemo?.kind === "image" ? (
+          // a render with its own background: fill the whole card
+          <img src={project.cardDemo.src} alt={`${project.name} preview`} loading="lazy" className="absolute inset-0 w-full h-full object-cover" />
+        ) : project.cardDemo?.kind === "video" ? (
           // a loop that already has its own background: fill the whole card
           <video autoPlay muted loop playsInline poster={project.cardDemo.poster} className={`object-contain ${lg ? "w-[72%] h-[72%]" : "w-[70%] h-[70%]"}`}>
             <source src={project.cardDemo.mp4} type="video/mp4" />

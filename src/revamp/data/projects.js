@@ -29,6 +29,22 @@ import layerReviewMp4 from "../../assets/case-studies/layer/routine-review.mp4";
 import layerReviewPoster from "../../assets/case-studies/layer/routine-review-poster.jpg";
 import layerEmptyShelf from "../../assets/case-studies/layer/empty-shelf.jpg";
 import layerEmptyRoutine from "../../assets/case-studies/layer/empty-routine.jpg";
+import evenCard from "../../assets/case-studies/even/card-3d.png";
+import evenHero from "../../assets/case-studies/even/hero-3d.jpg";
+import evenIcons from "../../assets/case-studies/even/icons.png";
+import evenRoute from "../../assets/case-studies/even/route.png";
+import evenTripInfo from "../../assets/case-studies/even/trip-info.png";
+import evenDirections from "../../assets/case-studies/even/directions.png";
+import evenInspect from "../../assets/case-studies/even/inspect.png";
+import evenSlopeLayer from "../../assets/case-studies/even/slope-layer.png";
+import evenLegend from "../../assets/case-studies/even/legend.png";
+import evenProfiles from "../../assets/case-studies/even/profiles.png";
+import evenAppStartMp4 from "../../assets/case-studies/even/app-start.mp4";
+import evenAppStartPoster from "../../assets/case-studies/even/app-start-poster.jpg";
+import evenChangeLocationMp4 from "../../assets/case-studies/even/change-location.mp4";
+import evenChangeLocationPoster from "../../assets/case-studies/even/change-location-poster.jpg";
+import evenPickLocationMp4 from "../../assets/case-studies/even/pick-location-2.mp4";
+import evenPickLocationPoster from "../../assets/case-studies/even/pick-location-2-poster.jpg";
 import utterSketchV1 from "../../assets/case-studies/utter/sketch-v1-idle.png";
 import utterSketchV2 from "../../assets/case-studies/utter/sketch-v2-recording.png";
 import utterSketchV3 from "../../assets/case-studies/utter/sketch-v3-review.png";
@@ -470,6 +486,403 @@ task = recognizer.recognitionTask(with: request) { result, error in
     gallery: [], // extra full-width screenshots, shown numbered
   },
   {
+    slug: "layer",
+    name: "Layer",
+    tagline: "Ingredient-smart skincare planner",
+    featured: true,
+    tags: ["iOS", "Swift", "On-device AI"],
+    frame: layerCard,
+    tint: "#1e231d", // Layer's dark-mode card color
+    // full-bleed 3D render with its own green gradient background
+    heroImage: layerHero3d,
+    github: "https://github.com/RJoshi141/layer",
+    summary:
+      "Skincare labels are dense ingredient lists in tiny type. Layer reads the bottle for you: scan a label, see what's actually inside, and get a morning and night routine in the right order, with clashes flagged before you use them. Everything runs on the phone.",
+    role: "Solo: design, engineering",
+    platform: "iOS 26, widgets",
+    year: "2026",
+    stack: ["Swift", "SwiftUI", "SwiftData", "Vision", "Foundation Models", "SpeechAnalyzer", "WidgetKit"],
+    sections: [
+      {
+        heading: "Why I built it",
+        body: [
+          "Most people can't tell which of their products clash, what order to put them on in, or whether last spring's serum is still good. The answers are all printed on the bottle, just not in a form anyone can use.",
+          "Under the hood it's three problems I care about: pulling structured data out of messy real-world documents, an assistant that reasons over your own data instead of general knowledge, and voice as an input. No account, no backend.",
+        ],
+      },
+      {
+        heading: "Scan any label",
+        body: [
+          "Photograph a bottle, tube or box, two or three angles if the list wraps around. Vision reads the text, and Layer pulls out the ingredient list, product name, brand, type and shelf life.",
+          "Here it's a gel-cream moisturizer: front and back of the tube, then Layer reads the label, finds the real product photo and drafts everything for review, including what the camera actually read. The photo gets lifted off its background on device, so every shelf item is a clean cutout.",
+        ],
+        // text and the scan recording share one row, like Joydrop's product section
+        phoneBeside: true,
+        phoneDemo: { frame: iphoneFrame, mp4: layerScanMp4, poster: layerScanPoster },
+      },
+      {
+        heading: "Ingredients never touch the LLM",
+        body: "A model can helpfully invent an ingredient that isn't on the bottle. A parser can't. So the list goes through deterministic code, and the model only handles the fuzzy parts.",
+        steps: [
+          {
+            label: "Parse the INCI list",
+            text: "OCR breaks words across lines and photos cut names in half. The parser rejoins them, keeps 1,2-Hexanediol as one ingredient, and stitches lists from several angles together without duplicates.",
+            file: "INCIParser.swift",
+            code: `// Rejoins words that OCR broke across lines.
+// "Sodium Hyal-" + "uronate" → "Sodium Hyaluronate"
+static func joinLines(_ lines: [String]) -> String {
+    var out = ""
+    for raw in lines {
+        let line = raw.trimmingCharacters(in: .whitespaces)
+        guard !line.isEmpty else { continue }
+        if out.hasSuffix("-"), let first = line.first, first.isLowercase {
+            out.removeLast()
+            out += line
+        } else if out.isEmpty || out.hasSuffix("-") {
+            out += line   // "PEG-" + "40" keeps its hyphen
+        } else {
+            out += " " + line
+        }
+    }
+    return out
+}`,
+          },
+          {
+            label: "Match against a real database",
+            text: "Each name is matched to a 242-entry ingredient database with roles, plain-English summaries and tags, using alias and typo-tolerant lookup. Anything unknown gets classified from INCI naming rules and learned when you save.",
+          },
+          {
+            label: "Let the model fill the fuzzy fields",
+            text: "Name, brand and category come from guided generation, so the output is typed Swift, not JSON to parse. Regex and heuristics run first every time, and they're the full fallback on phones without Apple Intelligence.",
+            file: "LabelExtractor.swift",
+            code: `@Generable
+struct ProductDraft {
+    @Guide(description: "Product name as printed, without the brand.")
+    var name: String
+
+    @Guide(description: "Brand name. Empty string if not visible.")
+    var brand: String
+
+    @Guide(description: "What kind of product this is.", .anyOf([
+        "cleanser", "toner", "serum", "treatment", "moisturizer",
+        "sunscreen", "eyeCream", "mask", "oil", "other",
+    ]))
+    var category: String
+
+    @Guide(description: "Months it lasts after opening, from the open-jar symbol like '12M'.")
+    var monthsAfterOpening: Int
+}`,
+          },
+          {
+            label: "Human in the loop",
+            text: "Nothing is saved until you've reviewed and edited the draft.",
+          },
+        ],
+      },
+      {
+        heading: "Built around your skin",
+        body: [
+          "First launch is a five-card tour of what Layer does, then five quick questions: skin type, sensitivity, up to three concerns, experience with actives, and anything to avoid.",
+          "Those answers turn the same ingredient list into personal advice. A retinol can be \"good for breakouts\" for one person and \"start slow\" for someone new to actives. Drying alcohol near the top of the list, or fragrance, gets flagged when your skin is dry or sensitive.",
+        ],
+        // intro tour + skin questions, recorded on device
+        phoneBeside: true,
+        phoneDemo: { frame: iphoneFrame, mp4: layerTourMp4, poster: layerTourPoster },
+        // where the tour lands: empty states that point at the next step instead of a blank screen
+        compactPhones: true,
+        phones: [
+          { frame: iphoneFrame, poster: layerEmptyShelf, caption: "An empty shelf points straight at the first scan." },
+          { frame: iphoneFrame, poster: layerEmptyRoutine, caption: "An empty routine explains what it will do once you pick products." },
+        ],
+      },
+      {
+        heading: "Routines that put themselves in order",
+        body: "Toggle a product into morning or night and it slots into layering order by type, thinnest to thickest. Eleven conflict rules flag clashes, like retinol with acids, before you use them. The Routine check card shows tonight at a glance and opens the assistant's review.",
+        image: layerRoutine,
+        inset: "w-[40%] h-[92%]",
+        steps: [
+          {
+            label: "Rules make the safety calls",
+            text: "The checker is pure and testable, with no SwiftData and no model. An LLM only gets to explain a finding later, never decide it.",
+            file: "ConflictChecker.swift",
+            code: `// Deterministic on purpose. Safety calls come from rules;
+// an LLM only gets to explain them later.
+static func check(_ items: [RoutineItem], period: RoutinePeriod,
+                  rules: [ConflictRule]) -> [Finding] {
+    let findings = pairFindings(items, rules: rules)
+        + routineFindings(items, period: period)
+    // Most serious first: avoid → caution → fine
+    let rank: [ConflictRule.Severity: Int] = [.avoid: 0, .caution: 1, .fine: 2]
+    return findings.sorted { rank[$0.severity]! < rank[$1.severity]! }
+}`,
+          },
+        ],
+      },
+      {
+        heading: "An assistant that reads your shelf",
+        // routine review: suggestions for the morning, one tap adds Vitamin C to the routine
+        phoneBeside: true,
+        phoneDemo: { frame: iphoneFrame, mp4: layerReviewMp4, poster: layerReviewPoster },
+        body: "Ask anything about your routine and an on-device model answers through three tools: your current routine, rule-based suggestions, and your whole shelf. It answers from your data, not general knowledge, and only recommends products you already own. Without Apple Intelligence, a rule-based advisor gives the same review with step explanations, swaps, gaps and one-tap fixes, so the feature never disappears.",
+        steps: [
+          {
+            label: "A fresh session per question",
+            text: "A new snapshot every time, so the tools always see the routine as it is right now.",
+            file: "RoutineAssistant.swift",
+            code: `let session = LanguageModelSession(
+    tools: [
+        RoutineTool(context: context),
+        SuggestionsTool(context: context),
+        ShelfTool(context: context),
+    ],
+    instructions: """
+        You are Layer, a friendly skincare assistant inside an iOS app. \\
+        Always use the tools to look up the user's routines, shelf and \\
+        suggestions before answering. Only recommend products that are \\
+        on their shelf. Keep answers short and practical.
+        """
+)`,
+          },
+        ],
+      },
+      {
+        heading: "Voice check-ins",
+        body: [
+          "Tap the mic on the Routine tab and say how your skin feels. \"After using this sunscreen, I did find my skin become more oily and shiny than usual\" becomes a structured log: the sunscreen toggled on as used, skin feel set to oily, and your words saved underneath.",
+          "Speech is transcribed on device with SpeechAnalyzer, and keyword rules fill the form, so you can fix anything before saving. Check-ins show up under Recent on the Routine tab, the start of tracking how your skin actually responds over time.",
+        ],
+        phoneBeside: true,
+        phoneDemo: { frame: iphoneFrame, mp4: layerVoiceMp4, poster: layerVoicePoster },
+      },
+      {
+        heading: "Tonight, without opening the app",
+        body: "The widget flips between morning and night on its own and shows each step in order. Expired products are struck through, and a clash turns the side panel rust. It comes in small, medium and lock screen sizes.",
+        images: [
+          { src: layerWidget, inset: "w-[88%] h-[88%]", caption: "Tonight's three steps next to the app icon." },
+          { src: layerHomescreen, inset: "w-[46%] h-[92%]", caption: "On the home screen." },
+        ],
+        steps: [
+          {
+            label: "A tiny snapshot, not the database",
+            text: "The widget can't open the app's SwiftData store, so the app writes a small JSON snapshot to a shared App Group whenever the routine changes, and skips the reload if nothing did.",
+            file: "WidgetSync.swift",
+            code: `static func save(_ snapshot: WidgetSnapshot) {
+    guard let defaults = UserDefaults(suiteName: appGroup),
+          let data = try? JSONEncoder().encode(snapshot) else { return }
+    // Skip the reload if nothing changed,
+    // widget refreshes are budgeted by the system
+    if defaults.data(forKey: key) == data { return }
+    defaults.set(data, forKey: key)
+    WidgetCenter.shared.reloadAllTimelines()
+}`,
+          },
+        ],
+      },
+      {
+        heading: "Design",
+        body: "A small design system: sage-white pages, sage cards, dark green controls, forest feature tiles, and one loud lime saved for calls to action. Product names are set in Instrument Serif, section titles in a bold two-tone sans, with bracket labels and numbered rows. The icons are a custom line set drawn as template SVGs, and everything adapts to dark mode.",
+        brand: {
+          colors: [
+            { name: "Page", hex: "#F3F4EF", note: "Sage white" },
+            { name: "Card", hex: "#E4E7DC", note: "Surfaces" },
+            { name: "Ink", hex: "#1F261F", note: "Deep forest text" },
+            { name: "Primary", hex: "#2F3D2C", note: "Controls" },
+            { name: "Lime", hex: "#C4D97C", note: "Calls to action" },
+            { name: "Rust", hex: "#B4602F", note: "Warnings only" },
+          ],
+        },
+        image: layerIcons,
+        inset: "w-[88%] h-[80%]",
+        caption: "The custom line icon set, one per product type and step.",
+      },
+      {
+        heading: "Privacy and cost",
+        list: [
+          "Your shelf, profile and check-ins live in SwiftData on the phone. No account, no backend.",
+          "OCR, extraction, speech, background removal and the assistant all run on device.",
+          "The only network calls are for finding a product photo, and every source is free: Open Beauty Facts, UPCitemdb, and an optional Google Lens key.",
+          "Swift Testing suites cover the deterministic core: INCI parsing, classification, conflict rules, fit checks, check-in parsing and the advisor.",
+        ],
+      },
+      {
+        heading: "What's next",
+        list: [
+          "App Intents and Siri, so \"what's my routine tonight?\" works hands free.",
+          "Trends from check-ins over time, to see which products your skin actually likes.",
+        ],
+      },
+    ],
+    metrics: [],
+    gallery: [],
+  },
+  {
+    slug: "even",
+    name: "Even",
+    tagline: "Directions that know the hills",
+    featured: true,
+    tags: ["iOS", "Python", "PostGIS"],
+    frame: evenCard,
+    tint: "#141a2e", // deep blue behind the 3D phones
+    // full-bleed 3D render with its own blue gradient background
+    heroImage: evenHero,
+    github: "https://github.com/RJoshi141/even",
+    summary:
+      "Regular map apps send everyone the same way. In San Francisco, that can mean a 15% hill, a corner with no curb ramp, or a staircase halfway through the route. Even plans around how you actually get around: how steep you can climb, how steep you can descend, and whether you need a ramp at every curb. Then it shows you why it picked the route it did.",
+    role: "Solo: design, data, engineering",
+    platform: "iOS 26",
+    year: "2026",
+    stack: ["SwiftUI", "MapKit", "Swift Charts", "FastAPI", "PostGIS", "pgRouting", "Python"],
+    sections: [
+      {
+        heading: "Why I built it",
+        body: [
+          "For someone in a manual wheelchair, a route is only as good as its worst block. One steep hill or one missing curb ramp and the whole trip fails, usually halfway there. Mainstream map apps don't know any of that. They optimize for distance and time.",
+          "AccessMap, the University of Washington project for Seattle, showed what a map built around slope and curbs could look like. I wanted to take that idea to San Francisco, one of the hilliest cities in the country, and build the whole stack myself: the data pipeline, the routing engine and the app.",
+          "Under the hood it's three problems I care about: turning messy public datasets into something you can route on, making an algorithm explain its decisions, and designing a map that stays calm when it has a lot to say.",
+        ],
+      },
+      {
+        heading: "Getting started",
+        body: "First launch asks one question: how do you get around? Manual wheelchair, power wheelchair, walker or cane, or stroller. Each choice sets its own limits, shown on a tilted card that updates as you tap: up to 5% uphill for a manual wheelchair, an easy 5% downhill for a walker, no ramp requirement for a stroller. Then it asks for your location so routes can start where you are.",
+        phoneBeside: true,
+        phoneDemo: { frame: iphoneFrame, mp4: evenAppStartMp4, poster: evenAppStartPoster },
+      },
+      {
+        heading: "Building the map from open data",
+        body: "No single dataset knows where you can roll. Even stitches four of them into one graph.",
+        steps: [
+          {
+            label: "Sidewalks",
+            text: "OpenStreetMap has the sidewalks, crossings, steps and elevators. A pipeline pulls them through Overpass and loads them into PostGIS.",
+          },
+          {
+            label: "Slope",
+            text: "Every path gets elevation from the USGS 1/3 arc-second model. That's about 10 m per pixel, so grades over shorter runs are mostly noise. Paths are cut into runs of 15 m or more, and each run gets a signed grade, so uphill and downhill are scored separately.",
+            file: "elevation.py",
+            code: `# the DEM is ~10 m per pixel, so grades over shorter runs are mostly noise
+MIN_CHUNK_M = 15.0`,
+          },
+          {
+            label: "Curb ramps",
+            text: "DataSF has a citywide curb ramp inventory, but it places every ramp at the center of its intersection, not at the corner. My first matching pass only covered 27% of crossings. The fix was to read each ramp's corner label (NE, SW and so on) and match it to the crossing end whose compass bearing points that way. Curb coverage went from 27% to 77%.",
+            file: "match_curbs.py",
+            code: `INTERSECTION_RADIUS_M = 35  # crosswalk ends sit 10-30 m from the center on wide streets
+MAX_CORNER_ANGLE = 67.5     # end's bearing must roughly point at the labeled corner`,
+          },
+          {
+            label: "The graph",
+            text: "Ways are split at every junction into nodes and edges for pgRouting, with a connectivity check so routes never start on an island.",
+          },
+        ],
+      },
+      {
+        heading: "Routing that knows your limits",
+        body: "Even runs Dijkstra on a cost built from your profile.",
+        steps: [
+          {
+            label: "Over your limits is a wall",
+            text: "Anything over your limits costs -1, which pgRouting treats as impassable. Direction matters: the same block can be fine going down and too steep going up.",
+            file: "routing.py",
+            code: `# forward travel climbs at +grade; reverse travel climbs at -grade
+CASE WHEN grade > {up} OR -grade > {down} THEN -1 ELSE {WEIGHT} END AS cost,
+CASE WHEN -grade > {up} OR grade > {down} THEN -1 ELSE {WEIGHT} END AS reverse_cost`,
+          },
+          {
+            label: "Everything else costs effective meters",
+            text: "Hills, unsurveyed curbs and worn ramps all make an edge feel longer than it is.",
+            file: "routing.py",
+            code: `# a bad ramp makes its crosswalk cost 4x, so a ~15 m crossing
+# is worth a ~45 m detour to avoid
+WEIGHT = """length_m * (1 + abs(grade) / 10)
+    * (CASE WHEN curb = 'unknown' THEN 1.5 ELSE 1 END)
+    * (CASE WHEN steep_ramp OR poor_ramp THEN 4 ELSE 1 END)"""`,
+          },
+          {
+            label: "When nothing fits",
+            text: "Even doesn't just fail. It finds the closest point you can reach, routes you there, and tells you how far is left.",
+          },
+        ],
+      },
+      {
+        heading: "One route, and the reasons behind it",
+        body: [
+          "Early versions showed two routes side by side: the shortest one and the one that fits you. In practice it was noise, since the shortest route is the one you can't take. So Even shows one route, colored by slope: green under 3%, amber from 3 to 8%. Square markers flag curb ramps that are steep or worn (!) and crossings no one has surveyed yet (?).",
+          "The trip card stays small: time, distance, and the steepest climb and descent. The rest lives in two pop-ups.",
+        ],
+        image: evenRoute,
+        inset: "w-[40%] h-[92%]",
+        media: [
+          {
+            src: [
+              { src: evenTripInfo, tall: true, inset: "w-[86%] h-[90%]", caption: "01 Trip info. A slope profile of the whole trip, drawn against your limits, plus the max climb, max descent, step count, and a \"watch for\" list. It also says what you gave up, like: \"The shortest way is 750 ft shorter but climbs…\"" },
+              { src: evenDirections, tall: true, inset: "w-[86%] h-[90%]", caption: "02 Directions. Raw graph edges make terrible directions, like nine \"continue\" steps in a row. Directions merges them by bearing, folds short slivers into the step before, and combines a crossing with the walk after it into \"Cross the street, then continue\". In one test route, nine raw pieces became five readable steps. Each step carries its length, slope and curb status." },
+            ],
+          },
+        ],
+      },
+      {
+        heading: "Tap anywhere",
+        body: "Tap any sidewalk to see its incline, length and surface, and whether it works both ways for you. From there, one tap makes it your start or your destination. It's the fastest way to plan from somewhere that doesn't have an address, like a park entrance or a bus stop.",
+        phoneBeside: true,
+        phoneDemo: { frame: iphoneFrame, mp4: evenChangeLocationMp4, poster: evenChangeLocationPoster },
+        image: evenInspect,
+        inset: "w-[40%] h-[92%]",
+      },
+      {
+        heading: "Search",
+        body: "Search is limited to the area Even covers, so it never suggests a place it can't route to. Picking a start point also offers \"Use my location\", which checks your coverage before routing, so you hear why instead of seeing a failed route.",
+        phoneBeside: true,
+        phoneDemo: { frame: iphoneFrame, mp4: evenPickLocationMp4, poster: evenPickLocationPoster },
+      },
+      {
+        heading: "Reading the neighborhood",
+        body: "The slope layer paints every sidewalk in view by grade, so you can see which blocks to avoid before you plan anything. The legend explains every color and marker, in the same panel style as the profile picker.",
+        images: [
+          { src: evenSlopeLayer, inset: "w-[86%] h-[90%]", caption: "The slope layer." },
+          { src: evenLegend, inset: "w-[86%] h-[90%]", caption: "The legend." },
+          { src: evenProfiles, inset: "w-[86%] h-[90%]", caption: "The profile picker." },
+        ],
+      },
+      {
+        heading: "Design",
+        body: [
+          "Two references shaped the look. The first was the NYC subway's signage: Helvetica, set bold, made to be read in a second by someone in motion. Directions are the same job. So Even uses Helvetica Neue throughout, with bold uppercase labels, big numbers, and nothing decorative.",
+          "The second was AccessMap. Its slope-colored sidewalks and curb markers proved how much a map can say before you ever ask for a route.",
+          "On top of that, I wanted it to feel fun and confident rather than clinical. The style is neo-brutalist: square panels with thick black borders and hard offset shadows, buttons that sink into their shadow when pressed, and start screens on grid paper with outlined headlines and tilted cards. One rule kept it readable: blue is the only accent, so wherever it appears, that's the thing to tap.",
+          "Squares carry the warnings and circles carry the places. The A and B pins and the direction steps are circles. Curb markers and panels are squares.",
+        ],
+        brand: {
+          colors: [
+            { name: "Paper", hex: "#FBFAF7", note: "Panels" },
+            { name: "Ink", hex: "#111111", note: "Text, borders and shadows" },
+            { name: "Blue", hex: "#1D4ED8", note: "The only accent" },
+            { name: "Light blue", hex: "#DCE6FF", note: "Selected rows" },
+            { name: "Easy", hex: "#15803D", note: "Under 3%" },
+            { name: "Moderate", hex: "#D98E04", note: "3 to 8%" },
+          ],
+        },
+        image: evenIcons,
+        inset: "w-[70%] h-[60%]",
+        caption: "The icon is the app in miniature: a route from A to B on grid paper. It comes in light, dark and tinted versions.",
+      },
+      {
+        heading: "What's next",
+        list: [
+          "Street names in directions, from OSM street data.",
+          "BART elevator outages, so a broken elevator reroutes you before you get there.",
+          "Resolving \"mixed\" corners, where one side of an intersection has a ramp and the other doesn't.",
+          "A web client on the same API.",
+        ],
+      },
+    ],
+    metrics: [
+      { value: "77%", label: "Curb coverage, up from 27%" },
+      { value: "4", label: "Mobility profiles" },
+      { value: "9 → 5", label: "Raw path pieces merged into direction steps on a test route" },
+    ],
+    gallery: [],
+  },
+  {
     slug: "iphone-duo",
     name: "iPhone Duo Case Study",
     tagline: "Making Apple's foldable actually fold",
@@ -723,236 +1136,6 @@ let jumpGroup = SKAction.group([jumpAnimation, jumpMotion])`,
             { name: "Glow", hex: "#FFD600", note: "Rewards only" },
           ],
         },
-      },
-    ],
-    metrics: [],
-    gallery: [],
-  },
-  {
-    slug: "layer",
-    name: "Layer",
-    tagline: "Ingredient-smart skincare for iOS",
-    featured: true,
-    tags: ["iOS", "Swift", "On-device AI"],
-    frame: layerCard,
-    tint: "#1e231d", // Layer's dark-mode card color
-    // full-bleed 3D render with its own green gradient background
-    heroImage: layerHero3d,
-    github: "https://github.com/RJoshi141/layer",
-    summary:
-      "Skincare labels are dense ingredient lists in tiny type. Layer reads the bottle for you: scan a label, see what's actually inside, and get a morning and night routine in the right order, with clashes flagged before you use them. Everything runs on the phone.",
-    role: "Solo: design, engineering",
-    platform: "iOS 26, widgets",
-    year: "2026",
-    stack: ["Swift", "SwiftUI", "SwiftData", "Vision", "Foundation Models", "SpeechAnalyzer", "WidgetKit"],
-    sections: [
-      {
-        heading: "Why I built it",
-        body: [
-          "Most people can't tell which of their products clash, what order to put them on in, or whether last spring's serum is still good. The answers are all printed on the bottle, just not in a form anyone can use.",
-          "Under the hood it's three problems I care about: pulling structured data out of messy real-world documents, an assistant that reasons over your own data instead of general knowledge, and voice as an input. No account, no backend.",
-        ],
-      },
-      {
-        heading: "Scan any label",
-        body: [
-          "Photograph a bottle, tube or box, two or three angles if the list wraps around. Vision reads the text, and Layer pulls out the ingredient list, product name, brand, type and shelf life.",
-          "Here it's a gel-cream moisturizer: front and back of the tube, then Layer reads the label, finds the real product photo and drafts everything for review, including what the camera actually read. The photo gets lifted off its background on device, so every shelf item is a clean cutout.",
-        ],
-        // text and the scan recording share one row, like Joydrop's product section
-        phoneBeside: true,
-        phoneDemo: { frame: iphoneFrame, mp4: layerScanMp4, poster: layerScanPoster },
-      },
-      {
-        heading: "Ingredients never touch the LLM",
-        body: "A model can helpfully invent an ingredient that isn't on the bottle. A parser can't. So the list goes through deterministic code, and the model only handles the fuzzy parts.",
-        steps: [
-          {
-            label: "Parse the INCI list",
-            text: "OCR breaks words across lines and photos cut names in half. The parser rejoins them, keeps 1,2-Hexanediol as one ingredient, and stitches lists from several angles together without duplicates.",
-            file: "INCIParser.swift",
-            code: `// Rejoins words that OCR broke across lines.
-// "Sodium Hyal-" + "uronate" → "Sodium Hyaluronate"
-static func joinLines(_ lines: [String]) -> String {
-    var out = ""
-    for raw in lines {
-        let line = raw.trimmingCharacters(in: .whitespaces)
-        guard !line.isEmpty else { continue }
-        if out.hasSuffix("-"), let first = line.first, first.isLowercase {
-            out.removeLast()
-            out += line
-        } else if out.isEmpty || out.hasSuffix("-") {
-            out += line   // "PEG-" + "40" keeps its hyphen
-        } else {
-            out += " " + line
-        }
-    }
-    return out
-}`,
-          },
-          {
-            label: "Match against a real database",
-            text: "Each name is matched to a 242-entry ingredient database with roles, plain-English summaries and tags, using alias and typo-tolerant lookup. Anything unknown gets classified from INCI naming rules and learned when you save.",
-          },
-          {
-            label: "Let the model fill the fuzzy fields",
-            text: "Name, brand and category come from guided generation, so the output is typed Swift, not JSON to parse. Regex and heuristics run first every time, and they're the full fallback on phones without Apple Intelligence.",
-            file: "LabelExtractor.swift",
-            code: `@Generable
-struct ProductDraft {
-    @Guide(description: "Product name as printed, without the brand.")
-    var name: String
-
-    @Guide(description: "Brand name. Empty string if not visible.")
-    var brand: String
-
-    @Guide(description: "What kind of product this is.", .anyOf([
-        "cleanser", "toner", "serum", "treatment", "moisturizer",
-        "sunscreen", "eyeCream", "mask", "oil", "other",
-    ]))
-    var category: String
-
-    @Guide(description: "Months it lasts after opening, from the open-jar symbol like '12M'.")
-    var monthsAfterOpening: Int
-}`,
-          },
-          {
-            label: "Human in the loop",
-            text: "Nothing is saved until you've reviewed and edited the draft.",
-          },
-        ],
-      },
-      {
-        heading: "Built around your skin",
-        body: [
-          "First launch is a five-card tour of what Layer does, then five quick questions: skin type, sensitivity, up to three concerns, experience with actives, and anything to avoid.",
-          "Those answers turn the same ingredient list into personal advice. A retinol can be \"good for breakouts\" for one person and \"start slow\" for someone new to actives. Drying alcohol near the top of the list, or fragrance, gets flagged when your skin is dry or sensitive.",
-        ],
-        // intro tour + skin questions, recorded on device
-        phoneBeside: true,
-        phoneDemo: { frame: iphoneFrame, mp4: layerTourMp4, poster: layerTourPoster },
-        // where the tour lands: empty states that point at the next step instead of a blank screen
-        compactPhones: true,
-        phones: [
-          { frame: iphoneFrame, poster: layerEmptyShelf, caption: "An empty shelf points straight at the first scan." },
-          { frame: iphoneFrame, poster: layerEmptyRoutine, caption: "An empty routine explains what it will do once you pick products." },
-        ],
-      },
-      {
-        heading: "Routines that put themselves in order",
-        body: "Toggle a product into morning or night and it slots into layering order by type, thinnest to thickest. Eleven conflict rules flag clashes, like retinol with acids, before you use them. The Routine check card shows tonight at a glance and opens the assistant's review.",
-        image: layerRoutine,
-        inset: "w-[40%] h-[92%]",
-        steps: [
-          {
-            label: "Rules make the safety calls",
-            text: "The checker is pure and testable, with no SwiftData and no model. An LLM only gets to explain a finding later, never decide it.",
-            file: "ConflictChecker.swift",
-            code: `// Deterministic on purpose. Safety calls come from rules;
-// an LLM only gets to explain them later.
-static func check(_ items: [RoutineItem], period: RoutinePeriod,
-                  rules: [ConflictRule]) -> [Finding] {
-    let findings = pairFindings(items, rules: rules)
-        + routineFindings(items, period: period)
-    // Most serious first: avoid → caution → fine
-    let rank: [ConflictRule.Severity: Int] = [.avoid: 0, .caution: 1, .fine: 2]
-    return findings.sorted { rank[$0.severity]! < rank[$1.severity]! }
-}`,
-          },
-        ],
-      },
-      {
-        heading: "An assistant that reads your shelf",
-        // routine review: suggestions for the morning, one tap adds Vitamin C to the routine
-        phoneBeside: true,
-        phoneDemo: { frame: iphoneFrame, mp4: layerReviewMp4, poster: layerReviewPoster },
-        body: "Ask anything about your routine and an on-device model answers through three tools: your current routine, rule-based suggestions, and your whole shelf. It answers from your data, not general knowledge, and only recommends products you already own. Without Apple Intelligence, a rule-based advisor gives the same review with step explanations, swaps, gaps and one-tap fixes, so the feature never disappears.",
-        steps: [
-          {
-            label: "A fresh session per question",
-            text: "A new snapshot every time, so the tools always see the routine as it is right now.",
-            file: "RoutineAssistant.swift",
-            code: `let session = LanguageModelSession(
-    tools: [
-        RoutineTool(context: context),
-        SuggestionsTool(context: context),
-        ShelfTool(context: context),
-    ],
-    instructions: """
-        You are Layer, a friendly skincare assistant inside an iOS app. \\
-        Always use the tools to look up the user's routines, shelf and \\
-        suggestions before answering. Only recommend products that are \\
-        on their shelf. Keep answers short and practical.
-        """
-)`,
-          },
-        ],
-      },
-      {
-        heading: "Voice check-ins",
-        body: [
-          "Tap the mic on the Routine tab and say how your skin feels. \"After using this sunscreen, I did find my skin become more oily and shiny than usual\" becomes a structured log: the sunscreen toggled on as used, skin feel set to oily, and your words saved underneath.",
-          "Speech is transcribed on device with SpeechAnalyzer, and keyword rules fill the form, so you can fix anything before saving. Check-ins show up under Recent on the Routine tab, the start of tracking how your skin actually responds over time.",
-        ],
-        phoneBeside: true,
-        phoneDemo: { frame: iphoneFrame, mp4: layerVoiceMp4, poster: layerVoicePoster },
-      },
-      {
-        heading: "Tonight, without opening the app",
-        body: "The widget flips between morning and night on its own and shows each step in order. Expired products are struck through, and a clash turns the side panel rust. It comes in small, medium and lock screen sizes.",
-        images: [
-          { src: layerWidget, inset: "w-[88%] h-[88%]", caption: "Tonight's three steps next to the app icon." },
-          { src: layerHomescreen, inset: "w-[46%] h-[92%]", caption: "On the home screen." },
-        ],
-        steps: [
-          {
-            label: "A tiny snapshot, not the database",
-            text: "The widget can't open the app's SwiftData store, so the app writes a small JSON snapshot to a shared App Group whenever the routine changes, and skips the reload if nothing did.",
-            file: "WidgetSync.swift",
-            code: `static func save(_ snapshot: WidgetSnapshot) {
-    guard let defaults = UserDefaults(suiteName: appGroup),
-          let data = try? JSONEncoder().encode(snapshot) else { return }
-    // Skip the reload if nothing changed,
-    // widget refreshes are budgeted by the system
-    if defaults.data(forKey: key) == data { return }
-    defaults.set(data, forKey: key)
-    WidgetCenter.shared.reloadAllTimelines()
-}`,
-          },
-        ],
-      },
-      {
-        heading: "Design",
-        body: "A small design system: sage-white pages, sage cards, dark green controls, forest feature tiles, and one loud lime saved for calls to action. Product names are set in Instrument Serif, section titles in a bold two-tone sans, with bracket labels and numbered rows. The icons are a custom line set drawn as template SVGs, and everything adapts to dark mode.",
-        brand: {
-          colors: [
-            { name: "Page", hex: "#F3F4EF", note: "Sage white" },
-            { name: "Card", hex: "#E4E7DC", note: "Surfaces" },
-            { name: "Ink", hex: "#1F261F", note: "Deep forest text" },
-            { name: "Primary", hex: "#2F3D2C", note: "Controls" },
-            { name: "Lime", hex: "#C4D97C", note: "Calls to action" },
-            { name: "Rust", hex: "#B4602F", note: "Warnings only" },
-          ],
-        },
-        image: layerIcons,
-        inset: "w-[88%] h-[80%]",
-        caption: "The custom line icon set, one per product type and step.",
-      },
-      {
-        heading: "Privacy and cost",
-        list: [
-          "Your shelf, profile and check-ins live in SwiftData on the phone. No account, no backend.",
-          "OCR, extraction, speech, background removal and the assistant all run on device.",
-          "The only network calls are for finding a product photo, and every source is free: Open Beauty Facts, UPCitemdb, and an optional Google Lens key.",
-          "Swift Testing suites cover the deterministic core: INCI parsing, classification, conflict rules, fit checks, check-in parsing and the advisor.",
-        ],
-      },
-      {
-        heading: "What's next",
-        list: [
-          "App Intents and Siri, so \"what's my routine tonight?\" works hands free.",
-          "Trends from check-ins over time, to see which products your skin actually likes.",
-        ],
       },
     ],
     metrics: [],
