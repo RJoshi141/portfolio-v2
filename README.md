@@ -17,12 +17,12 @@
 ## Screens
 
 <div align="center">
-  <img src="docs/screenshots/mac-work.jpg" alt="Work page on desktop with the menu open" width="49%" />
-  <img src="docs/screenshots/mac-about.jpg" alt="About page on desktop with the 3D lanyard" width="49%" />
+  <img src="docs/screenshots/mac-work.png" alt="Work page in a MacBook frame" width="49%" />
+  <img src="docs/screenshots/mac-about.png" alt="About page in a MacBook frame" width="49%" />
   <br /><br />
-  <img src="docs/screenshots/iphone-home.jpg" alt="Home page on iPhone" width="260" />
+  <img src="docs/screenshots/iphone-home.png" alt="Home page in an iPhone frame" width="240" />
   &nbsp;&nbsp;
-  <img src="docs/screenshots/iphone-utter.jpg" alt="Utter case study on iPhone" width="260" />
+  <img src="docs/screenshots/iphone-utter.png" alt="Utter case study in an iPhone frame" width="240" />
 </div>
 
 ## What this is
