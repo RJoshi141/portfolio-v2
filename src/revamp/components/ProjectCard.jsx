@@ -1,8 +1,11 @@
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
+import { LINE } from "../grid";
 
 // size "lg" = featured rail card, "md" = grid card
-export default function ProjectCard({ project, size = "md", index = 0 }) {
+// grid: a square cell in a bordered grid (Work page grid look), media flush and text under a divider
+// square: same card, sharp corners (Work page)
+export default function ProjectCard({ project, size = "md", index = 0, grid = false, square = false }) {
   const lg = size === "lg";
   return (
     <motion.a
@@ -12,10 +15,10 @@ export default function ProjectCard({ project, size = "md", index = 0 }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.2 }}
       transition={{ duration: 0.6, delay: index * 0.08, ease: "easeOut" }}
-      className={`group block ${lg ? "snap-start shrink-0 w-[85vw] md:w-[68vw] lg:w-[62vw]" : ""}`}
+      className={`group block ${lg ? "snap-start shrink-0 w-[85vw] md:w-[68vw] lg:w-[62vw]" : ""} ${grid ? `border-r border-b ${LINE}` : ""}`}
     >
       <div
-        className={`relative overflow-hidden rounded-2xl md:rounded-3xl flex items-center justify-center
+        className={`relative overflow-hidden ${grid || square ? "" : "rounded-2xl md:rounded-3xl"} flex items-center justify-center
                     ${lg ? "aspect-[4/3] md:aspect-[16/10]" : "aspect-square"}`}
         style={{ backgroundColor: project.tint }}
       >
@@ -95,11 +98,11 @@ export default function ProjectCard({ project, size = "md", index = 0 }) {
           </span>
         )}
       </div>
-      <div className="mt-4 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+      <div className={grid ? `px-5 md:px-6 pt-4 md:pt-5 border-t ${LINE} flex flex-wrap items-baseline gap-x-3 gap-y-1 transition-colors group-hover:bg-white/[0.03]` : "mt-4 flex flex-wrap items-baseline gap-x-3 gap-y-1"}>
         <h3 className={`${lg ? "text-lg md:text-xl" : "text-base md:text-lg"} text-white`}>{project.name}</h3>
         <p className={`${lg ? "text-lg md:text-xl" : "text-base md:text-lg"} text-neutral-500`}>{project.tagline}</p>
       </div>
-      <p className="mt-1 text-sm text-neutral-600">{project.tags.join(" · ")}</p>
+      <p className={grid ? "px-5 md:px-6 pt-1 pb-5 md:pb-6 text-sm text-neutral-600" : "mt-1 text-sm text-neutral-600"}>{project.tags.join(" · ")}</p>
     </motion.a>
   );
 }

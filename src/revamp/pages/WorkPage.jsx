@@ -9,7 +9,7 @@ export default function WorkPage() {
       <PageTitle>Work</PageTitle>
       <div className="mt-16 md:mt-24 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 md:gap-x-8 gap-y-12 md:gap-y-14">
         {[...featured, ...selected].map((p, i) => (
-          <ProjectCard key={p.slug} project={p} index={i % 3} />
+          <ProjectCard key={p.slug} project={p} index={i % 3} square />
         ))}
       </div>
     </section>

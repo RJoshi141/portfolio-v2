@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 const Lanyard = lazy(() => import("../../components/Lanyard"));
 import { ArrowUpRight } from "lucide-react";
 import { experience } from "../data/content";
+import { GRID, LINE } from "../grid";
 // raw markup so the icon's fill="currentColor" matches the location text color
 import sfIcon from "../../assets/city-sf.svg?raw";
 import singaporeIcon from "../../assets/city-singapore.svg?raw";
@@ -34,8 +35,13 @@ const SectionLabel = ({ children }) => (
 
 // One role: company, dates and place on the left; title and bullets on the right
 const Role = ({ company, title, when, where, whereIcon, link, caseStudy, bullets = [] }) => (
-  <motion.li {...rise} className="py-10 md:py-14 border-t border-neutral-900 grid md:grid-cols-[minmax(0,1fr)_minmax(0,1.9fr)] gap-4 md:gap-16">
-    <div>
+  <motion.li
+    {...rise}
+    className={GRID
+      ? `border-b ${LINE} grid md:grid-cols-[minmax(0,1fr)_minmax(0,1.9fr)]`
+      : "py-10 md:py-14 border-t border-neutral-900 grid md:grid-cols-[minmax(0,1fr)_minmax(0,1.9fr)] gap-4 md:gap-16"}
+  >
+    <div className={GRID ? "p-6 md:p-10" : ""}>
       <a
         href={link}
         target="_blank"
@@ -68,7 +74,7 @@ const Role = ({ company, title, when, where, whereIcon, link, caseStudy, bullets
         </a>
       )}
     </div>
-    <div>
+    <div className={GRID ? `px-6 pb-6 md:p-10 md:border-l ${LINE}` : ""}>
       <p className="text-base md:text-[1.1rem] text-neutral-200">{title}</p>
       <ul className="mt-5 space-y-3">
         {bullets.map((b) => (
@@ -129,13 +135,12 @@ export default function AboutPage() {
             </p>
           </div>
         </motion.div>
-
       </section>
 
       {/* Experience, expanded */}
       <section className="px-5 md:px-16 lg:px-20 pt-24 md:pt-32">
         <SectionLabel>Experience</SectionLabel>
-        <ul>
+        <ul className={GRID ? `border-t border-l border-r ${LINE}` : ""}>
           {experience.map((e) => (
             <Role key={e.company} {...e} />
           ))}

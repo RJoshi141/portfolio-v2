@@ -1,6 +1,5 @@
 // #/writing: articles and talks as image cards
 import { motion } from "framer-motion";
-import { ArrowUpRight } from "lucide-react";
 import PageTitle from "../components/PageTitle";
 import { writing } from "../data/content";
 
@@ -31,10 +30,7 @@ export default function WritingPage() {
               <p className="mt-5 font-mono text-xs md:text-sm uppercase tracking-wider text-neutral-500">
                 {w.where} · {w.when}{w.read && ` · ${w.read}`}
               </p>
-              <h2 className="mt-3 flex items-start gap-2 text-xl md:text-2xl tracking-[-0.015em] leading-snug text-white">
-                <span>{w.title}</span>
-                <ArrowUpRight className="mt-1 w-5 h-5 shrink-0 text-neutral-600 group-hover:text-white transition-colors" />
-              </h2>
+              <h2 className="mt-3 text-xl md:text-2xl tracking-[-0.015em] leading-snug text-white">{w.title}</h2>
               {w.description && (
                 <p className="mt-3 text-base md:text-lg font-light leading-[1.6] text-neutral-400">{w.description}</p>
               )}

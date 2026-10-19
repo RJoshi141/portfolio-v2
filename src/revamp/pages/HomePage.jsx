@@ -40,7 +40,7 @@ export default function HomePage() {
         <div className="flex gap-4 md:gap-8 overflow-x-auto snap-x snap-mandatory md:snap-none px-5 md:px-16 lg:px-20 pb-4 scroll-px-5 md:scroll-px-16 lg:scroll-px-20
                         [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {featured.map((p, i) => (
-            <ProjectCard key={p.slug} project={p} size="lg" index={i} />
+            <ProjectCard key={p.slug} project={p} size="lg" index={i} square />
           ))}
           <div className="shrink-0 w-1 md:w-4" aria-hidden />
         </div>
