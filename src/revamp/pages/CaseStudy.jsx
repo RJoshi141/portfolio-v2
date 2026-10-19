@@ -565,6 +565,19 @@ export default function CaseStudy({ slug }) {
         <PhoneDemo {...project.phoneDemo} />
       ) : project.demo ? (
         <WatchDemo {...project.demo} />
+      ) : project.heroVideo ? (
+        // full-bleed hero recording; loop: false plays it once and holds the last frame
+        <motion.figure {...rise()} className="my-12 md:my-20">
+          <Zoomable ratio={16 / 9} className="aspect-[4/3] md:aspect-[16/9]">
+            <video
+              autoPlay muted playsInline loop={project.heroVideo.loop !== false}
+              poster={project.heroVideo.poster}
+              className="w-full h-full object-cover"
+            >
+              <source src={project.heroVideo.mp4} type="video/mp4" />
+            </video>
+          </Zoomable>
+        </motion.figure>
       ) : project.heroImage ? (
         // full-bleed hero shot (image already has its own background)
         <Media items={project.heroImage} alt={`${project.name} preview`} inset="w-full h-full object-cover" />

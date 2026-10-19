@@ -31,6 +31,8 @@ import layerEmptyShelf from "../../assets/case-studies/layer/empty-shelf.jpg";
 import layerEmptyRoutine from "../../assets/case-studies/layer/empty-routine.jpg";
 import evenCard from "../../assets/case-studies/even/card-3d.png";
 import evenHero from "../../assets/case-studies/even/hero-3d.jpg";
+import evenHeroMp4 from "../../assets/case-studies/even/hero-flyin.mp4";
+import evenHeroPoster from "../../assets/case-studies/even/hero-flyin-poster.jpg";
 import evenIcons from "../../assets/case-studies/even/icons.png";
 import evenRoute from "../../assets/case-studies/even/route.png";
 import evenTripInfo from "../../assets/case-studies/even/trip-info.png";
@@ -725,6 +727,8 @@ static func check(_ items: [RoutineItem], period: RoutinePeriod,
     tint: "#141a2e", // deep blue behind the 3D phones
     // full-bleed 3D render with its own blue gradient background
     heroImage: evenHero,
+    // the phones fly in on a loop (wins over heroImage)
+    heroVideo: { mp4: evenHeroMp4, poster: evenHeroPoster },
     github: "https://github.com/RJoshi141/even",
     summary:
       "Regular map apps send everyone the same way. In San Francisco, that can mean a 15% hill, a corner with no curb ramp, or a staircase halfway through the route. Even plans around how you actually get around: how steep you can climb, how steep you can descend, and whether you need a ramp at every curb. Then it shows you why it picked the route it did.",
