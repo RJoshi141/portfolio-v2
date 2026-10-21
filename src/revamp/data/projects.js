@@ -11,7 +11,7 @@ import duoFoldPoster from "../../assets/case-studies/duo/duo-fold-poster.jpg";
 import duoCardMp4 from "../../assets/case-studies/duo/duo-fold-card.mp4";
 import duoCardPoster from "../../assets/case-studies/duo/duo-fold-card-poster.jpg";
 import layerCard from "../../assets/case-studies/layer/card-3d.png";
-import layerHero3d from "../../assets/case-studies/layer/hero-3d.jpg";
+import layerHero3phones from "../../assets/case-studies/layer/hero-3phones.png";
 import layerShelf from "../../assets/case-studies/layer/shelf.png";
 import layerProduct from "../../assets/case-studies/layer/product.png";
 import layerRoutine from "../../assets/case-studies/layer/routine.png";
@@ -47,6 +47,8 @@ import evenChangeLocationMp4 from "../../assets/case-studies/even/change-locatio
 import evenChangeLocationPoster from "../../assets/case-studies/even/change-location-poster.jpg";
 import evenPickLocationMp4 from "../../assets/case-studies/even/pick-location-2.mp4";
 import evenPickLocationPoster from "../../assets/case-studies/even/pick-location-2-poster.jpg";
+import utterHeroMp4 from "../../assets/case-studies/utter/hero-watch-3.mp4";
+import utterHeroPoster from "../../assets/case-studies/utter/hero-watch-3-poster.jpg";
 import utterSketchV1 from "../../assets/case-studies/utter/sketch-v1-idle.png";
 import utterSketchV2 from "../../assets/case-studies/utter/sketch-v2-recording.png";
 import utterSketchV3 from "../../assets/case-studies/utter/sketch-v3-review.png";
@@ -112,7 +114,7 @@ import joydropHomeFeed from "../../assets/case-studies/joydrop/home-after-feed.j
 import joydropHomeHighlight from "../../assets/case-studies/joydrop/home-after-highlight.jpg";
 import joydropHomeComments from "../../assets/case-studies/joydrop/home-after-comments.jpg";
 import joydropCardPhones from "../../assets/project-frames/joydrop-phones.png";
-import joydropHero from "../../assets/case-studies/joydrop/hero-v2.jpg";
+import joydropHero from "../../assets/case-studies/joydrop/hero-3phones.png";
 import iphoneFrame from "../../assets/case-studies/iphone-frame.png";
 import utterPhoneMp4 from "../../assets/case-studies/utter/iphone-demo.mp4";
 import utterPhoneWebm from "../../assets/case-studies/utter/iphone-demo.webm";
@@ -149,7 +151,10 @@ export const projects = [
     year: "2025 – Now",
     site: "https://app.joydrop.me/",
     // top of the case study: three-phone render; the app scroll video now sits in "The product"
-    heroImage: joydropHero,
+    // three floating phones on a transparent background, sitting right on the page (no grey panel)
+    hero: joydropHero,
+    heroBare: true,
+    heroInset: "w-full h-full",
     siteLabel: "joydrop.me",
     stack: ["Expo", "React Native", "NestJS", "Next.js", "Firebase", "EAS"],
     sections: [
@@ -318,11 +323,9 @@ export const projects = [
     platform: "watchOS, iOS",
     // looping screen recording shown in a Watch Ultra frame at the top of the case study
     // still shown first, before the looping demos
-    intro: {
-      src: utterWatchIntro,
-      // TODO: rewrite in your words
-      caption: "Discovery. Utter lives in the watch app grid as an amber U, launches in a beat, and opens on an intro screen that explains the whole idea in three lines: hold to record, send it to your iPhone, and it's transcribed and sorted.",
-    },
+    // hero: the watch turning on its band, looping (replaces the three-watch intro still)
+    // recording at its own near-square shape, centered, no extra background around it
+    heroVideo: { mp4: utterHeroMp4, poster: utterHeroPoster, fit: true, aspect: 1000 / 984 },
     demo: {
       frame: watchUltraFrame, mp4: utterDemoMp4, webm: utterDemoWebm,
       phone: { frame: iphoneFrame, mp4: utterPhoneMp4, webm: utterPhoneWebm },
@@ -495,8 +498,10 @@ task = recognizer.recognitionTask(with: request) { result, error in
     tags: ["iOS", "Swift", "On-device AI"],
     frame: layerCard,
     tint: "#1e231d", // Layer's dark-mode card color
-    // full-bleed 3D render with its own green gradient background
-    heroImage: layerHero3d,
+    // three floating phones on a transparent background, sitting right on the page (no grey panel)
+    hero: layerHero3phones,
+    heroBare: true,
+    heroInset: "w-full h-full",
     github: "https://github.com/RJoshi141/layer",
     summary:
       "Skincare labels are dense ingredient lists in tiny type. Layer reads the bottle for you: scan a label, see what's actually inside, and get a morning and night routine in the right order, with clashes flagged before you use them. Everything runs on the phone.",

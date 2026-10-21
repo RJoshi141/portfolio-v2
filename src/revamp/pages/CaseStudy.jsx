@@ -558,6 +558,25 @@ export default function CaseStudy({ slug }) {
         <Media items={project.intro.src} caption={project.intro.caption} alt={`${project.name} intro`} inset="w-[58%] h-[54%]" bare />
       )}
 
+      {/* hero recording, full-bleed; loop: false plays it once and holds the last frame */}
+      {project.heroVideo && (
+        <motion.figure {...rise()} className="my-12 md:my-20">
+          {/* fit: keep the recording's own shape (centered, narrower) instead of a full-width 16:9 crop */}
+          <Zoomable
+            ratio={project.heroVideo.fit ? project.heroVideo.aspect : 16 / 9}
+            className={project.heroVideo.fit ? "mx-auto w-full md:w-[56%] !bg-transparent" : "aspect-[4/3] md:aspect-[16/9]"}
+          >
+            <video
+              autoPlay muted playsInline loop={project.heroVideo.loop !== false}
+              poster={project.heroVideo.poster}
+              className={project.heroVideo.fit ? "w-full h-auto" : "w-full h-full object-cover"}
+            >
+              <source src={project.heroVideo.mp4} type="video/mp4" />
+            </video>
+          </Zoomable>
+        </motion.figure>
+      )}
+
       {/* Hero media */}
       {project.landscapeDemo ? (
         <LandscapeDemo {...project.landscapeDemo} />
@@ -565,20 +584,7 @@ export default function CaseStudy({ slug }) {
         <PhoneDemo {...project.phoneDemo} />
       ) : project.demo ? (
         <WatchDemo {...project.demo} />
-      ) : project.heroVideo ? (
-        // full-bleed hero recording; loop: false plays it once and holds the last frame
-        <motion.figure {...rise()} className="my-12 md:my-20">
-          <Zoomable ratio={16 / 9} className="aspect-[4/3] md:aspect-[16/9]">
-            <video
-              autoPlay muted playsInline loop={project.heroVideo.loop !== false}
-              poster={project.heroVideo.poster}
-              className="w-full h-full object-cover"
-            >
-              <source src={project.heroVideo.mp4} type="video/mp4" />
-            </video>
-          </Zoomable>
-        </motion.figure>
-      ) : project.heroImage ? (
+      ) : project.heroVideo ? null : project.heroImage ? (
         // full-bleed hero shot (image already has its own background)
         <Media items={project.heroImage} alt={`${project.name} preview`} inset="w-full h-full object-cover" />
       ) : (
