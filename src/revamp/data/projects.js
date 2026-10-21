@@ -41,8 +41,8 @@ import evenInspect from "../../assets/case-studies/even/inspect.png";
 import evenSlopeLayer from "../../assets/case-studies/even/slope-layer.png";
 import evenLegend from "../../assets/case-studies/even/legend.png";
 import evenProfiles from "../../assets/case-studies/even/profiles.png";
-import evenAppStartMp4 from "../../assets/case-studies/even/app-start.mp4";
-import evenAppStartPoster from "../../assets/case-studies/even/app-start-poster.jpg";
+import evenAppStartMp4 from "../../assets/case-studies/even/app-start-2.mp4";
+import evenAppStartPoster from "../../assets/case-studies/even/app-start-2-poster.jpg";
 import evenChangeLocationMp4 from "../../assets/case-studies/even/change-location.mp4";
 import evenChangeLocationPoster from "../../assets/case-studies/even/change-location-poster.jpg";
 import evenPickLocationMp4 from "../../assets/case-studies/even/pick-location-2.mp4";
@@ -736,7 +736,7 @@ static func check(_ items: [RoutineItem], period: RoutinePeriod,
     heroVideo: { mp4: evenHeroMp4, poster: evenHeroPoster },
     github: "https://github.com/RJoshi141/even",
     summary:
-      "Regular map apps send everyone the same way. In San Francisco, that can mean a 15% hill, a corner with no curb ramp, or a staircase halfway through the route. Even plans around how you actually get around: how steep you can climb, how steep you can descend, and whether you need a ramp at every curb. Then it shows you why it picked the route it did.",
+      "Map apps send everyone the same way. In San Francisco that can mean a 15% hill or a corner with no curb ramp. Even plans routes around how you get around, then shows you why it picked them.",
     role: "Solo: design, data, engineering",
     platform: "iOS 26",
     year: "2026",
@@ -744,61 +744,79 @@ static func check(_ items: [RoutineItem], period: RoutinePeriod,
     sections: [
       {
         heading: "Why I built it",
-        body: [
-          "For someone in a manual wheelchair, a route is only as good as its worst block. One steep hill or one missing curb ramp and the whole trip fails, usually halfway there. Mainstream map apps don't know any of that. They optimize for distance and time.",
-          "AccessMap, the University of Washington project for Seattle, showed what a map built around slope and curbs could look like. I wanted to take that idea to San Francisco, one of the hilliest cities in the country, and build the whole stack myself: the data pipeline, the routing engine and the app.",
-          "Under the hood it's three problems I care about: turning messy public datasets into something you can route on, making an algorithm explain its decisions, and designing a map that stays calm when it has a lot to say.",
-        ],
+        body: "For someone in a wheelchair, a route is only as good as its worst block. AccessMap proved a slope-aware map could work in Seattle. I wanted it for San Francisco, built end to end: data pipeline, routing engine and app.",
       },
       {
-        heading: "Getting started",
-        body: "First launch asks one question: how do you get around? Manual wheelchair, power wheelchair, walker or cane, or stroller. Each choice sets its own limits, shown on a tilted card that updates as you tap: up to 5% uphill for a manual wheelchair, an easy 5% downhill for a walker, no ramp requirement for a stroller. Then it asks for your location so routes can start where you are.",
-        phoneBeside: true,
-        phoneDemo: { frame: iphoneFrame, mp4: evenAppStartMp4, poster: evenAppStartPoster },
+        // one iPhone that plays the three flows in turn, with chapters beside it (desktop) or under it (phones)
+        heading: "Three moves",
+        body: "Pick a chapter or let it play through.",
+        walkthrough: {
+          frame: iphoneFrame,
+          chapters: [
+            {
+              label: "Get started",
+              text: "One question: how do you get around? Each answer sets its own slope and curb limits.",
+              mp4: evenAppStartMp4,
+              poster: evenAppStartPoster,
+            },
+            {
+              label: "Search",
+              text: "Search only suggests places Even can route to, and checks your location is covered first.",
+              mp4: evenPickLocationMp4,
+              poster: evenPickLocationPoster,
+            },
+            {
+              label: "Tap anywhere",
+              text: "Tap a sidewalk to see its incline and surface, then start or end a route right there.",
+              mp4: evenChangeLocationMp4,
+              poster: evenChangeLocationPoster,
+            },
+          ],
+        },
       },
       {
         heading: "Building the map from open data",
-        body: "No single dataset knows where you can roll. Even stitches four of them into one graph.",
+        body: "No single dataset knows where you can roll, so Even stitches four into one graph.",
         steps: [
           {
             label: "Sidewalks",
-            text: "OpenStreetMap has the sidewalks, crossings, steps and elevators. A pipeline pulls them through Overpass and loads them into PostGIS.",
+            text: "OpenStreetMap sidewalks, crossings, steps and elevators, loaded into PostGIS.",
           },
           {
             label: "Slope",
-            text: "Every path gets elevation from the USGS 1/3 arc-second model. That's about 10 m per pixel, so grades over shorter runs are mostly noise. Paths are cut into runs of 15 m or more, and each run gets a signed grade, so uphill and downhill are scored separately.",
+            text: "USGS elevation at ~10 m per pixel, so paths are cut into 15 m runs with a signed grade.",
             file: "elevation.py",
             code: `# the DEM is ~10 m per pixel, so grades over shorter runs are mostly noise
 MIN_CHUNK_M = 15.0`,
           },
           {
             label: "Curb ramps",
-            text: "DataSF has a citywide curb ramp inventory, but it places every ramp at the center of its intersection, not at the corner. My first matching pass only covered 27% of crossings. The fix was to read each ramp's corner label (NE, SW and so on) and match it to the crossing end whose compass bearing points that way. Curb coverage went from 27% to 77%.",
+            text: "DataSF puts every ramp at the intersection center. Matching each ramp's corner label to the crossing end that points that way took coverage from 27% to 77%.",
             file: "match_curbs.py",
             code: `INTERSECTION_RADIUS_M = 35  # crosswalk ends sit 10-30 m from the center on wide streets
 MAX_CORNER_ANGLE = 67.5     # end's bearing must roughly point at the labeled corner`,
           },
           {
             label: "The graph",
-            text: "Ways are split at every junction into nodes and edges for pgRouting, with a connectivity check so routes never start on an island.",
+            text: "Split at every junction for pgRouting, with a check so routes never start on an island.",
           },
         ],
       },
       {
         heading: "Routing that knows your limits",
-        body: "Even runs Dijkstra on a cost built from your profile.",
+        body: "Dijkstra over a cost built from your profile. If nothing fits the whole way, Even gets you as close as it can and says how far is left.",
         steps: [
           {
             label: "Over your limits is a wall",
-            text: "Anything over your limits costs -1, which pgRouting treats as impassable. Direction matters: the same block can be fine going down and too steep going up.",
+            text: "-1 means impassable, and uphill and downhill are checked separately.",
             file: "routing.py",
             code: `# forward travel climbs at +grade; reverse travel climbs at -grade
 CASE WHEN grade > {up} OR -grade > {down} THEN -1 ELSE {WEIGHT} END AS cost,
 CASE WHEN -grade > {up} OR grade > {down} THEN -1 ELSE {WEIGHT} END AS reverse_cost`,
           },
           {
-            label: "Everything else costs effective meters",
-            text: "Hills, unsurveyed curbs and worn ramps all make an edge feel longer than it is.",
+            label: "Everything else costs extra",
+            text: "Hills, unsurveyed curbs and worn ramps make an edge feel longer than it is.",
             file: "routing.py",
             code: `# a bad ramp makes its crosswalk cost 4x, so a ~15 m crossing
 # is worth a ~45 m detour to avoid
@@ -806,80 +824,39 @@ WEIGHT = """length_m * (1 + abs(grade) / 10)
     * (CASE WHEN curb = 'unknown' THEN 1.5 ELSE 1 END)
     * (CASE WHEN steep_ramp OR poor_ramp THEN 4 ELSE 1 END)"""`,
           },
-          {
-            label: "When nothing fits",
-            text: "Even doesn't just fail. It finds the closest point you can reach, routes you there, and tells you how far is left.",
-          },
         ],
       },
       {
-        heading: "One route, and the reasons behind it",
-        body: [
-          "Early versions showed two routes side by side: the shortest one and the one that fits you. In practice it was noise, since the shortest route is the one you can't take. So Even shows one route, colored by slope: green under 3%, amber from 3 to 8%. Square markers flag curb ramps that are steep or worn (!) and crossings no one has surveyed yet (?).",
-          "The trip card stays small: time, distance, and the steepest climb and descent. The rest lives in two pop-ups.",
-        ],
-        image: evenRoute,
-        inset: "w-[40%] h-[92%]",
+        heading: "One route, and why",
+        body: "One route colored by slope, green under 3% and amber to 8%. The rest lives in two pop-ups.",
         media: [
           {
             src: [
-              { src: evenTripInfo, tall: true, inset: "w-[86%] h-[90%]", caption: "01 Trip info. A slope profile of the whole trip, drawn against your limits, plus the max climb, max descent, step count, and a \"watch for\" list. It also says what you gave up, like: \"The shortest way is 750 ft shorter but climbs…\"" },
-              { src: evenDirections, tall: true, inset: "w-[86%] h-[90%]", caption: "02 Directions. Raw graph edges make terrible directions, like nine \"continue\" steps in a row. Directions merges them by bearing, folds short slivers into the step before, and combines a crossing with the walk after it into \"Cross the street, then continue\". In one test route, nine raw pieces became five readable steps. Each step carries its length, slope and curb status." },
+              { src: evenTripInfo, tall: true, inset: "w-[86%] h-[90%]", caption: "Trip info: the slope profile against your limits, and what the shortest route would have cost you." },
+              { src: evenDirections, tall: true, inset: "w-[86%] h-[90%]", caption: "Directions: nine raw path pieces merged into five readable steps, each with slope and curb status." },
             ],
           },
         ],
       },
       {
-        heading: "Tap anywhere",
-        body: "Tap any sidewalk to see its incline, length and surface, and whether it works both ways for you. From there, one tap makes it your start or your destination. It's the fastest way to plan from somewhere that doesn't have an address, like a park entrance or a bus stop.",
-        phoneBeside: true,
-        phoneDemo: { frame: iphoneFrame, mp4: evenChangeLocationMp4, poster: evenChangeLocationPoster },
-        image: evenInspect,
-        inset: "w-[40%] h-[92%]",
-      },
-      {
-        heading: "Search",
-        body: "Search is limited to the area Even covers, so it never suggests a place it can't route to. Picking a start point also offers \"Use my location\", which checks your coverage before routing, so you hear why instead of seeing a failed route.",
-        phoneBeside: true,
-        phoneDemo: { frame: iphoneFrame, mp4: evenPickLocationMp4, poster: evenPickLocationPoster },
-      },
-      {
-        heading: "Reading the neighborhood",
-        body: "The slope layer paints every sidewalk in view by grade, so you can see which blocks to avoid before you plan anything. The legend explains every color and marker, in the same panel style as the profile picker.",
-        images: [
-          { src: evenSlopeLayer, inset: "w-[86%] h-[90%]", caption: "The slope layer." },
-          { src: evenLegend, inset: "w-[86%] h-[90%]", caption: "The legend." },
-          { src: evenProfiles, inset: "w-[86%] h-[90%]", caption: "The profile picker." },
-        ],
-      },
-      {
         heading: "Design",
-        body: [
-          "Two references shaped the look. The first was the NYC subway's signage: Helvetica, set bold, made to be read in a second by someone in motion. Directions are the same job. So Even uses Helvetica Neue throughout, with bold uppercase labels, big numbers, and nothing decorative.",
-          "The second was AccessMap. Its slope-colored sidewalks and curb markers proved how much a map can say before you ever ask for a route.",
-          "On top of that, I wanted it to feel fun and confident rather than clinical. The style is neo-brutalist: square panels with thick black borders and hard offset shadows, buttons that sink into their shadow when pressed, and start screens on grid paper with outlined headlines and tilted cards. One rule kept it readable: blue is the only accent, so wherever it appears, that's the thing to tap.",
-          "Squares carry the warnings and circles carry the places. The A and B pins and the direction steps are circles. Curb markers and panels are squares.",
-        ],
+        body: "NYC subway signage meets neo-brutalism: bold Helvetica, thick borders, hard shadows. Blue is the only accent, so wherever it shows up, that's the thing to tap.",
         brand: {
           colors: [
             { name: "Paper", hex: "#FBFAF7", note: "Panels" },
-            { name: "Ink", hex: "#111111", note: "Text, borders and shadows" },
+            { name: "Ink", hex: "#111111", note: "Text and borders" },
             { name: "Blue", hex: "#1D4ED8", note: "The only accent" },
             { name: "Light blue", hex: "#DCE6FF", note: "Selected rows" },
             { name: "Easy", hex: "#15803D", note: "Under 3%" },
             { name: "Moderate", hex: "#D98E04", note: "3 to 8%" },
           ],
         },
-        image: evenIcons,
-        inset: "w-[70%] h-[60%]",
-        caption: "The icon is the app in miniature: a route from A to B on grid paper. It comes in light, dark and tinted versions.",
       },
       {
         heading: "What's next",
         list: [
-          "Street names in directions, from OSM street data.",
-          "BART elevator outages, so a broken elevator reroutes you before you get there.",
-          "Resolving \"mixed\" corners, where one side of an intersection has a ramp and the other doesn't.",
+          "Street names in directions.",
+          "BART elevator outages that reroute you.",
           "A web client on the same API.",
         ],
       },

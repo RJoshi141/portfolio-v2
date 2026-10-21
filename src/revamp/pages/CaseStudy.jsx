@@ -1,5 +1,6 @@
 // Case study: giant title + intro/meta split (Gabriel's Grandstand), then
 // headed story sections with full-width or side-by-side media (Blake's Randori).
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { findProject } from "../data/projects";
@@ -351,6 +352,123 @@ const LaptopDemo = ({ frame, mp4, poster, caption }) => (
   </motion.figure>
 );
 
+// One iPhone that plays several recordings in turn, with a quick fade to black between them.
+// Chapters sit beside the phone on desktop (dot, title, note) and as pills under it on phones.
+// Each recording plays once; when it ends the next chapter starts, and the last one wraps to the first.
+const Walkthrough = ({ heading, body, frame, chapters }) => {
+  const [active, setActive] = useState(0);   // chapter the controls highlight
+  const [shown, setShown] = useState(0);     // chapter the phone is playing
+  const [dark, setDark] = useState(false);   // black cover while switching
+  const video = useRef(null);
+  const box = useRef(null);
+  const timer = useRef();
+
+  const go = (i) => {
+    clearTimeout(timer.current);
+    setActive(i);
+    if (i === shown) {
+      // same chapter: just restart it
+      if (video.current) { video.current.currentTime = 0; video.current.play().catch(() => {}); }
+      return;
+    }
+    setDark(true);
+    timer.current = setTimeout(() => {
+      setShown(i); // swap once the screen is fully black
+      timer.current = setTimeout(() => setDark(false), 900); // never stay black if a video is slow to load
+    }, 120);
+  };
+
+  // only play while the phone is on screen
+  useEffect(() => {
+    const el = box.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([e]) => {
+      const v = video.current;
+      if (!v) return;
+      if (e.isIntersecting) v.play().catch(() => {});
+      else v.pause();
+    }, { threshold: 0.35 });
+    io.observe(el);
+    return () => { io.disconnect(); clearTimeout(timer.current); };
+  }, []);
+
+  const c = chapters[shown];
+  const now = chapters[active];
+
+  return (
+    <motion.section {...rise()} className="pt-20 md:pt-32">
+      <div ref={box} className="grid md:grid-cols-2 gap-8 md:gap-16 items-center">
+        {/* phone + (on phones) the pill row under it */}
+        <div>
+          <div className="relative mx-auto h-[520px] md:h-[680px] aspect-[2025/4139]">
+            <div
+              className="absolute overflow-hidden bg-black rounded-[18%/8.5%]"
+              style={{ left: "5.2%", top: "2.3%", width: "89.6%", height: "95.4%" }}
+            >
+              <video
+                key={shown}
+                ref={video}
+                src={c.mp4}
+                poster={c.poster}
+                autoPlay
+                muted
+                playsInline
+                onLoadedData={() => setDark(false)}
+                onError={() => setDark(false)}
+                onEnded={() => go((shown + 1) % chapters.length)}
+                className="w-full h-full object-cover"
+              />
+              {/* the black transition between recordings */}
+              <div className={`absolute inset-0 bg-black pointer-events-none transition-opacity duration-100 ${dark ? "opacity-100" : "opacity-0"}`} />
+            </div>
+            <img src={frame} alt="" className="absolute inset-0 w-full h-full pointer-events-none" />
+          </div>
+
+          <div className="md:hidden mt-8">
+            <div className="flex gap-2.5 overflow-x-auto pb-1 -mx-5 px-5 [scrollbar-width:none]">
+              {chapters.map((ch, i) => (
+                <button
+                  key={ch.label}
+                  type="button"
+                  onClick={() => go(i)}
+                  className={`shrink-0 flex items-center gap-2 pl-2 pr-3.5 py-1.5 rounded-full border transition-colors ${i === active ? "border-neutral-500 text-white" : "border-neutral-800 text-neutral-500"}`}
+                >
+                  <span className={`w-4 h-4 rounded-full transition-colors ${i === active ? "bg-white" : "bg-neutral-700"}`} />
+                  <span className="text-sm">{ch.label}</span>
+                </button>
+              ))}
+            </div>
+            <p className="mt-5 text-base font-light leading-[1.65] text-neutral-400">{now.text}</p>
+          </div>
+        </div>
+
+        {/* heading first on phones; chapter list beside the phone on desktop */}
+        <div className="order-first md:order-none">
+          <h2 className="text-xl md:text-[1.4rem] font-normal tracking-[-0.015em] leading-tight text-white">{heading}</h2>
+          {body && <p className="mt-4 md:mt-6 text-base md:text-[1.1rem] font-light leading-[1.65] text-neutral-200">{body}</p>}
+          <ol className="hidden md:block mt-10 border-t border-neutral-800">
+            {chapters.map((ch, i) => (
+              <li key={ch.label} className="border-b border-neutral-800">
+                <button type="button" onClick={() => go(i)} className="group w-full text-left py-6 flex gap-5 items-start">
+                  <span className={`mt-1 w-5 h-5 rounded-full shrink-0 transition-colors ${i === active ? "bg-white" : "bg-neutral-700 group-hover:bg-neutral-500"}`} />
+                  <span className="flex-1 min-w-0">
+                    <span className={`block text-lg md:text-xl transition-colors ${i === active ? "text-white" : "text-neutral-500 group-hover:text-neutral-300"}`}>{ch.label}</span>
+                    {i === active && (
+                      <>
+                        <span className="block mt-3 text-base font-light leading-[1.65] text-neutral-400">{ch.text}</span>
+                      </>
+                    )}
+                  </span>
+                </button>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </div>
+    </motion.section>
+  );
+};
+
 // Section text and one iPhone in the same row: heading + copy on the left, phone on the right
 // (stacks on phones, with the phone at the same size as the before/after rows)
 const SectionWithPhone = ({ heading, body, phoneDemo }) => (
@@ -604,7 +722,7 @@ export default function CaseStudy({ slug }) {
       {/* Story: heading, text, then that section's media */}
       {project.sections.map((s) => (
         <div key={s.heading || s.key}>
-          {s.heading && (s.phoneBeside ? <SectionWithPhone {...s} /> : <Section {...s} />)}
+          {s.walkthrough ? <Walkthrough heading={s.heading} body={s.body} {...s.walkthrough} /> : s.heading && (s.phoneBeside ? <SectionWithPhone {...s} /> : <Section {...s} />)}
           {(s.images || s.image || s.video) && (
             <Media items={s.images || s.video || s.image} caption={s.caption} inset={s.inset} wide={s.wide} alt={s.heading || project.name} />
           )}
