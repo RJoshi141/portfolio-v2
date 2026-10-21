@@ -504,7 +504,7 @@ task = recognizer.recognitionTask(with: request) { result, error in
     heroInset: "w-full h-full",
     github: "https://github.com/RJoshi141/layer",
     summary:
-      "Skincare labels are dense ingredient lists in tiny type. Layer reads the bottle for you: scan a label, see what's actually inside, and get a morning and night routine in the right order, with clashes flagged before you use them. Everything runs on the phone.",
+      "Skincare labels are dense ingredient lists in tiny type. Layer reads the bottle, explains what's inside, and builds a morning and night routine in the right order. All on the phone.",
     role: "Solo: design, engineering",
     platform: "iOS 26, widgets",
     year: "2026",
@@ -512,89 +512,72 @@ task = recognizer.recognitionTask(with: request) { result, error in
     sections: [
       {
         heading: "Why I built it",
-        body: [
-          "Most people can't tell which of their products clash, what order to put them on in, or whether last spring's serum is still good. The answers are all printed on the bottle, just not in a form anyone can use.",
-          "Under the hood it's three problems I care about: pulling structured data out of messy real-world documents, an assistant that reasons over your own data instead of general knowledge, and voice as an input. No account, no backend.",
-        ],
+        body: "Nobody knows which products clash, what order to use them in, or if last spring's serum is still good. The answers are on the bottle, just not in a form anyone can use.",
       },
       {
         heading: "Scan any label",
-        body: [
-          "Photograph a bottle, tube or box, two or three angles if the list wraps around. Vision reads the text, and Layer pulls out the ingredient list, product name, brand, type and shelf life.",
-          "Here it's a gel-cream moisturizer: front and back of the tube, then Layer reads the label, finds the real product photo and drafts everything for review, including what the camera actually read. The photo gets lifted off its background on device, so every shelf item is a clean cutout.",
-        ],
+        body: "Snap the front and back. Vision reads the label, Layer finds the real product photo, cuts it out on device, and drafts everything for you to review.",
         // text and the scan recording share one row, like Joydrop's product section
         phoneBeside: true,
         phoneDemo: { frame: iphoneFrame, mp4: layerScanMp4, poster: layerScanPoster },
       },
       {
         heading: "Ingredients never touch the LLM",
-        body: "A model can helpfully invent an ingredient that isn't on the bottle. A parser can't. So the list goes through deterministic code, and the model only handles the fuzzy parts.",
+        body: "A model can invent an ingredient that isn't on the bottle. A parser can't.",
         steps: [
           {
-            label: "Parse the INCI list",
-            text: "OCR breaks words across lines and photos cut names in half. The parser rejoins them, keeps 1,2-Hexanediol as one ingredient, and stitches lists from several angles together without duplicates.",
-            file: "INCIParser.swift",
-            code: `// Rejoins words that OCR broke across lines.
-// "Sodium Hyal-" + "uronate" → "Sodium Hyaluronate"
-static func joinLines(_ lines: [String]) -> String {
-    var out = ""
-    for raw in lines {
-        let line = raw.trimmingCharacters(in: .whitespaces)
-        guard !line.isEmpty else { continue }
-        if out.hasSuffix("-"), let first = line.first, first.isLowercase {
-            out.removeLast()
-            out += line
-        } else if out.isEmpty || out.hasSuffix("-") {
-            out += line   // "PEG-" + "40" keeps its hyphen
-        } else {
-            out += " " + line
-        }
-    }
-    return out
-}`,
+            label: "Parse",
+            text: "A deterministic parser rejoins words OCR split across lines and merges lists from several photos.",
           },
           {
-            label: "Match against a real database",
-            text: "Each name is matched to a 242-entry ingredient database with roles, plain-English summaries and tags, using alias and typo-tolerant lookup. Anything unknown gets classified from INCI naming rules and learned when you save.",
+            label: "Match",
+            text: "Each name is looked up in a 242-entry ingredient database. Unknown ones are classified from INCI naming rules.",
           },
           {
-            label: "Let the model fill the fuzzy fields",
-            text: "Name, brand and category come from guided generation, so the output is typed Swift, not JSON to parse. Regex and heuristics run first every time, and they're the full fallback on phones without Apple Intelligence.",
+            label: "Fill the fuzzy parts",
+            text: "Name, brand and type come from guided generation, typed Swift instead of JSON. Rules cover phones without Apple Intelligence.",
             file: "LabelExtractor.swift",
             code: `@Generable
 struct ProductDraft {
-    @Guide(description: "Product name as printed, without the brand.")
     var name: String
-
-    @Guide(description: "Brand name. Empty string if not visible.")
     var brand: String
-
-    @Guide(description: "What kind of product this is.", .anyOf([
-        "cleanser", "toner", "serum", "treatment", "moisturizer",
-        "sunscreen", "eyeCream", "mask", "oil", "other",
-    ]))
+    @Guide(.anyOf(["cleanser", "serum", "moisturizer", "sunscreen", /* ... */]))
     var category: String
-
-    @Guide(description: "Months it lasts after opening, from the open-jar symbol like '12M'.")
-    var monthsAfterOpening: Int
 }`,
           },
           {
-            label: "Human in the loop",
-            text: "Nothing is saved until you've reviewed and edited the draft.",
+            label: "Review",
+            text: "Nothing is saved until you've checked the draft.",
           },
         ],
       },
       {
-        heading: "Built around your skin",
-        body: [
-          "First launch is a five-card tour of what Layer does, then five quick questions: skin type, sensitivity, up to three concerns, experience with actives, and anything to avoid.",
-          "Those answers turn the same ingredient list into personal advice. A retinol can be \"good for breakouts\" for one person and \"start slow\" for someone new to actives. Drying alcohol near the top of the list, or fragrance, gets flagged when your skin is dry or sensitive.",
-        ],
-        // intro tour + skin questions, recorded on device
-        phoneBeside: true,
-        phoneDemo: { frame: iphoneFrame, mp4: layerTourMp4, poster: layerTourPoster },
+        // one iPhone that plays the three flows in turn, with chapters beside it (desktop) or under it (phones)
+        heading: "Made for your skin",
+        body: "Pick a chapter or let it play through.",
+        walkthrough: {
+          frame: iphoneFrame,
+          chapters: [
+            {
+              label: "Built around your skin",
+              text: "A short tour, then five questions: skin type, sensitivity, concerns, actives and anything to avoid. The same ingredient list becomes advice for you.",
+              mp4: layerTourMp4,
+              poster: layerTourPoster,
+            },
+            {
+              label: "Routine assistant",
+              text: "An on-device model answers from your shelf through three tools and only suggests products you own. Without Apple Intelligence, rules give the same review.",
+              mp4: layerReviewMp4,
+              poster: layerReviewPoster,
+            },
+            {
+              label: "Voice check-ins",
+              text: "Say how your skin feels. It's transcribed on device and fills in what you used and how your skin reacted.",
+              mp4: layerVoiceMp4,
+              poster: layerVoicePoster,
+            },
+          ],
+        },
         // where the tour lands: empty states that point at the next step instead of a blank screen
         compactPhones: true,
         phones: [
@@ -604,90 +587,21 @@ struct ProductDraft {
       },
       {
         heading: "Routines that put themselves in order",
-        body: "Toggle a product into morning or night and it slots into layering order by type, thinnest to thickest. Eleven conflict rules flag clashes, like retinol with acids, before you use them. The Routine check card shows tonight at a glance and opens the assistant's review.",
+        body: "Products slot into layering order, thinnest to thickest. Eleven conflict rules flag clashes like retinol with acids. Rules make the safety calls; a model only explains them.",
         image: layerRoutine,
         inset: "w-[40%] h-[92%]",
-        steps: [
-          {
-            label: "Rules make the safety calls",
-            text: "The checker is pure and testable, with no SwiftData and no model. An LLM only gets to explain a finding later, never decide it.",
-            file: "ConflictChecker.swift",
-            code: `// Deterministic on purpose. Safety calls come from rules;
-// an LLM only gets to explain them later.
-static func check(_ items: [RoutineItem], period: RoutinePeriod,
-                  rules: [ConflictRule]) -> [Finding] {
-    let findings = pairFindings(items, rules: rules)
-        + routineFindings(items, period: period)
-    // Most serious first: avoid → caution → fine
-    let rank: [ConflictRule.Severity: Int] = [.avoid: 0, .caution: 1, .fine: 2]
-    return findings.sorted { rank[$0.severity]! < rank[$1.severity]! }
-}`,
-          },
-        ],
-      },
-      {
-        heading: "An assistant that reads your shelf",
-        // routine review: suggestions for the morning, one tap adds Vitamin C to the routine
-        phoneBeside: true,
-        phoneDemo: { frame: iphoneFrame, mp4: layerReviewMp4, poster: layerReviewPoster },
-        body: "Ask anything about your routine and an on-device model answers through three tools: your current routine, rule-based suggestions, and your whole shelf. It answers from your data, not general knowledge, and only recommends products you already own. Without Apple Intelligence, a rule-based advisor gives the same review with step explanations, swaps, gaps and one-tap fixes, so the feature never disappears.",
-        steps: [
-          {
-            label: "A fresh session per question",
-            text: "A new snapshot every time, so the tools always see the routine as it is right now.",
-            file: "RoutineAssistant.swift",
-            code: `let session = LanguageModelSession(
-    tools: [
-        RoutineTool(context: context),
-        SuggestionsTool(context: context),
-        ShelfTool(context: context),
-    ],
-    instructions: """
-        You are Layer, a friendly skincare assistant inside an iOS app. \\
-        Always use the tools to look up the user's routines, shelf and \\
-        suggestions before answering. Only recommend products that are \\
-        on their shelf. Keep answers short and practical.
-        """
-)`,
-          },
-        ],
-      },
-      {
-        heading: "Voice check-ins",
-        body: [
-          "Tap the mic on the Routine tab and say how your skin feels. \"After using this sunscreen, I did find my skin become more oily and shiny than usual\" becomes a structured log: the sunscreen toggled on as used, skin feel set to oily, and your words saved underneath.",
-          "Speech is transcribed on device with SpeechAnalyzer, and keyword rules fill the form, so you can fix anything before saving. Check-ins show up under Recent on the Routine tab, the start of tracking how your skin actually responds over time.",
-        ],
-        phoneBeside: true,
-        phoneDemo: { frame: iphoneFrame, mp4: layerVoiceMp4, poster: layerVoicePoster },
       },
       {
         heading: "Tonight, without opening the app",
-        body: "The widget flips between morning and night on its own and shows each step in order. Expired products are struck through, and a clash turns the side panel rust. It comes in small, medium and lock screen sizes.",
+        body: "The widget flips between morning and night, strikes through expired products, and turns rust when something clashes. It reads a small snapshot the app shares, never the database.",
         images: [
           { src: layerWidget, inset: "w-[88%] h-[88%]", caption: "Tonight's three steps next to the app icon." },
           { src: layerHomescreen, inset: "w-[46%] h-[92%]", caption: "On the home screen." },
         ],
-        steps: [
-          {
-            label: "A tiny snapshot, not the database",
-            text: "The widget can't open the app's SwiftData store, so the app writes a small JSON snapshot to a shared App Group whenever the routine changes, and skips the reload if nothing did.",
-            file: "WidgetSync.swift",
-            code: `static func save(_ snapshot: WidgetSnapshot) {
-    guard let defaults = UserDefaults(suiteName: appGroup),
-          let data = try? JSONEncoder().encode(snapshot) else { return }
-    // Skip the reload if nothing changed,
-    // widget refreshes are budgeted by the system
-    if defaults.data(forKey: key) == data { return }
-    defaults.set(data, forKey: key)
-    WidgetCenter.shared.reloadAllTimelines()
-}`,
-          },
-        ],
       },
       {
         heading: "Design",
-        body: "A small design system: sage-white pages, sage cards, dark green controls, forest feature tiles, and one loud lime saved for calls to action. Product names are set in Instrument Serif, section titles in a bold two-tone sans, with bracket labels and numbered rows. The icons are a custom line set drawn as template SVGs, and everything adapts to dark mode.",
+        body: "Sage pages, forest controls and one loud lime for calls to action. Product names in Instrument Serif, with a custom line icon set.",
         brand: {
           colors: [
             { name: "Page", hex: "#F3F4EF", note: "Sage white" },
@@ -705,17 +619,16 @@ static func check(_ items: [RoutineItem], period: RoutinePeriod,
       {
         heading: "Privacy and cost",
         list: [
-          "Your shelf, profile and check-ins live in SwiftData on the phone. No account, no backend.",
-          "OCR, extraction, speech, background removal and the assistant all run on device.",
-          "The only network calls are for finding a product photo, and every source is free: Open Beauty Facts, UPCitemdb, and an optional Google Lens key.",
-          "Swift Testing suites cover the deterministic core: INCI parsing, classification, conflict rules, fit checks, check-in parsing and the advisor.",
+          "Everything lives on the phone. No account, no backend.",
+          "OCR, extraction, speech, cutouts and the assistant all run on device.",
+          "The only network calls find product photos, from free sources.",
         ],
       },
       {
         heading: "What's next",
         list: [
-          "App Intents and Siri, so \"what's my routine tonight?\" works hands free.",
-          "Trends from check-ins over time, to see which products your skin actually likes.",
+          "Siri: \"what's my routine tonight?\"",
+          "Trends from check-ins over time.",
         ],
       },
     ],
@@ -1129,6 +1042,7 @@ let jumpGroup = SKAction.group([jumpAnimation, jumpMotion])`,
   },
   {
     slug: "cinemate",
+    hidden: true, // off the Work and Home pages for now
     name: "Cinemate",
     tagline: "Movie discovery with RAG",
     featured: true,
@@ -1148,6 +1062,7 @@ let jumpGroup = SKAction.group([jumpAnimation, jumpMotion])`,
   },
   {
     slug: "harmoni",
+    hidden: true, // off the Work and Home pages for now
     name: "Harmoni",
     tagline: "Spotify listening dashboard",
     tags: ["React", "Spotify API", "Vercel"],
@@ -1184,6 +1099,7 @@ let jumpGroup = SKAction.group([jumpAnimation, jumpMotion])`,
   },
   {
     slug: "rubiks",
+    hidden: true, // off the Work and Home pages for now
     name: "Rubik's Cube Solver",
     tagline: "3D trainer in Three.js",
     tags: ["React", "Three.js"],
@@ -1201,6 +1117,7 @@ let jumpGroup = SKAction.group([jumpAnimation, jumpMotion])`,
   },
   {
     slug: "portfolio",
+    hidden: true, // off the Work and Home pages for now
     name: "Portfolio",
     tagline: "This site, previous version",
     tags: ["React", "Tailwind", "Framer Motion"],

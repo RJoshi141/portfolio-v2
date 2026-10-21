@@ -105,7 +105,7 @@ const Loop = ({ mp4, webm }) => (
 // Voice memo "in transit": a packet with a tiny waveform rides a dashed line from the
 // watch to the phone, labelled with what's actually moving and how.
 const Flow = () => (
-  <div className="relative w-[20%] self-center flex flex-col items-center text-center font-mono uppercase tracking-wider text-neutral-500 text-[clamp(6px,0.75vw,11px)]">
+  <div className="relative w-[20%] self-center flex flex-col items-center text-center font-mono uppercase tracking-wider text-neutral-500 text-[clamp(0.375rem,0.75vw,0.6875rem)]">
     <span>utter-uuid.m4a</span>
     <div className="relative w-full my-[1.2em] border-t border-dashed border-neutral-600">
       <motion.div
@@ -319,7 +319,7 @@ const AssetShelf = ({ items }) => (
             <img src={a.src} alt={a.label} className="[zoom:3] md:[zoom:4]" style={{ imageRendering: "pixelated" }} />
           </div>
           <p className="mt-4 text-sm md:text-base text-white">{a.label}</p>
-          {a.note && <p className="mt-1 font-mono text-[11px] md:text-xs uppercase tracking-wider text-neutral-500">{a.note}</p>}
+          {a.note && <p className="mt-1 font-mono text-[0.6875rem] md:text-xs uppercase tracking-wider text-neutral-500">{a.note}</p>}
         </li>
       ))}
     </ul>
@@ -400,7 +400,7 @@ const Walkthrough = ({ heading, body, frame, chapters }) => {
       <div ref={box} className="grid md:grid-cols-2 gap-8 md:gap-16 items-center">
         {/* phone + (on phones) the pill row under it */}
         <div>
-          <div className="relative mx-auto h-[520px] md:h-[680px] aspect-[2025/4139]">
+          <div className="relative mx-auto h-[32.5rem] md:h-[42.5rem] aspect-[2025/4139]">
             <div
               className="absolute overflow-hidden bg-black rounded-[18%/8.5%]"
               style={{ left: "5.2%", top: "2.3%", width: "89.6%", height: "95.4%" }}
@@ -523,8 +523,8 @@ const CodeStep = ({ n, label, text, file, code }) => (
       {text && <p className="mt-2 md:mt-3 text-base md:text-lg font-light leading-[1.6] text-neutral-400">{text}</p>}
     </div>
     {code && <div className="bg-[#1a1a1a] min-w-0">
-      {file && <p className="px-5 md:px-7 pt-4 md:pt-5 font-mono text-[11px] md:text-xs uppercase tracking-wider text-neutral-500">{file}</p>}
-      <pre className="px-5 md:px-7 py-4 md:py-5 overflow-x-auto font-mono text-[12px] md:text-[13.5px] leading-[1.7] text-neutral-200">
+      {file && <p className="px-5 md:px-7 pt-4 md:pt-5 font-mono text-[0.6875rem] md:text-xs uppercase tracking-wider text-neutral-500">{file}</p>}
+      <pre className="px-5 md:px-7 py-4 md:py-5 overflow-x-auto font-mono text-[0.75rem] md:text-[0.84375rem] leading-[1.7] text-neutral-200">
         <code>{highlight(code)}</code>
       </pre>
     </div>}
@@ -570,14 +570,14 @@ const BrandPanel = ({ colors = [], display, mono }) => (
     {(display || mono) && (
     <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-end mb-10 md:mb-14">
       <div>
-        <p className="font-mono text-[11px] md:text-xs uppercase tracking-wider text-neutral-500">Fraunces · Display</p>
+        <p className="font-mono text-[0.6875rem] md:text-xs uppercase tracking-wider text-neutral-500">Fraunces · Display</p>
         <p className="mt-3 text-[#F5F0E8] leading-[0.95] tracking-[-0.02em] text-5xl md:text-7xl"
            style={{ fontFamily: "'Fraunces', serif", fontWeight: 900 }}>
           {display}
         </p>
       </div>
       <div>
-        <p className="font-mono text-[11px] md:text-xs uppercase tracking-wider text-neutral-500">Space Mono · System</p>
+        <p className="font-mono text-[0.6875rem] md:text-xs uppercase tracking-wider text-neutral-500">Space Mono · System</p>
         <p className="mt-3 text-[#C9B99A] text-base md:text-lg tracking-[0.12em]" style={{ fontFamily: "'Space Mono', monospace" }}>
           {mono}
         </p>
@@ -590,7 +590,7 @@ const BrandPanel = ({ colors = [], display, mono }) => (
           {/* thin ring so the near-black swatches still read against the grey panel */}
           <div className="aspect-square ring-1 ring-white/10" style={{ backgroundColor: c.hex }} />
           <p className="mt-3 text-sm md:text-base text-white">{c.name}</p>
-          <p className="font-mono text-[11px] md:text-xs uppercase tracking-wider text-neutral-500">{c.hex}</p>
+          <p className="font-mono text-[0.6875rem] md:text-xs uppercase tracking-wider text-neutral-500">{c.hex}</p>
           {c.note && <p className="mt-1 text-xs md:text-sm font-light text-neutral-500">{c.note}</p>}
         </li>
       ))}
@@ -627,7 +627,7 @@ export default function CaseStudy({ slug }) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.9, ease }}
         className="pt-16 md:pt-24 font-medium tracking-[-0.05em] leading-[0.9] text-white break-words"
-        style={{ fontSize: project.name.length > 10 ? "clamp(3.5rem, 11vw, 12rem)" : "clamp(4rem, 17vw, 18rem)" }}
+        style={{ fontSize: project.name.length > 10 ? "clamp(3.5rem, 11vw, 11.5rem)" : "clamp(4rem, 17vw, 17.5rem)" }}
       >
         {project.name}
       </motion.h1>

@@ -78,7 +78,7 @@ function NavCapsule({ page, items }) {
   const menu = [{ label: "Home", home: true }, ...links];
 
   return (
-    <div ref={ref} className="fixed top-2 right-3 md:top-6 md:right-[max(2.5rem,calc((100vw_-_1360px)/2_+_2.5rem))] z-50 flex flex-col items-end">
+    <div ref={ref} className="fixed top-2 right-3 md:top-6 md:right-10 z-50 flex flex-col items-end">
       {/* row and button share one 48px slot; the button is pinned to the right edge */}
       <div className="relative h-12 flex items-center justify-end">
         <AnimatePresence initial={false}>
@@ -141,7 +141,7 @@ function NavCapsule({ page, items }) {
             animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
             exit={{ opacity: 0, y: -10, scale: 0.94, filter: "blur(8px)" }}
             transition={{ type: "spring", stiffness: 420, damping: 32 }}
-            className={`mt-3 min-w-[210px] rounded-[28px] py-3 origin-top-right [text-shadow:0_1px_8px_rgba(0,0,0,0.6)] ${GLASS}`}
+            className={`mt-3 min-w-[13.125rem] rounded-[28px] py-3 origin-top-right [text-shadow:0_1px_8px_rgba(0,0,0,0.6)] ${GLASS}`}
           >
             {menu.map((l) => {
               const active = (l.home ? "Home" : l.label) === current;

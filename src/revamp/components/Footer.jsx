@@ -23,7 +23,7 @@ const connect = [
   ...socials.filter((s) => s.label !== "Email").map((s) => ({ ...s, external: true })),
 ];
 
-const linkCls = "text-base md:text-[17px] text-neutral-400 hover:text-white transition-colors";
+const linkCls = "text-base md:text-[1.0625rem] text-neutral-400 hover:text-white transition-colors";
 
 const Column = ({ title, children }) => (
   <div>

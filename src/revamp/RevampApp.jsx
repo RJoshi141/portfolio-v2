@@ -33,11 +33,12 @@ function RevampApp() {
 
   return (
     <div className="revamp bg-black text-white min-h-screen antialiased">
-      {/* Centered column: past 1360px wide (big screens, or zoomed out) the page stops stretching
-          and the extra space goes to the black margins, so the content edges move closer together. */}
-      <div className="mx-auto w-full max-w-[1360px]">
+      {/* Header and footer span the full window, pinned to its edges at any zoom level.
+          Page content is capped in rem and centered, so when you zoom out the images,
+          cards and frames shrink along with the text instead of stretching to fill the wider window. */}
+      <div className="w-full">
         <Nav page={page} />
-        <main>
+        <main className="mx-auto max-w-[104rem]">
           {isCase ? <CaseStudy slug={slug} /> : Page ? <Page /> : <HomePage />}
         </main>
         <Footer />

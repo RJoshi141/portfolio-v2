@@ -1,10 +1,10 @@
 // About page (#/about): big title, intro, then each role with what I actually did there
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useState } from "react";
 import { motion } from "framer-motion";
 
 // 3D ID card on a lanyard (three.js), loaded only on the About page so it doesn't weigh down the rest
 const Lanyard = lazy(() => import("../../components/Lanyard"));
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Hand } from "lucide-react";
 import { experience } from "../data/content";
 import { GRID, LINE } from "../grid";
 // raw markup so the icon's fill="currentColor" matches the location text color
@@ -89,6 +89,8 @@ const Role = ({ company, title, when, where, whereIcon, link, caseStudy, bullets
 );
 
 export default function AboutPage() {
+  // hide the "grab the badge" hint once someone has touched the lanyard
+  const [grabbed, setGrabbed] = useState(false);
   return (
     <>
       <section className="relative px-5 md:px-16 lg:px-20 pt-16 md:pt-28">
@@ -104,11 +106,19 @@ export default function AboutPage() {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 1, ease }}
-          className="hidden lg:block absolute top-0 -right-4 w-[32%] h-[720px] z-10"
+          className="hidden lg:block absolute top-0 -right-4 w-[32%] h-[45rem] z-10"
+          onPointerDown={() => setGrabbed(true)}
         >
           <Suspense fallback={null}>
             <Lanyard position={[0, 0, 25]} gravity={[0, -40, 0]} cardImage="/portfolio-v2/assets/comic-self.png" bandColor="#3a3a3a" />
           </Suspense>
+          {/* tells people the badge is interactive; fades away after the first grab */}
+          <p
+            className={`pointer-events-none absolute bottom-2 inset-x-0 flex items-center justify-center gap-2 font-mono text-xs uppercase tracking-wider text-neutral-500 transition-opacity duration-500 ${grabbed ? "opacity-0" : "opacity-100"}`}
+          >
+            <Hand className="w-4 h-4 animate-bounce" />
+            Grab the badge and give it a swing
+          </p>
         </motion.div>
 
         {/* Intro: short and product-focused */}

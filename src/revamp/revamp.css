@@ -50,3 +50,8 @@ body {
   from { background-position-x: 0%; }
   to { background-position-x: 100%; }
 }
+
+/* The whole site is sized in rem, so this makes 100% browser zoom look like the old 90%. */
+html {
+  font-size: 90%;
+}

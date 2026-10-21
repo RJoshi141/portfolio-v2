@@ -15,7 +15,7 @@ export default function ProjectCard({ project, size = "md", index = 0, grid = fa
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.2 }}
       transition={{ duration: 0.6, delay: index * 0.08, ease: "easeOut" }}
-      className={`group block ${lg ? "snap-start shrink-0 w-[85vw] md:w-[68vw] lg:w-[62vw]" : ""} ${grid ? `border-r border-b ${LINE}` : ""}`}
+      className={`group block ${lg ? "snap-start shrink-0 w-[min(85vw,40rem)] md:w-[min(68vw,52rem)] lg:w-[min(62vw,62rem)]" : ""} ${grid ? `border-r border-b ${LINE}` : ""}`}
     >
       <div
         className={`relative overflow-hidden ${grid || square ? "" : "rounded-2xl md:rounded-3xl"} flex items-center justify-center
@@ -27,7 +27,7 @@ export default function ProjectCard({ project, size = "md", index = 0, grid = fa
           <img src={project.cardDemo.src} alt={`${project.name} preview`} loading="lazy" className="absolute inset-0 w-full h-full object-cover" />
         ) : project.cardDemo?.kind === "video" ? (
           // a loop that already has its own background: fill the whole card
-          <video autoPlay muted loop playsInline poster={project.cardDemo.poster} className={`object-contain ${lg ? "w-[72%] h-[72%]" : "w-[70%] h-[70%]"}`}>
+          <video autoPlay muted loop playsInline poster={project.cardDemo.poster} className={lg ? "w-[72%] h-[72%] object-contain" : "w-full h-full object-cover"}>
             <source src={project.cardDemo.mp4} type="video/mp4" />
           </video>
         ) : project.cardDemo?.kind === "phone" ? (
@@ -37,7 +37,7 @@ export default function ProjectCard({ project, size = "md", index = 0, grid = fa
               className="absolute overflow-hidden bg-black rounded-[18%/8.5%]"
               style={{ left: "5.2%", top: "2.3%", width: "89.6%", height: "95.4%" }}
             >
-              <video autoPlay muted loop playsInline poster={project.cardDemo.poster} className="w-full h-full object-cover">
+              <video autoPlay muted loop playsInline poster={project.cardDemo.poster} className={lg ? "w-[72%] h-[72%] object-contain" : "w-full h-full object-cover"}>
                 <source src={project.cardDemo.mp4} type="video/mp4" />
               </video>
             </div>
