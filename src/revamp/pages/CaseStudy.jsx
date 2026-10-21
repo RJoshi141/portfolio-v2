@@ -2,9 +2,10 @@
 // headed story sections with full-width or side-by-side media (Blake's Randori).
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Star } from "lucide-react";
 import { findProject } from "../data/projects";
 import { LightboxProvider, Zoomable } from "../components/Lightbox";
+import { EmpathyMap, ComponentBoard, Tools } from "../components/CaseExtras";
 
 const ease = [0.22, 1, 0.36, 1];
 const rise = (delay = 0) => ({
@@ -75,6 +76,49 @@ const Media = ({ items, caption, alt, inset, wide, bare, aspect }) => {
     </motion.figure>
   );
 };
+
+// GitHub star count for the Code row. Starts from the count saved in projects.js, then
+// refreshes from the GitHub API (cached for the session so it doesn't hit the rate limit).
+const Stars = ({ repo, count }) => {
+  const [stars, setStars] = useState(count);
+  useEffect(() => {
+    const path = repo.replace("https://github.com/", "");
+    const key = `stars:${path}`;
+    try {
+      const cached = sessionStorage.getItem(key);
+      if (cached) { setStars(Number(cached)); return; }
+    } catch {}
+    fetch(`https://api.github.com/repos/${path}`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (d && typeof d.stargazers_count === "number") {
+          setStars(d.stargazers_count);
+          try { sessionStorage.setItem(key, String(d.stargazers_count)); } catch {}
+        }
+      })
+      .catch(() => {});
+  }, [repo]);
+  return (
+    <span className="inline-flex items-center gap-1.5 text-neutral-300" title={`${stars} ${stars === 1 ? "star" : "stars"} on GitHub`}>
+      <Star className="w-4 h-4 fill-[#f5c542] text-[#f5c542]" />
+      <span className="tabular-nums">{stars}</span>
+    </span>
+  );
+};
+
+// Short clips side by side at their own shape (no panel, no crop), each with a caption.
+const Clips = ({ items }) => (
+  <motion.div {...rise()} className={`my-12 md:my-20 grid gap-8 ${items.length > 1 ? "md:grid-cols-2" : ""}`}>
+    {items.map((c) => (
+      <figure key={c.mp4}>
+        <video autoPlay muted loop playsInline poster={c.poster} className="w-full h-auto rounded-md bg-black">
+          <source src={c.mp4} type="video/mp4" />
+        </video>
+        {c.caption && <figcaption className="mt-4 text-sm md:text-base font-light leading-[1.6] text-neutral-400">{c.caption}</figcaption>}
+      </figure>
+    ))}
+  </motion.div>
+);
 
 // Heading in the left column, large readable copy on the right (Gabriel's Slingshot page)
 const Section = ({ heading, body, list }) => (
@@ -737,6 +781,7 @@ export default function CaseStudy({ slug }) {
         {project.name}
       </motion.h1>
 
+
       {/* Intro left, meta right */}
       <motion.div
         initial={{ opacity: 0, y: 24 }}
@@ -764,6 +809,7 @@ export default function CaseStudy({ slug }) {
                className="inline-flex items-center gap-1 hover:text-neutral-400 transition-colors">
               GitHub <ArrowUpRight className="w-4 h-4" />
             </a>
+            {project.stars != null && <span className="ml-4"><Stars repo={project.github} count={project.stars} /></span>}
           </MetaRow>}
           {project.site && (
             <MetaRow label="Live">
@@ -832,9 +878,12 @@ export default function CaseStudy({ slug }) {
       {project.sections.map((s) => (
         <div key={s.heading || s.key}>
           {s.pair && <PhonePair items={s.pair} />}
-          {s.walkthrough ? <Walkthrough heading={s.heading} body={s.body} {...s.walkthrough} /> : s.heading && (s.phoneBeside ? <SectionWithPhone {...s} /> : <Section {...s} />)}
+          {s.empathy && <EmpathyMap heading={s.heading} body={s.body} map={s.empathy} />}
+          {s.components && <ComponentBoard kind={s.components} heading={s.heading} body={s.body} />}
+          {s.empathy || s.components ? null : s.stepRow ? <StepRow heading={s.heading} body={s.body} steps={s.steps} /> : s.walkthrough ? <Walkthrough heading={s.heading} body={s.body} {...s.walkthrough} /> : s.heading && (s.phoneBeside ? <SectionWithPhone {...s} /> : <Section {...s} />)}
+          {s.clips && <Clips items={s.clips} />}
           {(s.images || s.image || s.video) && (
-            <Media items={s.images || s.video || s.image} caption={s.caption} inset={s.inset} wide={s.wide} bare={s.bare} alt={s.heading || project.name} />
+            <Media items={s.images || s.video || s.image} caption={s.caption} inset={s.inset} wide={s.wide} bare={s.bare} aspect={s.panel} alt={s.heading || project.name} />
           )}
           {s.brand && <BrandPanel {...s.brand} />}
           {/* optional "before" row of phones above the main one */}
@@ -845,7 +894,7 @@ export default function CaseStudy({ slug }) {
           {s.laptop && <LaptopDemo {...s.laptop} />}
           {s.sprites && <Sprites sheets={s.sprites} />}
           {s.assets && <AssetShelf items={s.assets} />}
-          {s.steps?.map((st, n) => <CodeStep key={st.label} n={n + 1} {...st} />)}
+          {!s.stepRow && s.steps?.map((st, n) => <CodeStep key={st.label} n={n + 1} {...st} />)}
           {s.media?.map((m, n) =>
             m.label ? (
               <FigureRow key={n} label={m.label} text={m.text} src={m.src} inset={m.inset} />
@@ -858,17 +907,20 @@ export default function CaseStudy({ slug }) {
 
       {project.metrics.length > 0 && (
         <motion.section {...rise()} className="pt-16 md:pt-28">
-          <h2 className="text-3xl md:text-5xl font-medium tracking-[-0.03em] text-white mb-10">Results</h2>
+          <h2 className="text-xl md:text-[1.4rem] font-normal tracking-[-0.015em] leading-tight text-white mb-8 md:mb-10">Results</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {project.metrics.map((m) => (
               <div key={m.label}>
-                <p className="text-5xl md:text-6xl tracking-tight text-white">{m.value}</p>
-                <p className="mt-2 text-sm md:text-base text-neutral-500">{m.label}</p>
+                {/* same scale as the rest of the case study: heading-size value, body-size label */}
+                <p className="text-xl md:text-[1.4rem] tracking-[-0.015em] text-white">{m.value}</p>
+                <p className="mt-2 text-base md:text-[1.1rem] font-light leading-[1.6] text-neutral-400">{m.label}</p>
               </div>
             ))}
           </div>
         </motion.section>
       )}
+
+      {project.tools && <Tools items={project.tools} />}
 
       {project.gallery.map((img, n) => (
         <Media key={n} items={img} alt={`${project.name} ${n + 1}`} caption={String(n + 1).padStart(2, "0")} />

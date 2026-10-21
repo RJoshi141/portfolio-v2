@@ -49,6 +49,16 @@ import evenPickLocationMp4 from "../../assets/case-studies/even/pick-location-2.
 import evenPickLocationPoster from "../../assets/case-studies/even/pick-location-2-poster.jpg";
 import utterHeroMp4 from "../../assets/case-studies/utter/hero-watch-3.mp4";
 import utterHeroPoster from "../../assets/case-studies/utter/hero-watch-3-poster.jpg";
+import lumonHeroMp4 from "../../assets/case-studies/lumon/hero-imac.mp4";
+import lumonHeroPoster from "../../assets/case-studies/lumon/hero-imac-poster.jpg";
+import lumonDemoMp4 from "../../assets/case-studies/lumon/demo.mp4";
+import lumonDemoPoster from "../../assets/case-studies/lumon/demo-poster.jpg";
+import lumonReportsMp4 from "../../assets/case-studies/lumon/reports.mp4";
+import lumonReportsPoster from "../../assets/case-studies/lumon/reports-poster.jpg";
+import lumonShowScreenMp4 from "../../assets/case-studies/lumon/show-screen.mp4";
+import lumonShowScreenPoster from "../../assets/case-studies/lumon/show-screen-poster.jpg";
+import lumonShowUiMp4 from "../../assets/case-studies/lumon/show-interface.mp4";
+import lumonShowUiPoster from "../../assets/case-studies/lumon/show-interface-poster.jpg";
 import utterSketchV1 from "../../assets/case-studies/utter/sketch-v1-idle.png";
 import utterSketchV2 from "../../assets/case-studies/utter/sketch-v2-recording.png";
 import utterSketchV3 from "../../assets/case-studies/utter/sketch-v3-review.png";
@@ -303,6 +313,18 @@ export const projects = [
         ],
       },
     ],
+    // tools row at the bottom of the case study
+    tools: [
+      { name: "Figma", logo: "figma" },
+      { name: "TypeScript", logo: "typescript" },
+      { name: "React Native", logo: "react" },
+      { name: "Expo", logo: "expo" },
+      { name: "EAS", icon: "eas" },
+      { name: "Next.js", logo: "nextjs" },
+      { name: "NestJS", logo: "nestjs" },
+      { name: "Firebase", logo: "firebase" },
+      { name: "Xcode", logo: "xcode" },
+    ],
     metrics: [
       { value: "~30%", label: "Faster app performance" },
       { value: "8+", label: "Push notification triggers" },
@@ -370,6 +392,20 @@ export const projects = [
         body: "Ideas show up at bad times. Pulling out a phone, unlocking it, and opening a notes app is enough friction to lose the thought.",
       },
       {
+        // empathy map: who Utter is for
+        heading: "Who it's for",
+        body: "Good ideas show up at bad times. These are the people who lose them.",
+        empathy: {
+          who: "People who think on the move: walking, driving, working out, or mid-conversation, with an Apple Watch already on their wrist.",
+          says: ["I'll remember it later.", "Wait, what was that idea?"],
+          thinks: ["By the time I unlock my phone, it's gone.", "I don't want to stop what I'm doing."],
+          does: ["Texts notes to themselves", "Leaves voice memos they never replay", "Keeps a dozen half-finished lists"],
+          feels: ["scattered", "rushed", "forgetful", "frustrated"],
+          hears: ["\"Just write it down.\"", "Notification pings pulling them away"],
+          needs: ["One tap from the wrist", "Notes that sort themselves"],
+        },
+      },
+      {
         heading: "Early sketches",
         // TODO: rewrite these in your words
         body: "Before writing any code I sketched the three moments that matter on the wrist: before you speak, while you're speaking, and right after.",
@@ -410,6 +446,12 @@ export const projects = [
         ],
       },
       {
+        // live UI components rebuilt in code, on Utter's black canvas
+        heading: "Exploring UI components",
+        body: "The pieces that make up Utter, rebuilt here in code.",
+        components: "utter",
+      },
+      {
         // iPhone screens in one row, each on its own grey panel with a note underneath
         key: "iphone-screens",
         inset: "w-[92%] h-[92%]",
@@ -441,7 +483,20 @@ export const projects = [
       },
       // TODO: { heading: "How it works", body: "...", image: someImport, caption: "..." },
     ],
-    metrics: [], // e.g. { value: "<1s", label: "Watch to phone sync" }
+    // tools row at the bottom of the case study
+    tools: [
+      { name: "Xcode", logo: "xcode" },
+      { name: "Swift", logo: "swift", note: "SwiftUI" },
+      { name: "watchOS", icon: "watch" },
+      { name: "WatchConnectivity", icon: "sync" },
+      { name: "AVFoundation", icon: "audio" },
+      { name: "Speech", icon: "mic", note: "SFSpeechRecognizer" },
+    ],
+    metrics: [
+      { value: "1", label: "Gesture to capture: hold, let go, send" },
+      { value: "4", label: "Categories every memo sorts into" },
+      { value: "12 kHz", label: "Mono audio, light enough to send from the wrist" },
+    ],
     gallery: [], // extra full-width screenshots, shown numbered
   },
   {
@@ -456,6 +511,7 @@ export const projects = [
     hero: layerHero3phones,
     heroBare: true,
     heroInset: "w-[85%] h-[85%]",
+    stars: 1, // GitHub stars as of Oct 2026; the badge refreshes live
     github: "https://github.com/RJoshi141/layer",
     summary:
       "Skincare labels are dense ingredient lists in tiny type. Layer reads the bottle, explains what's inside, and builds a morning and night routine in the right order. All on the phone.",
@@ -467,6 +523,20 @@ export const projects = [
       {
         heading: "Why I built it",
         body: "Nobody knows which products clash, what order to use them in, or if last spring's serum is still good. The answers are on the bottle, just not in a form anyone can use.",
+      },
+      {
+        // empathy map: who Layer is for, in their own words
+        heading: "Who it's for",
+        body: "The answers are printed on every bottle. Most people just can't read them.",
+        empathy: {
+          who: "People building a skincare routine, from first-timers to anyone juggling actives like retinol and acids.",
+          says: ["Can I use this with my vitamin C?", "Wait, does serum go before moisturizer?"],
+          thinks: ["Is last spring's serum still good?", "Am I paying for products that cancel each other out?"],
+          does: ["Googles every ingredient", "Copies routines from social media", "Buys products that do the same thing"],
+          feels: ["overwhelmed", "unsure", "skeptical", "curious"],
+          hears: ["Ten-step routines from influencers", "Conflicting advice on what clashes"],
+          needs: ["A plain read of what's in each bottle", "A routine in the right order, without clashes"],
+        },
       },
       {
         heading: "Scan any label",
@@ -568,8 +638,16 @@ struct ProductDraft {
           ],
         },
         image: layerIcons,
-        inset: "w-[88%] h-[80%]",
+        inset: "w-[86%] h-[78%]",
+        // small, short panel shaped to the icon strip, centered
+        panel: "aspect-[3.6/1] w-full md:w-[60%] mx-auto",
         caption: "The custom line icon set, one per product type and step.",
+      },
+      {
+        // live UI components rebuilt in code, on the app's sage background
+        heading: "Exploring UI components",
+        body: "The pieces that make up Layer, rebuilt here in code.",
+        components: "layer",
       },
       {
         heading: "Privacy and cost",
@@ -586,6 +664,17 @@ struct ProductDraft {
           "Trends from check-ins over time.",
         ],
       },
+    ],
+    // tools grid at the bottom of the case study
+    tools: [
+      { name: "Xcode", logo: "xcode" },
+      { name: "Swift", logo: "swift", note: "SwiftUI, SwiftData" },
+      { name: "Foundation Models", icon: "intelligence", note: "On-device LLM" },
+      { name: "Vision", icon: "scan", note: "OCR, cutouts" },
+      { name: "SpeechAnalyzer", icon: "mic" },
+      { name: "WidgetKit", icon: "widget" },
+      { name: "Google Lens", logo: "googlelens", note: "Photo search" },
+      { name: "Open Beauty Facts", icon: "database", note: "Product data" },
     ],
     metrics: [],
     gallery: [],
@@ -613,6 +702,20 @@ struct ProductDraft {
       {
         heading: "Why I built it",
         body: "For someone in a wheelchair, a route is only as good as its worst block. AccessMap proved a slope-aware map could work in Seattle. I wanted it for San Francisco, built end to end: data pipeline, routing engine and app.",
+      },
+      {
+        // empathy map: who Even is for, in their own words
+        heading: "Who it's for",
+        body: "A route is only as good as its worst block. This is who that matters to.",
+        empathy: {
+          who: "Manual and power wheelchair users, people with walkers or canes, and parents pushing strollers in San Francisco.",
+          says: ["Is there a ramp on that corner?", "The map said 12 minutes. It took me 40."],
+          thinks: ["One steep block and the whole trip fails.", "I don't want to get stuck halfway."],
+          does: ["Checks Street View before leaving", "Plans around hills from memory", "Sticks to long routes they already know"],
+          feels: ["anxious", "stuck", "frustrated", "cautious", "dependent"],
+          hears: ["\"It's just around the corner.\"", "Directions built for distance and time, not slope"],
+          needs: ["A route that fits their limits", "A reason to trust it before they go"],
+        },
       },
       {
         // one iPhone that plays the three flows in turn, with chapters beside it (desktop) or under it (phones)
@@ -722,6 +825,12 @@ WEIGHT = """length_m * (1 + abs(grade) / 10)
         },
       },
       {
+        // live UI components rebuilt in code, on the app's own grid paper
+        heading: "Exploring UI components",
+        body: "The pieces that make up Even, rebuilt here in code. Try pressing the buttons.",
+        components: "even",
+      },
+      {
         heading: "What's next",
         list: [
           "Street names in directions.",
@@ -729,6 +838,18 @@ WEIGHT = """length_m * (1 + abs(grade) / 10)
           "A web client on the same API.",
         ],
       },
+    ],
+    // tools grid at the bottom of the case study
+    tools: [
+      { name: "Xcode", logo: "xcode" },
+      { name: "Swift", logo: "swift", note: "SwiftUI" },
+      { name: "MapKit", icon: "map" },
+      { name: "Swift Charts", icon: "chart" },
+      { name: "Python", logo: "python" },
+      { name: "FastAPI", logo: "fastapi" },
+      { name: "PostgreSQL", logo: "postgresql", note: "PostGIS, pgRouting" },
+      { name: "Docker", logo: "docker" },
+      { name: "OpenStreetMap", logo: "openstreetmap" },
     ],
     metrics: [
       { value: "77%", label: "Curb coverage, up from 27%" },
@@ -833,6 +954,7 @@ WEIGHT = """length_m * (1 + abs(grade) / 10)
     // work card: the gameplay loop in the landscape iPhone from the case study
     cardDemo: { kind: "landscape", frame: iphoneLandscapeFrame, mp4: zoomiesGameplayMp4, poster: zoomiesGameplayPoster },
     tint: "#101a13",
+    stars: 4, // GitHub stars as of Oct 2026; the badge refreshes live
     github: "https://github.com/RJoshi141/Zoomies",
     summary:
       "A retro 2D endless runner where a dog dodges logs and collects bones, with custom pixel sprites and UI.",
@@ -1001,6 +1123,13 @@ let jumpGroup = SKAction.group([jumpAnimation, jumpMotion])`,
         },
       },
     ],
+    // tools row at the bottom of the case study
+    tools: [
+      { name: "Xcode", logo: "xcode" },
+      { name: "Swift", logo: "swift" },
+      { name: "SpriteKit", icon: "sprite" },
+      { name: "Pixilart", logo: "pixilart" },
+    ],
     metrics: [],
     gallery: [],
   },
@@ -1050,14 +1179,78 @@ let jumpGroup = SKAction.group([jumpAnimation, jumpMotion])`,
     tags: ["HTML", "CSS", "JavaScript"],
     frame: lumonFrame,
     tint: "#0f1517",
+    stars: 14, // GitHub stars as of Oct 2026; the badge refreshes live
     github: "https://github.com/RJoshi141/lumon",
+    site: "https://lumon-interface.vercel.app/index.html",
+    siteLabel: "lumon-interface.vercel.app",
+    // the site playing on an iMac, at its own shape
+    heroVideo: { mp4: lumonHeroMp4, poster: lumonHeroPoster, fit: true, aspect: 16 / 9, width: "md:w-full" },
     summary:
-      "A recreation of Severance's retro-futuristic Lumon terminal with grid animations and immersive visuals.",
-    role: "Solo",
+      "A working recreation of the macrodata refinement terminal from Severance. Numbers drift and swell under your cursor, bins fill, and there's an employee report screen behind it. Plain HTML, CSS and JavaScript.",
+    role: "Solo: design, engineering",
     stack: ["HTML", "CSS", "JavaScript"],
     platform: "Web",
     year: "",
-    sections: [],
+    sections: [
+      {
+        heading: "Design inspiration",
+        body: "The show's terminals are mostly empty navy, one cyan, and numbers that feel alive. I studied the boot screen and the file screen frame by frame before writing any CSS.",
+        clips: [
+          { mp4: lumonShowScreenMp4, poster: lumonShowScreenPoster, caption: "From Severance (Apple TV+): the Lumon mark on the boot screen." },
+          { mp4: lumonShowUiMp4, poster: lumonShowUiPoster, caption: "From Severance (Apple TV+): a file opening on the terminal." },
+        ],
+      },
+      {
+        heading: "What I built",
+        body: "The same two moments, rebuilt for the browser.",
+        clips: [
+          { mp4: lumonDemoMp4, poster: lumonDemoPoster, caption: "The boot screen into the refinement grid, with the cursor magnifying numbers and the bins underneath." },
+          { mp4: lumonReportsMp4, poster: lumonReportsPoster, caption: "Employee reports: names, tasks refined and compliance scores." },
+        ],
+      },
+      {
+        heading: "Making the numbers feel alive",
+        body: "No framework, about ninety lines of JavaScript.",
+        stepRow: true,
+        steps: [
+          { label: "Random digits", text: "Every cell gets a random number on load, so no two files look the same." },
+          { label: "Drift", text: "Some cells float up or sideways, each with its own delay and speed." },
+          { label: "Swell", text: "Cells within 100px of the cursor scale up to 2.6x, easing back to normal by 200px." },
+          { label: "Reports", text: "A second screen renders employee reports from a small data set." },
+        ],
+      },
+      {
+        heading: "Design",
+        body: "Two colors and two typefaces: navy and phosphor cyan, Share Tech Mono for every digit and Russo One for the wordmark.",
+        brand: {
+          colors: [
+            { name: "Cyan", hex: "#8EE3F1", note: "Every line, digit and glow" },
+            { name: "Navy", hex: "#08203A", note: "The terminal" },
+            { name: "Deep navy", hex: "#041B2D", note: "Shadows and depth" },
+          ],
+        },
+      },
+      {
+        // live UI components rebuilt in code, in the terminal's colors
+        heading: "Exploring UI components",
+        body: "The pieces of the terminal, rebuilt here in code. Try the grid.",
+        components: "lumon",
+      },
+      {
+        heading: "What's next",
+        list: [
+          "A features dashboard linking the other screens.",
+          "A cryptic message board and interactive tasks.",
+          "Sound effects to match the show.",
+        ],
+      },
+    ],
+    tools: [
+      { name: "HTML", logo: "html5" },
+      { name: "CSS", logo: "css3" },
+      { name: "JavaScript", logo: "javascript" },
+      { name: "Vercel", logo: "vercel" },
+    ],
     metrics: [],
     gallery: [],
   },
