@@ -151,10 +151,12 @@ export const projects = [
     year: "2025 – Now",
     site: "https://app.joydrop.me/",
     // top of the case study: three-phone render; the app scroll video now sits in "The product"
+    // every phone row sits straight on the page, no grey panels
+    bareFrames: true,
     // three floating phones on a transparent background, sitting right on the page (no grey panel)
     hero: joydropHero,
     heroBare: true,
-    heroInset: "w-full h-full",
+    heroInset: "w-[85%] h-[85%]",
     siteLabel: "joydrop.me",
     stack: ["Expo", "React Native", "NestJS", "Next.js", "Firebase", "EAS"],
     sections: [
@@ -166,6 +168,7 @@ export const projects = [
         ],
         // text and phone share one row
         phoneBeside: true,
+        phoneSize: "walkthrough", // same phone height as the walkthrough players and Layer's scan
         phoneDemo: { frame: iphoneFrame, mp4: joydropFeedMp4, poster: joydropFeedPoster },
       },
       {
@@ -194,6 +197,7 @@ export const projects = [
           ],
         },
         // before/after side by side, each on its own grey panel
+        bare: true, // login before/after phones without grey panels
         images: [
           { src: joydropLoginBefore, tall: true, inset: "w-[90%] h-[90%]", caption: "Before. The web app's login, viewed on a phone." },
           { src: joydropLoginAfter, tall: true, inset: "w-[90%] h-[90%]", caption: "After. The native iOS login." },
@@ -325,7 +329,7 @@ export const projects = [
     // still shown first, before the looping demos
     // hero: the watch turning on its band, looping (replaces the three-watch intro still)
     // recording at its own near-square shape, centered, no extra background around it
-    heroVideo: { mp4: utterHeroMp4, poster: utterHeroPoster, fit: true, aspect: 1000 / 984 },
+    heroVideo: { mp4: utterHeroMp4, poster: utterHeroPoster, fit: true, aspect: 1000 / 984, width: "md:w-[44%]" },
     demo: {
       frame: watchUltraFrame, mp4: utterDemoMp4, webm: utterDemoWebm,
       phone: { frame: iphoneFrame, mp4: utterPhoneMp4, webm: utterPhoneWebm },
@@ -336,79 +340,27 @@ export const projects = [
     // TODO: rewrite the text in your words; code is trimmed from the Utter repo
     flow: {
       heading: "From wrist to inbox",
-      body: "A thought starts as audio on the watch and ends up as sorted text on the phone. Five steps get it there.",
+      body: "Audio on the watch becomes sorted text on the phone in five steps.",
       steps: [
         {
-          label: "Record on the watch",
-          text: "AVAudioRecorder writes a small mono AAC file. 12 kHz is plenty for speech and keeps the file light for the trip to the phone. Metering drives the live waveform.",
-          file: "WatchAudioRecorder.swift",
-          code: String.raw`let url = FileManager.default.temporaryDirectory
-    .appendingPathComponent("utter-\(UUID().uuidString).m4a")
-
-let settings: [String: Any] = [
-    AVFormatIDKey: Int(kAudioFormatMPEG4AAC),
-    AVSampleRateKey: 12000,
-    AVNumberOfChannelsKey: 1
-]
-
-let recorder = try AVAudioRecorder(url: url, settings: settings)
-recorder.isMeteringEnabled = true
-recorder.record()`,
+          label: "Record",
+          text: "A small mono AAC file at 12 kHz: plenty for speech, light enough to send.",
         },
         {
-          label: "Send it over WatchConnectivity",
-          text: "Tapping send hands the file to WCSession. transferFile queues it and the system delivers it in the background, so you can drop your wrist and move on.",
-          file: "UtterWatchApp.swift",
-          code: String.raw`func sendAudioFile(_ url: URL) {
-    guard WCSession.default.isReachable else {
-        statusText = "iPhone not reachable"
-        return
-    }
-    WCSession.default.transferFile(url, metadata: ["type": "audio"])
-}`,
+          label: "Send",
+          text: "WatchConnectivity queues the file and delivers it in the background, so you can drop your wrist and move on.",
         },
         {
-          label: "Catch it on the iPhone",
-          text: "The phone's session delegate receives the file. The incoming copy gets cleaned up once the delegate returns, so it's moved into Documents/utter-recordings right away.",
-          file: "UtterApp.swift",
-          code: String.raw`func session(_ session: WCSession, didReceive file: WCSessionFile) {
-    let folder = docs.appendingPathComponent("utter-recordings")
-    try FileManager.default.createDirectory(at: folder,
-                                            withIntermediateDirectories: true)
-
-    let destination = folder.appendingPathComponent(file.fileURL.lastPathComponent)
-    try FileManager.default.copyItem(at: file.fileURL, to: destination)
-}`,
+          label: "Receive",
+          text: "The iPhone moves the file into its own folder right away, before the system cleans it up.",
         },
         {
           label: "Transcribe",
-          text: "Import from Apple Watch grabs the newest recording and runs it through the Speech framework as a file request, waiting for the final result instead of partials.",
-          file: "SpeechManager.swift",
-          code: String.raw`let request = SFSpeechURLRecognitionRequest(url: url)
-request.shouldReportPartialResults = false
-
-task = recognizer.recognitionTask(with: request) { result, error in
-    if let result, result.isFinal {
-        completion(result.bestTranscription.formattedString)
-    }
-}`,
+          text: "The Speech framework runs on the file and waits for the final result, not partials.",
         },
         {
-          label: "Sort into a category",
-          text: "A simple keyword pass picks Reminder, Todo, Idea, or Note. You can change it on the review sheet, then the memo is saved as Codable JSON and shows up in the inbox.",
-          file: "ContentView.swift",
-          code: String.raw`func detectedCategory(for text: String) -> String {
-    let lower = text.lowercased()
-
-    if lower.contains("remind me") || lower.contains("tomorrow") {
-        return "reminder"
-    } else if lower.contains("buy") || lower.contains("pick up") {
-        return "todo"
-    } else if lower.contains("idea") || lower.contains("what if") {
-        return "idea"
-    }
-    return "note"
-}`,
+          label: "Sort",
+          text: "A keyword pass picks Reminder, Todo, Idea or Note. You can change it before saving.",
         },
       ],
     },
@@ -461,6 +413,7 @@ task = recognizer.recognitionTask(with: request) { result, error in
         // iPhone screens in one row, each on its own grey panel with a note underneath
         key: "iphone-screens",
         inset: "w-[92%] h-[92%]",
+        bare: true, // screenshots sit straight on the page, no grey panels
         images: [
           { src: utterPhoneOnboarding, caption: "Onboarding. First launch explains the loop: record on your wrist, transcribe on your phone, and every memo lands in one of four categories." },
           { src: utterPhoneRecord, caption: "Record. Hold the mic to capture a thought right on the phone, or import your latest Apple Watch recording and transcribe it." },
@@ -471,7 +424,8 @@ task = recognizer.recognitionTask(with: request) { result, error in
         heading: "Final watch app",
         // TODO: rewrite in your words
         body: "Where the sketches ended up. Four states, one gesture: hold to talk, let go to review, tap to send.",
-        // both final frames side by side, each on its own grey panel with a note underneath
+        // both final frames side by side with a note underneath, straight on the page (no grey panels)
+        bare: true,
         images: [
           {
             src: utterWatchRecordReview,
@@ -501,7 +455,7 @@ task = recognizer.recognitionTask(with: request) { result, error in
     // three floating phones on a transparent background, sitting right on the page (no grey panel)
     hero: layerHero3phones,
     heroBare: true,
-    heroInset: "w-full h-full",
+    heroInset: "w-[85%] h-[85%]",
     github: "https://github.com/RJoshi141/layer",
     summary:
       "Skincare labels are dense ingredient lists in tiny type. Layer reads the bottle, explains what's inside, and builds a morning and night routine in the right order. All on the phone.",
@@ -520,6 +474,7 @@ task = recognizer.recognitionTask(with: request) { result, error in
         // text and the scan recording share one row, like Joydrop's product section
         phoneBeside: true,
         phoneDemo: { frame: iphoneFrame, mp4: layerScanMp4, poster: layerScanPoster },
+        phoneSize: "walkthrough", // same height as the "Made for your skin" phone
       },
       {
         heading: "Ingredients never touch the LLM",
@@ -578,25 +533,25 @@ struct ProductDraft {
             },
           ],
         },
-        // where the tour lands: empty states that point at the next step instead of a blank screen
-        compactPhones: true,
-        phones: [
-          { frame: iphoneFrame, poster: layerEmptyShelf, caption: "An empty shelf points straight at the first scan." },
-          { frame: iphoneFrame, poster: layerEmptyRoutine, caption: "An empty routine explains what it will do once you pick products." },
-        ],
       },
       {
-        heading: "Routines that put themselves in order",
-        body: "Products slot into layering order, thinnest to thickest. Eleven conflict rules flag clashes like retinol with acids. Rules make the safety calls; a model only explains them.",
-        image: layerRoutine,
-        inset: "w-[40%] h-[92%]",
-      },
-      {
-        heading: "Tonight, without opening the app",
-        body: "The widget flips between morning and night, strikes through expired products, and turns rust when something clashes. It reads a small snapshot the app shares, never the database.",
-        images: [
-          { src: layerWidget, inset: "w-[88%] h-[88%]", caption: "Tonight's three steps next to the app icon." },
-          { src: layerHomescreen, inset: "w-[46%] h-[92%]", caption: "On the home screen." },
+        // routines and the widget share one row, each with its phone underneath
+        pair: [
+          {
+            heading: "Routines that put themselves in order",
+            body: "Pick products for morning or night. Layer handles the rest.",
+            list: [
+              "Every product slots into layering order, thinnest to thickest.",
+              "Eleven conflict rules flag clashes, like retinol with acids.",
+              "Routine check reviews tonight at a glance. Rules decide; a model only explains.",
+            ],
+            phoneImage: layerRoutine,
+          },
+          {
+            heading: "Tonight, without opening the app",
+            body: "The widget flips between morning and night, strikes through expired products, and turns rust when something clashes. It reads a small snapshot the app shares, never the database.",
+            phoneImage: layerHomescreen,
+          },
         ],
       },
       {
@@ -646,7 +601,7 @@ struct ProductDraft {
     // full-bleed 3D render with its own blue gradient background
     heroImage: evenHero,
     // the phones fly in on a loop (wins over heroImage)
-    heroVideo: { mp4: evenHeroMp4, poster: evenHeroPoster },
+    heroVideo: { mp4: evenHeroMp4, poster: evenHeroPoster, width: "mx-auto md:w-[82%]" },
     github: "https://github.com/RJoshi141/even",
     summary:
       "Map apps send everyone the same way. In San Francisco that can mean a 15% hill or a corner with no curb ramp. Even plans routes around how you get around, then shows you why it picked them.",
@@ -741,6 +696,7 @@ WEIGHT = """length_m * (1 + abs(grade) / 10)
       },
       {
         heading: "One route, and why",
+        bare: true, // trip info and directions phones straight on the page, no grey panels
         body: "One route colored by slope, green under 3% and amber to 8%. The rest lives in two pop-ups.",
         media: [
           {
@@ -898,13 +854,21 @@ WEIGHT = """length_m * (1 + abs(grade) / 10)
           "Physics and collisions using SpriteKit category bit masks",
           "Endless spawning, scoring, and custom game UI",
         ],
-        // the rest of the game's screens, each in its own box
-        // TODO: rewrite captions in your words
-        landscapes: [
-          { frame: iphoneLandscapeFrame, mp4: zoomiesSplashMp4, poster: zoomiesSplashPoster, caption: "Splash. The pixel dog and wordmark on launch." },
-          { frame: iphoneLandscapeFrame, mp4: zoomiesStartMp4, poster: zoomiesStartPoster, caption: "Tap to start. Five hearts, a distance counter, and a bone to grab back a heart." },
-          { frame: iphoneLandscapeFrame, mp4: zoomiesMenuMp4, poster: zoomiesMenuPoster, caption: "Menu and rules. Resume, rules, credits, and exit, all in custom pixel buttons." },
-        ],
+      },
+      {
+        // one landscape iPhone that plays the other three screens in turn, pills underneath
+        heading: "The other screens",
+        body: "Pick a screen or let it play through.",
+        walkthrough: {
+          frame: iphoneLandscapeFrame,
+          landscape: true,
+          bottom: true,
+          chapters: [
+            { label: "Splash", text: "The pixel dog and wordmark on launch.", mp4: zoomiesSplashMp4, poster: zoomiesSplashPoster },
+            { label: "Tap to start", text: "Five hearts, a distance counter, and a bone to grab back a heart.", mp4: zoomiesStartMp4, poster: zoomiesStartPoster },
+            { label: "Menu and rules", text: "Resume, rules, credits and exit, all in custom pixel buttons.", mp4: zoomiesMenuMp4, poster: zoomiesMenuPoster },
+          ],
+        },
       },
       {
         heading: "The sprites",

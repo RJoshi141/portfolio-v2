@@ -60,7 +60,8 @@ const Media = ({ items, caption, alt, inset, wide, bare, aspect }) => {
                   src={src}
                   alt={`${alt} ${i + 1}`}
                   // `tall` pairs (portrait phone screenshots) get portrait panels so the phones can be bigger
-                  aspect={pair && !tall ? "aspect-[4/3]" : pair ? "aspect-[2/3]" : "aspect-[3/4]"}
+                  // bare: no grey panel behind the screenshot
+                  aspect={`${pair && !tall ? "aspect-[4/3]" : pair ? "aspect-[2/3]" : "aspect-[3/4]"}${bare ? " !bg-transparent" : ""}`}
                   ratio={pair && !tall ? 4 / 3 : pair ? 2 / 3 : 3 / 4}
                   inset={own || inset || "w-[80%] h-[80%]"}
                 />
@@ -134,7 +135,8 @@ const Flow = () => (
 // Screen boxes are measured off the frame PNGs (percentages of each frame image).
 const WatchDemo = ({ frame, mp4, webm, phone }) => (
   <motion.figure {...rise()} className="my-12 md:my-20">
-    <Zoomable ratio={16 / 9} className="aspect-[4/3] md:aspect-[16/9]">
+    {/* no grey panel: the watch and phone sit straight on the page */}
+    <Zoomable ratio={16 / 9} className="aspect-[4/3] md:aspect-[16/9] !bg-transparent">
       <div className="relative h-[44%] aspect-[1347/2148]">
         <img src={frame} alt="" className="absolute inset-0 w-full h-full" />
         {/* recording sits slightly inside the frame's display so it never touches the bezel */}
@@ -188,7 +190,8 @@ const PhoneScreen = ({ frame, mp4, webm, poster, className = "" }) => (
 // One iPhone on a wide grey panel, or several iPhones each in their own grey box side by side
 // (captions sit under each box).
 // `compact`: narrower, centered portrait boxes (matches the login before/after row)
-const PhoneDemo = ({ phones, compact, ...single }) => {
+// bare: phone rows without grey panels behind each phone
+const PhoneDemo = ({ phones, compact, bare, ...single }) => {
   if (!phones) {
     return (
       <motion.figure {...rise()} className="my-12 md:my-20">
@@ -205,7 +208,7 @@ const PhoneDemo = ({ phones, compact, ...single }) => {
     <motion.div {...rise()} className={`my-12 md:my-20 grid gap-6 md:gap-8 ${phones.length === 3 ? "md:grid-cols-3" : "md:grid-cols-2"} ${compact && phones.length !== 3 ? "md:max-w-[66%] md:mx-auto" : ""}`}>
       {phones.map((p, i) => (
         <figure key={i}>
-          <Zoomable ratio={compact ? 2 / 3 : 4 / 5} className={compact ? "aspect-[2/3]" : "aspect-[4/5]"}>
+          <Zoomable ratio={compact ? 2 / 3 : 4 / 5} className={`${compact ? "aspect-[2/3]" : "aspect-[4/5]"}${bare ? " !bg-transparent" : ""}`}>
             <PhoneScreen {...p} className={compact ? "!h-[90%]" : ""} />
           </Zoomable>
           {p.caption && (
@@ -239,8 +242,9 @@ const LandscapeDemo = ({ phones, ...single }) => {
     return (
       <motion.figure {...rise()} className="my-12 md:my-20">
         {/* no grey panel: the phone sits straight on the page background */}
-        <Zoomable ratio={16 / 9} className="aspect-[4/3] md:aspect-[16/9] !bg-transparent">
-          <LandscapePhone {...single} className="w-[54%]" />
+        {/* full width on phones (matches the walkthrough player), about half the width on desktop */}
+        <Zoomable ratio={16 / 9} className="aspect-[2/1] md:aspect-[16/9] !bg-transparent">
+          <LandscapePhone {...single} className="w-full md:w-[54%]" />
         </Zoomable>
       </motion.figure>
     );
@@ -336,7 +340,8 @@ const Sprites = ({ sheets }) => (
 // Screen box measured off macbook-frame.png (the frame's screen is transparent, so the video sits behind it).
 const LaptopDemo = ({ frame, mp4, poster, caption }) => (
   <motion.figure {...rise()} className="my-12 md:my-20">
-    <Zoomable ratio={16 / 9} className="aspect-[4/3] md:aspect-[16/9]">
+    {/* no grey panel: the MacBook sits straight on the page */}
+    <Zoomable ratio={16 / 9} className="aspect-[4/3] md:aspect-[16/9] !bg-transparent">
       <div className="relative w-[80%] aspect-[1400/846]">
         <video
           autoPlay muted loop playsInline poster={poster}
@@ -352,10 +357,11 @@ const LaptopDemo = ({ frame, mp4, poster, caption }) => (
   </motion.figure>
 );
 
-// One iPhone that plays several recordings in turn, with a quick fade to black between them.
-// Chapters sit beside the phone on desktop (dot, title, note) and as pills under it on phones.
+// One phone that plays several recordings in turn, with a quick fade to black between them.
+// Default: portrait iPhone, chapters beside it on desktop (dot, title, note) and as pills under it on phones.
+// landscape: a landscape iPhone instead. bottom: heading on top, phone centered, pills + note under it everywhere.
 // Each recording plays once; when it ends the next chapter starts, and the last one wraps to the first.
-const Walkthrough = ({ heading, body, frame, chapters }) => {
+const Walkthrough = ({ heading, body, frame, chapters, landscape = false, bottom = false }) => {
   const [active, setActive] = useState(0);   // chapter the controls highlight
   const [shown, setShown] = useState(0);     // chapter the phone is playing
   const [dark, setDark] = useState(false);   // black cover while switching
@@ -395,57 +401,86 @@ const Walkthrough = ({ heading, body, frame, chapters }) => {
   const c = chapters[shown];
   const now = chapters[active];
 
+  // screen boxes measured off the frame PNGs
+  const device = landscape
+    ? { wrap: "relative w-full md:w-[54%] mx-auto aspect-[895/438]", screen: { left: "2.46%", top: "5.48%", width: "94.97%", height: "89.27%" }, round: "rounded-[7%/15%]" }
+    : { wrap: "relative mx-auto h-[32.5rem] md:h-[42.5rem] aspect-[2025/4139]", screen: { left: "5.2%", top: "2.3%", width: "89.6%", height: "95.4%" }, round: "rounded-[18%/8.5%]" };
+
+  const phone = (
+    <div className={device.wrap}>
+      <div className={`absolute overflow-hidden bg-black ${device.round}`} style={device.screen}>
+        <video
+          key={shown}
+          ref={video}
+          src={c.mp4}
+          poster={c.poster}
+          autoPlay
+          muted
+          playsInline
+          onLoadedData={() => setDark(false)}
+          onError={() => setDark(false)}
+          onEnded={() => go((shown + 1) % chapters.length)}
+          className="w-full h-full object-cover"
+        />
+        {/* the black transition between recordings */}
+        <div className={`absolute inset-0 bg-black pointer-events-none transition-opacity duration-100 ${dark ? "opacity-100" : "opacity-0"}`} />
+      </div>
+      <img src={frame} alt="" className="absolute inset-0 w-full h-full pointer-events-none" />
+    </div>
+  );
+
+  const pills = (center) => (
+    <div className={`flex gap-2.5 overflow-x-auto pb-1 [scrollbar-width:none] ${center ? "md:justify-center" : ""} -mx-5 px-5 md:mx-0 md:px-0`}>
+      {chapters.map((ch, i) => (
+        <button
+          key={ch.label}
+          type="button"
+          onClick={() => go(i)}
+          className={`shrink-0 flex items-center gap-2 md:gap-2.5 pl-2 pr-3.5 md:pl-2.5 md:pr-5 py-1.5 md:py-2 rounded-full border transition-colors ${i === active ? "border-neutral-500 text-white" : "border-neutral-800 text-neutral-500 hover:text-neutral-300"}`}
+        >
+          <span className={`w-4 h-4 md:w-5 md:h-5 rounded-full transition-colors ${i === active ? "bg-white" : "bg-neutral-700"}`} />
+          <span className="text-sm md:text-base">{ch.label}</span>
+        </button>
+      ))}
+    </div>
+  );
+
+  const title = (
+    <>
+      <h2 className="text-xl md:text-[1.4rem] font-normal tracking-[-0.015em] leading-tight text-white">{heading}</h2>
+      {body && <p className="mt-4 md:mt-6 text-base md:text-[1.1rem] font-light leading-[1.65] text-neutral-200">{body}</p>}
+    </>
+  );
+
+  if (bottom) {
+    // controls under the phone on every screen size
+    return (
+      <motion.section {...rise()} className="pt-20 md:pt-32">
+        <div className="max-w-3xl">{title}</div>
+        <div ref={box} className="mt-10 md:mt-14">
+          {phone}
+          <div className="mt-8 md:mt-10">{pills(true)}</div>
+          <p className="mt-5 md:mt-6 md:text-center md:max-w-2xl md:mx-auto text-base font-light leading-[1.65] text-neutral-400">{now.text}</p>
+        </div>
+      </motion.section>
+    );
+  }
+
   return (
     <motion.section {...rise()} className="pt-20 md:pt-32">
       <div ref={box} className="grid md:grid-cols-2 gap-8 md:gap-16 items-center">
         {/* phone + (on phones) the pill row under it */}
         <div>
-          <div className="relative mx-auto h-[32.5rem] md:h-[42.5rem] aspect-[2025/4139]">
-            <div
-              className="absolute overflow-hidden bg-black rounded-[18%/8.5%]"
-              style={{ left: "5.2%", top: "2.3%", width: "89.6%", height: "95.4%" }}
-            >
-              <video
-                key={shown}
-                ref={video}
-                src={c.mp4}
-                poster={c.poster}
-                autoPlay
-                muted
-                playsInline
-                onLoadedData={() => setDark(false)}
-                onError={() => setDark(false)}
-                onEnded={() => go((shown + 1) % chapters.length)}
-                className="w-full h-full object-cover"
-              />
-              {/* the black transition between recordings */}
-              <div className={`absolute inset-0 bg-black pointer-events-none transition-opacity duration-100 ${dark ? "opacity-100" : "opacity-0"}`} />
-            </div>
-            <img src={frame} alt="" className="absolute inset-0 w-full h-full pointer-events-none" />
-          </div>
-
+          {phone}
           <div className="md:hidden mt-8">
-            <div className="flex gap-2.5 overflow-x-auto pb-1 -mx-5 px-5 [scrollbar-width:none]">
-              {chapters.map((ch, i) => (
-                <button
-                  key={ch.label}
-                  type="button"
-                  onClick={() => go(i)}
-                  className={`shrink-0 flex items-center gap-2 pl-2 pr-3.5 py-1.5 rounded-full border transition-colors ${i === active ? "border-neutral-500 text-white" : "border-neutral-800 text-neutral-500"}`}
-                >
-                  <span className={`w-4 h-4 rounded-full transition-colors ${i === active ? "bg-white" : "bg-neutral-700"}`} />
-                  <span className="text-sm">{ch.label}</span>
-                </button>
-              ))}
-            </div>
+            {pills(false)}
             <p className="mt-5 text-base font-light leading-[1.65] text-neutral-400">{now.text}</p>
           </div>
         </div>
 
         {/* heading first on phones; chapter list beside the phone on desktop */}
         <div className="order-first md:order-none">
-          <h2 className="text-xl md:text-[1.4rem] font-normal tracking-[-0.015em] leading-tight text-white">{heading}</h2>
-          {body && <p className="mt-4 md:mt-6 text-base md:text-[1.1rem] font-light leading-[1.65] text-neutral-200">{body}</p>}
+          {title}
           <ol className="hidden md:block mt-10 border-t border-neutral-800">
             {chapters.map((ch, i) => (
               <li key={ch.label} className="border-b border-neutral-800">
@@ -454,9 +489,7 @@ const Walkthrough = ({ heading, body, frame, chapters }) => {
                   <span className="flex-1 min-w-0">
                     <span className={`block text-lg md:text-xl transition-colors ${i === active ? "text-white" : "text-neutral-500 group-hover:text-neutral-300"}`}>{ch.label}</span>
                     {i === active && (
-                      <>
-                        <span className="block mt-3 text-base font-light leading-[1.65] text-neutral-400">{ch.text}</span>
-                      </>
+                      <span className="block mt-3 text-base font-light leading-[1.65] text-neutral-400">{ch.text}</span>
                     )}
                   </span>
                 </button>
@@ -469,18 +502,90 @@ const Walkthrough = ({ heading, body, frame, chapters }) => {
   );
 };
 
+// Compact pipeline: numbered steps in one row on desktop (two columns on phones),
+// joined by a thin line, for flows that don't need code next to every step.
+const StepRow = ({ heading, body, steps }) => (
+  <motion.section {...rise()} className="pt-20 md:pt-32">
+    <div className="grid md:grid-cols-[minmax(0,1fr)_minmax(0,1.9fr)] gap-6 md:gap-16">
+      <h2 className="text-xl md:text-[1.4rem] font-normal tracking-[-0.015em] leading-tight text-white">{heading}</h2>
+      {body && <p className="text-base md:text-[1.1rem] font-light leading-[1.65] text-neutral-200">{body}</p>}
+    </div>
+    <ol className={`mt-10 md:mt-14 grid grid-cols-2 gap-x-6 gap-y-8 ${steps.length === 5 ? "md:grid-cols-5" : steps.length === 3 ? "md:grid-cols-3" : "md:grid-cols-4"} md:gap-x-8`}>
+      {steps.map((st, n) => (
+        <li key={st.label} className="relative pt-5 border-t border-neutral-800">
+          {/* dot on the line marks each step */}
+          <span className="absolute -top-[5px] left-0 w-2.5 h-2.5 rounded-full bg-white" />
+          <p className="font-mono text-xs md:text-sm text-neutral-500">{String(n + 1).padStart(2, "0")}</p>
+          <p className="mt-2 text-base md:text-lg text-white">{st.label}</p>
+          {st.text && <p className="mt-2 text-sm md:text-base font-light leading-[1.6] text-neutral-400">{st.text}</p>}
+        </li>
+      ))}
+    </ol>
+  </motion.section>
+);
+
 // Section text and one iPhone in the same row: heading + copy on the left, phone on the right
 // (stacks on phones, with the phone at the same size as the before/after rows)
-const SectionWithPhone = ({ heading, body, phoneDemo }) => (
+// Two short sections side by side: each has its copy on top and a framed phone screenshot under it.
+// Phones sit on the same baseline even when one column has more text.
+const PhonePair = ({ items }) => (
+  <motion.section {...rise()} className="pt-20 md:pt-32 grid md:grid-cols-2 gap-16 md:gap-12 lg:gap-16">
+    {items.map((it) => (
+      <div key={it.heading} className="flex flex-col">
+        <h2 className="text-xl md:text-[1.4rem] font-normal tracking-[-0.015em] leading-tight text-white">{it.heading}</h2>
+        {it.body && <p className="mt-4 md:mt-6 text-base md:text-[1.1rem] font-light leading-[1.65] text-neutral-200">{it.body}</p>}
+        {it.list && (
+          <ol className="mt-6 md:mt-8 border-t border-neutral-800">
+            {it.list.map((item, n) => (
+              <li key={item} className="py-4 border-b border-neutral-800 flex gap-5 text-base font-light leading-[1.6] text-neutral-300">
+                <span className="font-mono text-sm text-neutral-500 pt-0.5">{String(n + 1).padStart(2, "0")}</span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ol>
+        )}
+        <div className="mt-auto pt-10 md:pt-14">
+          <Zoomable ratio={2 / 3} className="h-[32.5rem] md:h-[40rem] !bg-transparent">
+            <img src={it.phoneImage} alt={it.heading} loading="lazy" className="h-full w-auto object-contain" />
+          </Zoomable>
+        </div>
+      </div>
+    ))}
+  </motion.section>
+);
+
+// phoneSize "walkthrough": same fixed phone height as the Walkthrough player
+// phoneImage: an already-framed phone screenshot (transparent PNG) instead of a recording
+// list: optional numbered points under the copy, so the phone has something to sit beside
+const SectionWithPhone = ({ heading, body, list, phoneDemo, phoneImage, phoneSize }) => (
   <motion.section {...rise()} className="pt-20 md:pt-32 grid md:grid-cols-2 gap-10 md:gap-16 items-center">
     <div>
       <h2 className="text-xl md:text-[1.4rem] font-normal tracking-[-0.015em] leading-tight text-white">{heading}</h2>
-      <div className="mt-6 md:mt-8 text-base md:text-[1.1rem] font-light tracking-[-0.005em] leading-[1.65] text-neutral-200 space-y-6">
-        {(Array.isArray(body) ? body : [body]).map((para) => <p key={para}>{para}</p>)}
-      </div>
+      {body && (
+        <div className="mt-6 md:mt-8 text-base md:text-[1.1rem] font-light tracking-[-0.005em] leading-[1.65] text-neutral-200 space-y-6">
+          {(Array.isArray(body) ? body : [body]).map((para) => <p key={para}>{para}</p>)}
+        </div>
+      )}
+      {list && (
+        <ol className="mt-8 md:mt-10 border-t border-neutral-800">
+          {list.map((item, n) => (
+            <li key={item} className="py-5 border-b border-neutral-800 flex gap-5 text-base md:text-[1.05rem] font-light leading-[1.6] text-neutral-300">
+              <span className="font-mono text-sm text-neutral-500 pt-0.5">{String(n + 1).padStart(2, "0")}</span>
+              <span>{item}</span>
+            </li>
+          ))}
+        </ol>
+      )}
     </div>
-    <Zoomable ratio={2 / 3} className="aspect-[2/3] md:aspect-[4/5] !bg-transparent">
-      <PhoneScreen {...phoneDemo} className="!h-[90%]" />
+    <Zoomable
+      ratio={2 / 3}
+      className={phoneSize === "walkthrough" || phoneImage ? "h-[32.5rem] md:h-[42.5rem] !bg-transparent" : "aspect-[2/3] md:aspect-[4/5] !bg-transparent"}
+    >
+      {phoneImage ? (
+        <img src={phoneImage} alt={heading} loading="lazy" className="h-full w-auto object-contain" />
+      ) : (
+        <PhoneScreen {...phoneDemo} className={phoneSize === "walkthrough" ? "!h-full" : "!h-[90%]"} />
+      )}
     </Zoomable>
   </motion.section>
 );
@@ -682,7 +787,8 @@ export default function CaseStudy({ slug }) {
           {/* fit: keep the recording's own shape (centered, narrower) instead of a full-width 16:9 crop */}
           <Zoomable
             ratio={project.heroVideo.fit ? project.heroVideo.aspect : 16 / 9}
-            className={project.heroVideo.fit ? "mx-auto w-full md:w-[56%] !bg-transparent" : "aspect-[4/3] md:aspect-[16/9]"}
+            // width: optional size class, so a hero can sit smaller and centered
+            className={`${project.heroVideo.fit ? "mx-auto w-full !bg-transparent" : "aspect-[4/3] md:aspect-[16/9]"} ${project.heroVideo.width || (project.heroVideo.fit ? "md:w-[56%]" : "")}`}
           >
             <video
               autoPlay muted playsInline loop={project.heroVideo.loop !== false}
@@ -712,25 +818,29 @@ export default function CaseStudy({ slug }) {
       )}
 
       {/* How data moves through the app: heading + body, then numbered code steps */}
-      {project.flow && (
+      {/* no code in any step: compact row of steps; otherwise the step-by-step code layout */}
+      {project.flow && (project.flow.steps.some((st) => st.code) ? (
         <div>
           <Section heading={project.flow.heading} body={project.flow.body} />
           {project.flow.steps.map((st, n) => <CodeStep key={st.label} n={n + 1} {...st} />)}
         </div>
-      )}
+      ) : (
+        <StepRow {...project.flow} />
+      ))}
 
       {/* Story: heading, text, then that section's media */}
       {project.sections.map((s) => (
         <div key={s.heading || s.key}>
+          {s.pair && <PhonePair items={s.pair} />}
           {s.walkthrough ? <Walkthrough heading={s.heading} body={s.body} {...s.walkthrough} /> : s.heading && (s.phoneBeside ? <SectionWithPhone {...s} /> : <Section {...s} />)}
           {(s.images || s.image || s.video) && (
-            <Media items={s.images || s.video || s.image} caption={s.caption} inset={s.inset} wide={s.wide} alt={s.heading || project.name} />
+            <Media items={s.images || s.video || s.image} caption={s.caption} inset={s.inset} wide={s.wide} bare={s.bare} alt={s.heading || project.name} />
           )}
           {s.brand && <BrandPanel {...s.brand} />}
           {/* optional "before" row of phones above the main one */}
           {s.phoneDemo && !s.phoneBeside && <PhoneDemo {...s.phoneDemo} />}
-          {s.phonesBefore && <PhoneDemo phones={s.phonesBefore} compact={s.compactPhones} />}
-          {s.phones && <PhoneDemo phones={s.phones} compact={s.compactPhones} />}
+          {s.phonesBefore && <PhoneDemo phones={s.phonesBefore} compact={s.compactPhones} bare={project.bareFrames} />}
+          {s.phones && <PhoneDemo phones={s.phones} compact={s.compactPhones} bare={project.bareFrames} />}
           {s.landscapes && <LandscapeDemo phones={s.landscapes} />}
           {s.laptop && <LaptopDemo {...s.laptop} />}
           {s.sprites && <Sprites sheets={s.sprites} />}
@@ -740,7 +850,7 @@ export default function CaseStudy({ slug }) {
             m.label ? (
               <FigureRow key={n} label={m.label} text={m.text} src={m.src} inset={m.inset} />
             ) : (
-              <Media key={n} items={m.src} caption={m.caption} inset={m.inset} wide={m.wide} alt={m.caption || `${s.heading} ${n + 1}`} />
+              <Media key={n} items={m.src} caption={m.caption} inset={m.inset} wide={m.wide} bare={m.bare || s.bare} alt={m.caption || `${s.heading} ${n + 1}`} />
             )
           )}
         </div>
