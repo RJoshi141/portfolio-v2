@@ -134,8 +134,8 @@ import harmoniFrame from "../../assets/project-frames/harmoni-frames.png";
 import portfolioFrame from "../../assets/project-frames/potfolio-frames.png";
 import rubiksFrame from "../../assets/project-frames/rubiks-mac.png";
 import lumonFrame from "../../assets/project-frames/lumon-imac.png";
-import cellscopeHeroMp4 from "../../assets/case-studies/cellscope/hero-macbook.mp4";
-import cellscopeHeroPoster from "../../assets/case-studies/cellscope/hero-macbook-poster.jpg";
+import cellscopeHeroMp4 from "../../assets/case-studies/cellscope/hero-macbook-2.mp4";
+import cellscopeHeroPoster from "../../assets/case-studies/cellscope/hero-macbook-2-poster.jpg";
 import cellscopeCardMp4 from "../../assets/case-studies/cellscope/card.mp4";
 import cellscopeCardPoster from "../../assets/case-studies/cellscope/card-poster.jpg";
 import cellscopeChartsMp4 from "../../assets/case-studies/cellscope/charts.mp4";
@@ -881,7 +881,7 @@ WEIGHT = """length_m * (1 + abs(grade) / 10)
     site: "https://cellscope-nine.vercel.app/",
     siteLabel: "cellscope-nine.vercel.app",
     // the dashboard running on a MacBook, at its own shape
-    heroVideo: { mp4: cellscopeHeroMp4, poster: cellscopeHeroPoster, fit: true, aspect: 2100 / 1270, width: "mx-auto md:w-[88%]" },
+    heroVideo: { mp4: cellscopeHeroMp4, poster: cellscopeHeroPoster, fit: true, aspect: 16 / 9, width: "mx-auto md:w-[78%]" },
     summary:
       "Every laptop and phone battery has a gas-gauge chip that reports voltage, current and temperature over SMBus. CellScope is the kind of tool hardware teams build around that chip. It reads the raw registers, decodes them, stores every reading in Postgres and charts each battery live as it charges, drains and wears.",
     role: "Solo: design, engineering",
@@ -896,6 +896,7 @@ WEIGHT = """length_m * (1 + abs(grade) / 10)
       {
         heading: "What it shows",
         body: "Two laptop packs and two phone batteries, simulated at 60× real time so a full charge cycle fits in a few minutes. Pick one and everything below follows it.",
+        clipsWidth: "mx-auto md:w-[68%]", // smaller, centered
         clips: [
           { mp4: cellscopeChartsMp4, poster: cellscopeChartsPoster, caption: "Four synced charts instead of one with two y-axes. Hovering one moves the crosshair on all of them." },
         ],
@@ -923,6 +924,7 @@ def read_battery(bus, addr=0x0B):
     }`,
           },
         ],
+        clipsWidth: "mx-auto md:w-[68%]", // smaller, centered
         clips: [
           { mp4: cellscopeRegsMp4, poster: cellscopeRegsPoster, caption: "The register inspector: each raw word next to what it means, flashing when it changes between polls." },
         ],
@@ -981,12 +983,19 @@ def read_battery(bus, addr=0x0B):
         },
         media: [
           {
+            bare: true, // phone screens straight on the page, no grey panels
             src: [
               { src: cellscopeMobileFleet, tall: true, inset: "w-[86%] h-[90%]", caption: "On a phone, the fleet stacks into one column." },
               { src: cellscopeMobileDetail, tall: true, inset: "w-[86%] h-[90%]", caption: "Pack detail: stats go two-up and the charts stack." },
             ],
           },
         ],
+      },
+      {
+        // live UI components rebuilt in code, on CellScope's light page
+        heading: "Exploring UI components",
+        body: "The pieces of the dashboard, rebuilt here in code.",
+        components: "cellscope",
       },
       {
         heading: "What's next",
@@ -999,7 +1008,7 @@ def read_battery(bus, addr=0x0B):
     ],
     tools: [
       { name: "Python", logo: "python" },
-      { name: "Flask", icon: "flask" },
+      { name: "Flask", logo: "flask" },
       { name: "PostgreSQL", logo: "postgresql", note: "SQLAlchemy" },
       { name: "React", logo: "react" },
       { name: "TypeScript", logo: "typescript" },

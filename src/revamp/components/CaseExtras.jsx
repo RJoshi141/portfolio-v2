@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import {
   MessageCircle, Brain, Footprints, Heart, Ear, Target, Users, Check, Droplet,
-  ScanText, Mic, LayoutGrid, Database, Map, ChartSpline, Watch, AudioLines, Pause, Trash2, ArrowRight, Sparkles, ArrowLeftRight, Gamepad2, Grid3x3, Rocket, FlaskConical,
+  ScanText, Mic, LayoutGrid, Database, Map, ChartSpline, Watch, AudioLines, Pause, Trash2, ArrowRight, Sparkles, ArrowLeftRight, Gamepad2, Grid3x3, Rocket, Laptop, Smartphone, BatteryCharging, Thermometer, Zap, FlaskConical,
 } from "lucide-react";
 // full-color brand marks (devicon, MIT; OSM from simple-icons in its brand green; Lens drawn to match)
 import xcode from "../../assets/tools/color/xcode.png";
@@ -27,6 +27,7 @@ import html5 from "../../assets/tools/color/html5.svg";
 import css3 from "../../assets/tools/color/css3.svg";
 import javascript from "../../assets/tools/color/javascript.svg";
 import vercel from "../../assets/tools/color/vercel.svg";
+import flask from "../../assets/tools/color/flask.svg";
 
 const ease = [0.22, 1, 0.36, 1];
 const rise = { initial: { opacity: 0, y: 24 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, amount: 0.15 }, transition: { duration: 0.8, ease } };
@@ -367,11 +368,73 @@ const LumonBoard = (props) => (
   </Board>
 );
 
+// CellScope: Apple-style paper, SF fonts, one blue accent, green and red only for battery state
+const sf = { fontFamily: '-apple-system, "SF Pro Text", Inter, sans-serif', backgroundColor: "#F5F5F7", color: "#1D1D1F" };
+const mono = { fontFamily: '"SF Mono", ui-monospace, Menlo, monospace' };
+
+const CellScopeBoard = (props) => (
+  <Board {...props}>
+    <Cell bg={sf} wide note="Fleet cards: the device icon, charge left and one status chip. Green only when it's charging, red only when it's low.">
+      <div className="grid grid-cols-2 gap-3 w-full max-w-md">
+        {[
+          [Laptop, "Laptop 02", 27, "Charging", "#34C759"],
+          [Smartphone, "Phone 01", 14, "Low", "#FF3B30"],
+        ].map(([Icon, name, pct, state, c]) => (
+          <div key={name} className="rounded-2xl bg-white p-4 shadow-[0_1px_2px_rgba(0,0,0,0.06)]">
+            <p className="flex items-center gap-2 text-xs text-[#6E6E73]"><Icon className="w-4 h-4" />{name}</p>
+            <p className="mt-2 text-3xl font-semibold tracking-tight">{pct}<span className="text-base text-[#6E6E73]">%</span></p>
+            <span className="mt-2 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[0.7rem] font-medium" style={{ color: c, backgroundColor: `${c}1a` }}>
+              <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: c }} />{state}
+            </span>
+          </div>
+        ))}
+      </div>
+    </Cell>
+    <Cell bg={sf} note="Stat tiles: a small label, one big number, units kept quiet.">
+      <div className="grid grid-cols-2 gap-3 w-full max-w-[16rem]">
+        {[[Zap, "Voltage", "11.57", "V"], [Thermometer, "Temp", "33.4", "°C"]].map(([Icon, l, v, u]) => (
+          <div key={l} className="rounded-xl bg-white p-3">
+            <p className="flex items-center gap-1.5 text-[0.7rem] text-[#6E6E73]"><Icon className="w-3.5 h-3.5" />{l}</p>
+            <p className="mt-1 text-xl font-semibold">{v}<span className="ml-0.5 text-xs text-[#6E6E73]">{u}</span></p>
+          </div>
+        ))}
+      </div>
+    </Cell>
+    <Cell bg={sf} note="Register rows: the raw word in SF Mono, what it means beside it. The value flashes blue when it changes.">
+      <div className="w-full max-w-[17rem] rounded-xl bg-white divide-y divide-[#E5E5EA] text-xs">
+        {[["0x0A", "Current", "0xFF38", "−200 mA"], ["0x08", "Temperature", "0x0C1B", "36.6 °C"], ["0x16", "Status", "0x00C0", "FC, INIT"]].map(([a, n, w, m], i) => (
+          <div key={a} className="flex items-center justify-between px-3 py-2">
+            <span style={mono} className="text-[#6E6E73]">{a}</span>
+            <span className="flex-1 ml-3">{n}</span>
+            <span style={mono} className={`px-1 rounded ${i === 0 ? "bg-[#0071E3]/10 text-[#0071E3]" : ""}`}>{w}</span>
+            <span className="ml-3 w-16 text-right text-[#6E6E73]">{m}</span>
+          </div>
+        ))}
+      </div>
+    </Cell>
+    <Cell bg={sf} note="Battery health: capacity left against design, one bar and one number.">
+      <div className="w-full max-w-[15rem]">
+        <div className="flex items-baseline justify-between"><span className="text-sm">Battery health</span><span className="text-2xl font-semibold">89.7%</span></div>
+        <div className="mt-3 h-2 rounded-full bg-[#E5E5EA]"><div className="h-full w-[89.7%] rounded-full bg-[#1D1D1F]" /></div>
+        <p className="mt-2 text-[0.7rem] text-[#6E6E73]">4,486 of 5,000 mAh · 312 cycles</p>
+      </div>
+    </Cell>
+    <Cell bg={sf} note="The live pill and charge state: a blinking dot so you know the numbers are moving.">
+      <div className="flex items-center gap-3">
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-xs">
+          <span className="relative flex w-2 h-2"><span className="absolute inset-0 rounded-full bg-[#34C759] animate-ping opacity-60" /><span className="relative w-2 h-2 rounded-full bg-[#34C759]" /></span>Live
+        </span>
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-[#0071E3] text-white px-3 py-1.5 text-xs"><BatteryCharging className="w-4 h-4" />60× speed</span>
+      </div>
+    </Cell>
+  </Board>
+);
+
 export const ComponentBoard = ({ kind, ...props }) =>
-  kind === "even" ? <EvenBoard {...props} /> : kind === "layer" ? <LayerBoard {...props} /> : kind === "utter" ? <UtterBoard {...props} /> : kind === "lumon" ? <LumonBoard {...props} /> : null;
+  kind === "even" ? <EvenBoard {...props} /> : kind === "layer" ? <LayerBoard {...props} /> : kind === "utter" ? <UtterBoard {...props} /> : kind === "lumon" ? <LumonBoard {...props} /> : kind === "cellscope" ? <CellScopeBoard {...props} /> : null;
 
 // ---------------------------------------------------------------- tools grid
-const LOGOS = { xcode, swift, python, fastapi, postgresql, docker, openstreetmap, googlelens, expo, figma, firebase, nestjs, nextjs, react, typescript, pixilart, html5, css3, javascript, vercel };
+const LOGOS = { xcode, swift, python, fastapi, postgresql, docker, openstreetmap, googlelens, expo, figma, firebase, nestjs, nextjs, react, typescript, pixilart, html5, css3, javascript, vercel, flask };
 
 // Apple frameworks and data sources with no public logo get an app-icon-style tile:
 // a rounded square with its own gradient and a white glyph, so the row reads like real icons.

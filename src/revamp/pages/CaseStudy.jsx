@@ -66,7 +66,7 @@ const Media = ({ items, caption, alt, inset, wide, bare, aspect }) => {
                   ratio={pair && !tall ? 4 / 3 : pair ? 2 / 3 : 3 / 4}
                   inset={own || inset || "w-[80%] h-[80%]"}
                 />
-                {note && <p className="mt-3 md:mt-4 text-sm md:text-base font-light leading-[1.5] text-neutral-400">{note}</p>}
+                {note && <p className={`mt-3 md:mt-4 text-sm md:text-base font-light leading-[1.5] text-neutral-400 ${bare && tall ? "text-center" : ""}`}>{note}</p>}
               </div>
             );
           })}
@@ -107,8 +107,9 @@ const Stars = ({ repo, count }) => {
 };
 
 // Short clips side by side at their own shape (no panel, no crop), each with a caption.
-const Clips = ({ items }) => (
-  <motion.div {...rise()} className={`my-12 md:my-20 grid gap-8 ${items.length > 1 ? "md:grid-cols-2" : ""}`}>
+// width: optional size class for the row (e.g. a single clip kept smaller and centered)
+const Clips = ({ items, width = "" }) => (
+  <motion.div {...rise()} className={`my-12 md:my-20 grid gap-8 ${items.length > 1 ? "md:grid-cols-2" : ""} ${width}`}>
     {items.map((c) => (
       <figure key={c.mp4}>
         <video autoPlay muted loop playsInline poster={c.poster} className="w-full h-auto rounded-md bg-black">
@@ -881,7 +882,7 @@ export default function CaseStudy({ slug }) {
           {s.empathy && <EmpathyMap heading={s.heading} body={s.body} map={s.empathy} />}
           {s.components && <ComponentBoard kind={s.components} heading={s.heading} body={s.body} />}
           {s.empathy || s.components ? null : s.stepRow ? <StepRow heading={s.heading} body={s.body} steps={s.steps} /> : s.walkthrough ? <Walkthrough heading={s.heading} body={s.body} {...s.walkthrough} /> : s.heading && (s.phoneBeside ? <SectionWithPhone {...s} /> : <Section {...s} />)}
-          {s.clips && <Clips items={s.clips} />}
+          {s.clips && <Clips items={s.clips} width={s.clipsWidth} />}
           {(s.images || s.image || s.video) && (
             <Media items={s.images || s.video || s.image} caption={s.caption} inset={s.inset} wide={s.wide} bare={s.bare} aspect={s.panel} alt={s.heading || project.name} />
           )}
