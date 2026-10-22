@@ -646,8 +646,8 @@ const FigureRow = ({ label, text, src, inset = "w-[92%] h-[86%]" }) => (
   </motion.div>
 );
 
-// Tiny Swift highlighter: comments, strings, keywords. Everything else stays neutral.
-const SWIFT = /(\/\/.*$)|("(?:[^"\\]|\\.)*")|\b(let|var|func|guard|else|return|if|try|in|self|await|export|function|const)\b/gm;
+// Tiny Swift/TS/Python highlighter: comments (// or #), strings, keywords. Everything else stays neutral.
+const SWIFT = /(\/\/.*$|#.*$)|("(?:[^"\\]|\\.)*")|\b(let|var|func|guard|else|return|if|try|in|self|await|export|function|const|def)\b/gm;
 const highlight = (code) => {
   const out = [];
   let last = 0, m, k = 0;

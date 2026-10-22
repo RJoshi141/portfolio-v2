@@ -134,6 +134,16 @@ import harmoniFrame from "../../assets/project-frames/harmoni-frames.png";
 import portfolioFrame from "../../assets/project-frames/potfolio-frames.png";
 import rubiksFrame from "../../assets/project-frames/rubiks-mac.png";
 import lumonFrame from "../../assets/project-frames/lumon-imac.png";
+import cellscopeHeroMp4 from "../../assets/case-studies/cellscope/hero-macbook.mp4";
+import cellscopeHeroPoster from "../../assets/case-studies/cellscope/hero-macbook-poster.jpg";
+import cellscopeCardMp4 from "../../assets/case-studies/cellscope/card.mp4";
+import cellscopeCardPoster from "../../assets/case-studies/cellscope/card-poster.jpg";
+import cellscopeChartsMp4 from "../../assets/case-studies/cellscope/charts.mp4";
+import cellscopeChartsPoster from "../../assets/case-studies/cellscope/charts-poster.jpg";
+import cellscopeRegsMp4 from "../../assets/case-studies/cellscope/registers.mp4";
+import cellscopeRegsPoster from "../../assets/case-studies/cellscope/registers-poster.jpg";
+import cellscopeMobileFleet from "../../assets/case-studies/cellscope/mobile-fleet.png";
+import cellscopeMobileDetail from "../../assets/case-studies/cellscope/mobile-detail.png";
 
 export const projects = [
   {
@@ -641,7 +651,6 @@ struct ProductDraft {
         inset: "w-[86%] h-[78%]",
         // small, short panel shaped to the icon strip, centered
         panel: "aspect-[3.6/1] w-full md:w-[60%] mx-auto",
-        caption: "The custom line icon set, one per product type and step.",
       },
       {
         // live UI components rebuilt in code, on the app's sage background
@@ -855,6 +864,152 @@ WEIGHT = """length_m * (1 + abs(grade) / 10)
       { value: "77%", label: "Curb coverage, up from 27%" },
       { value: "4", label: "Mobility profiles" },
       { value: "9 → 5", label: "Raw path pieces merged into direction steps on a test route" },
+    ],
+    gallery: [],
+  },
+  {
+    slug: "cellscope",
+    name: "CellScope",
+    tagline: "Live battery telemetry over SMBus",
+    featured: true,
+    tags: ["Python", "Flask", "React"],
+    frame: cellscopeCardPoster,
+    // work card: the live dashboard looping inside the MacBook frame
+    cardDemo: { frame: macbookFrame, mp4: cellscopeCardMp4, poster: cellscopeCardPoster },
+    tint: "#16181c",
+    github: "https://github.com/RJoshi141/cellscope",
+    site: "https://cellscope-nine.vercel.app/",
+    siteLabel: "cellscope-nine.vercel.app",
+    // the dashboard running on a MacBook, at its own shape
+    heroVideo: { mp4: cellscopeHeroMp4, poster: cellscopeHeroPoster, fit: true, aspect: 2100 / 1270, width: "mx-auto md:w-[88%]" },
+    summary:
+      "Every laptop and phone battery has a gas-gauge chip that reports voltage, current and temperature over SMBus. CellScope is the kind of tool hardware teams build around that chip. It reads the raw registers, decodes them, stores every reading in Postgres and charts each battery live as it charges, drains and wears.",
+    role: "Solo: design, engineering",
+    platform: "Web",
+    year: "2026",
+    stack: ["Python", "Flask", "SQLAlchemy", "PostgreSQL", "React", "TypeScript", "Zustand", "KendoReact"],
+    sections: [
+      {
+        heading: "Why I built it",
+        body: "Battery teams don't check a pack from a settings screen. They read the gas gauge directly, one register at a time, to catch a cell running hot or capacity fading faster than it should. I wanted to build that whole path myself: the bus, the decoding, the API, the database and the dashboard on top.",
+      },
+      {
+        heading: "What it shows",
+        body: "Two laptop packs and two phone batteries, simulated at 60× real time so a full charge cycle fits in a few minutes. Pick one and everything below follows it.",
+        clips: [
+          { mp4: cellscopeChartsMp4, poster: cellscopeChartsPoster, caption: "Four synced charts instead of one with two y-axes. Hovering one moves the crosshair on all of them." },
+        ],
+      },
+      {
+        heading: "Reading the wire",
+        body: "Nothing comes off the bus as a nice number. Current is a signed 16-bit word, temperature is tenths of a kelvin, and status is a set of bit flags. Every value on the dashboard starts as one of these words.",
+        steps: [
+          {
+            label: "One decoder",
+            text: "Takes anything with smbus2's read_word_data, so a real I²C adapter drops in without touching the API or the UI.",
+            file: "simulator.py",
+            code: `def _signed16(word):
+    return word - 0x10000 if word & 0x8000 else word  # two's complement
+
+def read_battery(bus, addr=0x0B):
+    def word(name):
+        return bus.read_word_data(addr, SBS[name])
+    return {
+        "voltage_mv": word("voltage"),
+        "current_ma": _signed16(word("current")),
+        "temp_c": round(word("temperature") / 10 - 273.15, 1),  # 0.1 K
+        "status": word("battery_status"),  # bit flags
+        # ...plus capacity, cycle count and time to empty/full
+    }`,
+          },
+        ],
+        clips: [
+          { mp4: cellscopeRegsMp4, poster: cellscopeRegsPoster, caption: "The register inspector: each raw word next to what it means, flashing when it changes between polls." },
+        ],
+      },
+      {
+        heading: "A battery worth watching",
+        body: "A random number generator makes a boring chart, so each battery runs a small physics model.",
+        stepRow: true,
+        steps: [
+          { label: "Charge", text: "Charge left is current integrated over time, the same coulomb counting a real gas gauge does." },
+          { label: "Voltage", text: "Read off a Li-ion curve, minus current times internal resistance, so it sags under load." },
+          { label: "Charging", text: "Constant current to 80%, then a taper as it fills, like a real charger." },
+          { label: "Heat and wear", text: "Heats with current squared, and loses a little capacity every cycle." },
+        ],
+      },
+      {
+        heading: "Built for serverless",
+        body: "Vercel functions don't keep memory between requests, so the simulator can't either. Each poll rebuilds the battery from its last stored reading, steps it forward and reads it through the bus. Postgres is the only source of truth.",
+        steps: [
+          {
+            label: "Stateless, throttled polling",
+            text: "Ten open tabs still write one reading per tick, and a quiet hour resumes where it left off instead of draining every battery to zero.",
+            file: "telemetry.py",
+            code: `def poll(battery, now):
+    last = battery.latest_reading()
+    if last and now - last.ts < MIN_INTERVAL:
+        return last  # someone else just polled this pack
+
+    state = state_from(battery, last)
+    if last:
+        state = step(state, min(now - last.ts, MAX_GAP).total_seconds())
+
+    bus = FakeSMBus(state)  # swap for smbus2.SMBus(1) on real hardware
+    reading = Reading(battery=battery, ts=now, **read_battery(bus))
+    db.session.add(reading)
+    db.session.commit()
+    return reading`,
+          },
+        ],
+      },
+      {
+        heading: "Two ways in",
+        body: "REST for the dashboard, and JSON-RPC 2.0 on the same Flask app for scripts and test rigs, with batch requests, notifications and the spec's error codes. Errors come back as JSON either way.",
+      },
+      {
+        heading: "Design",
+        body: "Quiet and close to Apple's own tools: SF Pro for text, SF Mono for every hex word and serial, one blue accent, and green or red only when a battery is charging or low. The laptop and phone icons are drawn from scratch to match.",
+        brand: {
+          colors: [
+            { name: "Paper", hex: "#F5F5F7", note: "Page" },
+            { name: "Ink", hex: "#1D1D1F", note: "Text and charge" },
+            { name: "Blue", hex: "#0071E3", note: "Accent and chart lines" },
+            { name: "Green", hex: "#34C759", note: "Charging" },
+            { name: "Red", hex: "#FF3B30", note: "Low and alarms" },
+          ],
+        },
+        media: [
+          {
+            src: [
+              { src: cellscopeMobileFleet, tall: true, inset: "w-[86%] h-[90%]", caption: "On a phone, the fleet stacks into one column." },
+              { src: cellscopeMobileDetail, tall: true, inset: "w-[86%] h-[90%]", caption: "Pack detail: stats go two-up and the charts stack." },
+            ],
+          },
+        ],
+      },
+      {
+        heading: "What's next",
+        list: [
+          "Connect a real gas gauge through a Total Phase Aardvark.",
+          "Alembic migrations instead of create_all.",
+          "Alerts when a battery crosses a temperature or health limit.",
+        ],
+      },
+    ],
+    tools: [
+      { name: "Python", logo: "python" },
+      { name: "Flask", icon: "flask" },
+      { name: "PostgreSQL", logo: "postgresql", note: "SQLAlchemy" },
+      { name: "React", logo: "react" },
+      { name: "TypeScript", logo: "typescript" },
+      { name: "Vercel", logo: "vercel" },
+    ],
+    metrics: [
+      { value: "10", label: "Smart Battery registers read every poll" },
+      { value: "17", label: "pytest tests across decoding, API and RPC" },
+      { value: "1", label: "Class to swap for real hardware" },
+      { value: "60×", label: "Simulated time, a full cycle in minutes" },
     ],
     gallery: [],
   },

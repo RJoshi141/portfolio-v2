@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import {
   MessageCircle, Brain, Footprints, Heart, Ear, Target, Users, Check, Droplet,
-  ScanText, Mic, LayoutGrid, Database, Map, ChartSpline, Watch, AudioLines, Pause, Trash2, ArrowRight, Sparkles, ArrowLeftRight, Gamepad2, Grid3x3, Rocket,
+  ScanText, Mic, LayoutGrid, Database, Map, ChartSpline, Watch, AudioLines, Pause, Trash2, ArrowRight, Sparkles, ArrowLeftRight, Gamepad2, Grid3x3, Rocket, FlaskConical,
 } from "lucide-react";
 // full-color brand marks (devicon, MIT; OSM from simple-icons in its brand green; Lens drawn to match)
 import xcode from "../../assets/tools/color/xcode.png";
@@ -389,6 +389,7 @@ const TILES = {
   sprite: [Gamepad2, "linear-gradient(160deg,#30d158,#0a8f3c)"],
   pixel: [Grid3x3, "linear-gradient(160deg,#5ac8fa,#2b6fd6)"],
   eas: [Rocket, "linear-gradient(160deg,#4630eb,#1f1a5c)"],
+  flask: [FlaskConical, "linear-gradient(160deg,#3a3a3c,#111)"],
 };
 
 export const Tools = ({ items }) => (
