@@ -13,6 +13,8 @@ import pgLogo from "../../assets/pg-logo.png";
 import krogerLogo from "../../assets/kroger-logo.png";
 
 const all = [...featured, ...selected];
+// the home page's picks: the featured projects minus the iPhone Duo case study (it's still on Works)
+const picks = featured.filter((p) => p.slug !== "iphone-duo");
 
 // the company logos from the original site; heights balance wide wordmarks against stacked marks
 const COMPANIES = [
@@ -111,10 +113,10 @@ export default function Home() {
       <section className="px-5 md:px-10 pt-28 md:pt-40">
         <div className="flex items-baseline justify-between">
           <h2 data-split="morph" className="text-5xl md:text-8xl tracking-[-0.05em]">Selected <span className="serif italic">work</span></h2>
-          <p data-fade className="mono text-xs text-[var(--muted)]">({pad(featured.length)})</p>
+          <p data-fade className="mono text-xs text-[var(--muted)]">({pad(Math.min(picks.length, 6))})</p>
         </div>
         <div className="mt-14 md:mt-20 grid md:grid-cols-12 gap-x-6 gap-y-20 md:gap-y-32">
-          {featured.slice(0, 6).map((p, i) => (
+          {picks.slice(0, 6).map((p, i) => (
             // staggered editorial layout: wide, then narrow and pushed right, and so on
             <div key={p.slug} data-fade className={i % 2 === 0 ? "md:col-span-5 md:col-start-2" : "md:col-span-4 md:col-start-8 md:mt-40"}>
               <BigCard p={p} i={i} tall={i % 2 === 1} />
