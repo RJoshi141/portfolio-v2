@@ -9,10 +9,13 @@ export default defineConfig({
   assetsInclude: ['**/*.glb'],
   build: {
     rollupOptions: {
-      // two pages: the new site at /portfolio-v2/ and the previous one at /portfolio-v2/classic/
+      // the site at /portfolio-v2/ (src/next), the last version at /previous/ (src/revamp),
+      // the original at /classic/, and /next/ which just forwards old preview links to the site
       input: {
         main: resolve(__dirname, 'index.html'),
+        previous: resolve(__dirname, 'previous/index.html'),
         classic: resolve(__dirname, 'classic/index.html'),
+        next: resolve(__dirname, 'next/index.html'),
       },
     },
   },

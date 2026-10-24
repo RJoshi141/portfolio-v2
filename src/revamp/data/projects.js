@@ -647,6 +647,7 @@ struct ProductDraft {
             { name: "Rust", hex: "#B4602F", note: "Warnings only" },
           ],
         },
+        lightArt: true, // light line icons: the next site blends them so they show on light pages too
         image: layerIcons,
         inset: "w-[86%] h-[78%]",
         // small, short panel shaped to the icon strip, centered

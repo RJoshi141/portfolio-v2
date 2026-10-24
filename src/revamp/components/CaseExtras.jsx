@@ -56,11 +56,12 @@ const QUADRANTS = [
   ["needs", "Needs", Target],
 ];
 
-export const EmpathyMap = ({ heading, body, map }) => (
-  <motion.section {...rise} className="pt-20 md:pt-32">
-    <Head heading={heading} body={body} />
+// bare: just the grid, no heading or top spacing (the new site supplies its own chapter heading)
+export const EmpathyMap = ({ heading, body, map, bare }) => (
+  <motion.section {...rise} className={bare ? "" : "pt-20 md:pt-32"}>
+    {!bare && <Head heading={heading} body={body} />}
     {/* hairline grid: 1px gaps over a grey backing draw the lines between cells */}
-    <div className="mt-10 md:mt-14 grid md:grid-cols-3 gap-px bg-neutral-800 border border-neutral-800">
+    <div className={`${bare ? "" : "mt-10 md:mt-14"} grid md:grid-cols-3 gap-px bg-neutral-800 border border-neutral-800`}>
       <div className="md:col-span-3 bg-black p-6 md:p-8">
         <Label icon={Users}>Who we're designing for</Label>
         <p className="mt-4 text-lg md:text-[1.35rem] leading-[1.45] text-white max-w-4xl">{map.who}</p>
@@ -111,10 +112,10 @@ const Cell = ({ bg, note, children, wide }) => (
   </figure>
 );
 
-const Board = ({ heading, body, children }) => (
-  <motion.section {...rise} className="pt-20 md:pt-32">
-    <Head heading={heading} body={body} />
-    <div className="mt-10 md:mt-14 grid md:grid-cols-3 gap-px bg-neutral-800 border border-neutral-800">{children}</div>
+const Board = ({ heading, body, children, bare }) => (
+  <motion.section {...rise} className={bare ? "" : "pt-20 md:pt-32"}>
+    {!bare && <Head heading={heading} body={body} />}
+    <div className={`${bare ? "" : "mt-10 md:mt-14"} grid md:grid-cols-3 gap-px bg-neutral-800 border border-neutral-800`}>{children}</div>
   </motion.section>
 );
 

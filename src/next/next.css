@@ -1,0 +1,82 @@
+/* The "next" revamp only: Tailwind + its own tokens, none of the classic/revamp globals. */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #0c0c0b;
+  --fg: #efede8;
+  --muted: #8b8a85;
+  --line: rgba(239, 237, 232, 0.14);
+  --panel: #161614;
+  --blob: #262623;
+}
+:root[data-theme="light"] {
+  --bg: #fcfcfa;
+  --fg: #141413;
+  --muted: #7a7975;
+  --line: rgba(20, 20, 19, 0.12);
+  --panel: #f1f0ec;
+  --blob: #dedcd7;
+}
+
+html { background: var(--bg); }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 0.6s ease, color 0.6s ease;
+}
+.serif { font-family: "Instrument Serif", Georgia, serif; font-weight: 400; }
+.mono { font-family: "JetBrains Mono", ui-monospace, monospace; }
+
+/* Lenis */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+/* hide the native cursor where the custom one is active */
+@media (hover: hover) and (pointer: fine) {
+  .has-cursor, .has-cursor a, .has-cursor button { cursor: none; }
+}
+
+/* SplitText line masks */
+.split-line { padding-bottom: 0.08em; margin-bottom: -0.08em; }
+
+/* hover roll: two stacked copies of a label, the second slides up into place */
+.roll { display: inline-flex; overflow: hidden; position: relative; vertical-align: top; }
+.roll > span { display: block; transition: transform 0.6s cubic-bezier(0.76, 0, 0.24, 1); }
+.roll > span + span { position: absolute; inset: 0; transform: translateY(100%); }
+a:hover > .roll > span:first-child, button:hover > .roll > span:first-child, .roll-host:hover .roll > span:first-child { transform: translateY(-100%); }
+a:hover > .roll > span + span, button:hover > .roll > span + span, .roll-host:hover .roll > span + span { transform: translateY(0); }
+
+/* drag strips */
+.strip { scrollbar-width: none; }
+.strip::-webkit-scrollbar { display: none; }
+
+::selection { background: var(--fg); color: var(--bg); }
+
+/* company logos in the marquee: shown in their own colors, as on the original site */
+img.logo-ink { transition: transform .4s; }
+
+/* pixel sprite sheet played frame by frame (Zoomies dog in the works list) */
+.sprite-run { background-size: calc(var(--frames) * 100%) 100%; background-repeat: no-repeat; image-rendering: pixelated; animation: sprite-run .8s steps(8, jump-none) infinite; }
+@keyframes sprite-run { from { background-position: 0 0; } to { background-position: 100% 0; } }
+
+/* Instrument Serif only ships one weight: never fake-bold it inside medium-weight paragraphs */
+.serif { font-weight: 400; font-synthesis: none; }
+
+/* light-colored line art (Layer's icons): repainted deep forest green on the light theme */
+.light-art-ink { display: none; background: #2F3D2C; -webkit-mask-size: 100% 100%; mask-size: 100% 100%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; }
+[data-theme="light"] .light-art-ink { display: block; }
+[data-theme="light"] .light-art > img { opacity: 0; }
+
+/* the empathy map and component boards were drawn for the old all-black site; inside .cx their
+   chrome follows this site's theme (the app-colored component swatches keep their own colors) */
+.cx .bg-black { background: var(--bg); }
+.cx .bg-neutral-800 { background: var(--line); }
+.cx .border-neutral-800, .cx .border-neutral-700 { border-color: var(--line); }
+.cx .text-white, .cx .text-neutral-200 { color: var(--fg); }
+.cx .text-neutral-300, .cx .text-neutral-400, .cx .text-neutral-500 { color: var(--muted); }
+.cx .bg-neutral-500 { background: var(--muted); }

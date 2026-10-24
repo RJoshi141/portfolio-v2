@@ -27,3 +27,6 @@ server/.env
 *.njsproj
 *.sln
 *.sw?
+
+# local build snapshots
+_tmp

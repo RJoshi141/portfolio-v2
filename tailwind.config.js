@@ -4,6 +4,7 @@ module.exports = {
   content: [
     "./index.html",
     "./classic/index.html",
+    "./previous/index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
