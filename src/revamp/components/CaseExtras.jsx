@@ -439,7 +439,7 @@ const LOGOS = { xcode, swift, python, fastapi, postgresql, docker, openstreetmap
 
 // Apple frameworks and data sources with no public logo get an app-icon-style tile:
 // a rounded square with its own gradient and a white glyph, so the row reads like real icons.
-const TILES = {
+export const TILES = {
   map: [Map, "linear-gradient(160deg,#6ee08a,#2bb24c)"],
   chart: [ChartSpline, "linear-gradient(160deg,#5e9bff,#6e4bf0)"],
   intelligence: [Sparkles, "linear-gradient(135deg,#ff9f0a,#ff375f 40%,#bf5af2 70%,#0a84ff)"],

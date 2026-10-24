@@ -7,7 +7,34 @@ import { ArrowUpRight, Star } from "lucide-react";
 import { featured, selected, findProject } from "../../revamp/data/projects";
 import { Device, DragStrip, CardVisual, Roll, Walkthrough, go, isVideo, pad, usePageMotion } from "../shared";
 import { Footer } from "../NextApp";
-import { EmpathyMap, ComponentBoard } from "../../revamp/components/CaseExtras";
+import { EmpathyMap, ComponentBoard, TILES } from "../../revamp/components/CaseExtras";
+// current tool logos (from the maintained svg-logos set): Firebase's 2024 flame, the 2024 CSS mark,
+// the newer Docker whale. Xcode is the real Xcode 26 app icon; the rest have no newer version.
+import figma from "../../assets/tools/latest/figma.svg";
+import typescript from "../../assets/tools/latest/typescript.svg";
+import react from "../../assets/tools/latest/react.svg";
+import nextjs from "../../assets/tools/latest/nextjs.svg";
+import vercel from "../../assets/tools/latest/vercel.svg";
+import nestjs from "../../assets/tools/latest/nestjs.svg";
+import firebase from "../../assets/tools/latest/firebase.svg";
+import expo from "../../assets/tools/latest/expo.svg";
+import swift from "../../assets/tools/latest/swift.svg";
+import python from "../../assets/tools/latest/python.svg";
+import fastapi from "../../assets/tools/latest/fastapi.svg";
+import postgresql from "../../assets/tools/latest/postgresql.svg";
+import docker from "../../assets/tools/latest/docker.svg";
+import flask from "../../assets/tools/latest/flask.svg";
+import html5 from "../../assets/tools/latest/html5.svg";
+import css from "../../assets/tools/latest/css.svg";
+import javascript from "../../assets/tools/latest/javascript.svg";
+import xcode from "../../assets/tools/color/xcode.png";
+import openstreetmap from "../../assets/tools/color/openstreetmap.svg";
+import googlelens from "../../assets/tools/color/googlelens.svg";
+import pixilart from "../../assets/tools/color/pixilart.svg";
+
+const LOGOS = { figma, typescript, react, nextjs, vercel, nestjs, firebase, expo, swift, python, fastapi, postgresql, docker, flask, html5, css3: css, javascript, xcode, openstreetmap, googlelens, pixilart };
+// single-color black marks flip to white on the dark theme
+const INK = ["nextjs", "vercel", "expo", "flask"];
 
 const all = [...featured, ...selected];
 
@@ -244,9 +271,30 @@ export default function Case({ slug }) {
       )}
 
       {p.tools?.length > 0 && (
-        <section className="pt-20 md:ml-[33.4%] flex flex-wrap items-center gap-2">
-          <Label className="mr-3">Built with</Label>
-          {p.tools.map((t) => <span key={t.name} className="px-3 py-1 rounded-full border border-[var(--line)] text-sm">{t.name}</span>)}
+        // the tools as their real icons, name underneath
+        <section className="pt-24 md:pt-36 grid md:grid-cols-12 gap-x-10 gap-y-8">
+          <div className="md:col-span-4"><Label>Built with</Label></div>
+          <ul className="md:col-span-8 grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 gap-x-4 gap-y-8">
+            {p.tools.map((t, i) => {
+              const tile = TILES[t.icon];
+              const G = tile?.[0];
+              return (
+                <li key={t.name} data-fade data-delay={i * 0.04} className="flex flex-col items-center text-center gap-3">
+                  <span className="w-12 h-12 md:w-14 md:h-14 flex items-center justify-center">
+                    {t.logo && LOGOS[t.logo] ? (
+                      <img src={LOGOS[t.logo]} alt="" className={`max-w-full max-h-full object-contain ${INK.includes(t.logo) ? "icon-ink" : ""}`} />
+                    ) : G ? (
+                      // Apple frameworks without a public logo: an app-icon style tile
+                      <span className="w-full h-full rounded-[22%] flex items-center justify-center" style={{ background: tile[1] }}>
+                        <G className="w-6 h-6 md:w-7 md:h-7 text-white" strokeWidth={1.8} />
+                      </span>
+                    ) : null}
+                  </span>
+                  <span className="text-xs md:text-sm font-medium leading-tight">{t.name}</span>
+                </li>
+              );
+            })}
+          </ul>
         </section>
       )}
 

@@ -11,6 +11,14 @@ import singaporeIcon from "../../assets/city-singapore.svg?raw";
 import cincinnatiIcon from "../../assets/city-cincinnati.svg?raw";
 import georgetownIcon from "../../assets/city-georgetown-icon.svg?raw";
 
+// the past companies printed as pills on the badge, in their brand colors
+const PAST = [
+  { label: "Toyota", bg: "#EB0A1E" },
+  { label: "P&G", bg: "#003DA5" },
+  { label: "BECO", bg: "#141413" },
+  { label: "Kroger", bg: "#21409A" },
+];
+
 const ICONS = { sf: sfIcon, singapore: singaporeIcon, cincinnati: cincinnatiIcon, kentucky: georgetownIcon };
 
 // the 3D badge from the original site, loaded only here
@@ -43,11 +51,11 @@ const Pass = () => {
         <span data-split="morph" data-now data-delay="0.25" className="serif italic text-right text-[22vw] md:text-[13vw] leading-[0.8] tracking-[-0.03em]">Joshi</span>
       </div>
 
-      {/* the badge drops in once the name has inked */}
+      {/* the badge drops in once the name has inked; its canvas spans the whole section so it can swing over the name */}
       <div data-fade className="absolute inset-0 z-10 pointer-events-none">
-        <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-full md:w-[46%] pointer-events-auto" onPointerDown={() => setGrabbed(true)}>
+        <div className="absolute inset-0 pointer-events-auto" onPointerDown={() => setGrabbed(true)}>
           <Suspense fallback={null}>
-            <Lanyard key={theme} position={[0, 0, 25]} gravity={[0, -40, 0]} cardImage="/portfolio-v2/assets/comic-self.png" theme={theme} bandColor={theme === "dark" ? "#3a3a3a" : "#1f1f1e"} />
+            <Lanyard key={theme} position={[0, 0, 25]} gravity={[0, -40, 0]} cardImage="/portfolio-v2/assets/comic-self.png" theme={theme} bandColor={theme === "dark" ? "#3a3a3a" : "#1f1f1e"} variant="clear" currently="Founding engineer @ Joydrop" previously={PAST} />
           </Suspense>
         </div>
       </div>

@@ -80,3 +80,6 @@ img.logo-ink { transition: transform .4s; }
 .cx .text-white, .cx .text-neutral-200 { color: var(--fg); }
 .cx .text-neutral-300, .cx .text-neutral-400, .cx .text-neutral-500 { color: var(--muted); }
 .cx .bg-neutral-500 { background: var(--muted); }
+
+/* black single-color logos (Next.js, Vercel, Expo, Flask) turn white on the dark theme */
+[data-theme="dark"] img.icon-ink { filter: invert(1); }
