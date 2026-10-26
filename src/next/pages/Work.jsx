@@ -156,7 +156,7 @@ export default function Work() {
     <main ref={root} className="px-5 md:px-10 pt-36 md:pt-44">
       <div className="flex items-end justify-between gap-6 border-b border-[var(--line)] pb-6">
         <div className="flex items-start gap-3 md:gap-5">
-          <h1 data-split="morph" data-now className="text-[26vw] md:text-[16vw] leading-[0.78] tracking-[-0.065em]">works</h1>
+          <h1 data-split="morph" data-now className="text-[21vw] md:text-[16vw] leading-[0.78] tracking-[-0.065em] whitespace-nowrap">works</h1>
           <span data-fade data-now data-delay="0.5" className="mono text-sm md:text-lg text-[var(--muted)] mt-2 md:mt-5">[ {all.length} ]</span>
         </div>
         <div data-fade data-now data-delay="0.4" className="flex items-center gap-1 pb-2">

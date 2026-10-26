@@ -98,6 +98,7 @@ const Nav = ({ route, theme, setTheme }) => {
       if (dead || !nameEl.current) return;
       split = SplitText.create(nameEl.current.querySelectorAll(".nm"), { type: "chars" });
       ink = makeInk(nameEl.current);
+      ink.setChars(split.chars);
       const paint = ink.paint;
       tl = gsap.timeline({ repeat: -1, repeatDelay: 6, delay: 4 })
         .call(ink.on)
@@ -131,19 +132,25 @@ const Nav = ({ route, theme, setTheme }) => {
     const r = e.currentTarget.getBoundingClientRect();
     const x = r.left - n.left, y = r.top - n.top, w = r.width, h = r.height;
     const dx = x + w / 2 - h / 2;
+    // everything is SVG attributes (no transforms), so the shapes sit exactly on the link
+    const full = (X, W) => ({ x: X, y, width: W, height: h, rx: h / 2 });
+    const dot = (X, W) => ({ x: X + W / 2, y: y + h / 2, width: 0, height: 0, rx: 0 });
     if (!shown.current) {
       shown.current = true;
-      gsap.set(pill.current, { x, y, width: w, height: h });
-      gsap.set(drop.current, { x: dx, y, width: h, height: h });
-      gsap.fromTo([pill.current, drop.current], { scale: 0 }, { scale: 1, duration: 0.8, ease: "elastic.out(1, 0.45)", overwrite: "auto" });
+      gsap.fromTo(pill.current, { attr: dot(x, w) }, { attr: full(x, w), duration: 0.8, ease: "elastic.out(1, 0.45)", overwrite: "auto" });
+      gsap.fromTo(drop.current, { attr: dot(dx, h) }, { attr: full(dx, h), duration: 0.8, ease: "elastic.out(1, 0.45)", overwrite: "auto" });
     } else {
-      gsap.to(pill.current, { x, y, width: w, height: h, scale: 1, duration: 0.6, ease: "elastic.out(1, 0.6)", overwrite: "auto" });
-      gsap.to(drop.current, { x: dx, y, scale: 1, duration: 1, ease: "power3.out", overwrite: "auto" });
+      gsap.to(pill.current, { attr: full(x, w), duration: 0.6, ease: "elastic.out(1, 0.6)", overwrite: "auto" });
+      gsap.to(drop.current, { attr: full(dx, h), duration: 1, ease: "power3.out", overwrite: "auto" });
     }
   };
   const out = () => {
     shown.current = false;
-    gsap.to([pill.current, drop.current], { scale: 0, duration: 0.45, ease: "power3.in", overwrite: "auto" });
+    const shrink = (el) => {
+      const X = +el.getAttribute("x"), Y = +el.getAttribute("y"), W = +el.getAttribute("width"), H = +el.getAttribute("height");
+      gsap.to(el, { attr: { x: X + W / 2, y: Y + H / 2, width: 0, height: 0, rx: 0 }, duration: 0.45, ease: "power3.in", overwrite: "auto" });
+    };
+    shrink(pill.current); shrink(drop.current);
   };
 
   const item = "relative z-10 mix-blend-difference rounded-full px-2 py-[0.1rem] -mx-2";
@@ -156,16 +163,18 @@ const Nav = ({ route, theme, setTheme }) => {
         <span className="nm block pl-[1.1em] serif italic font-normal tracking-[-0.01em]">Joshi</span>
       </a>
       <nav ref={navEl} onPointerLeave={out} className="relative flex items-start gap-6 md:gap-0 md:w-1/2 md:justify-between mono uppercase text-[0.68rem] md:text-[0.8rem] tracking-[0.04em] leading-[1.6]">
-        <svg aria-hidden className="absolute w-0 h-0">
+        {/* the pill and its drop are SVG shapes with the goo filter applied inside the SVG: Safari
+            repaints that correctly (a CSS filter: url() on HTML left streaks behind it) */}
+        <svg aria-hidden className="pointer-events-none absolute inset-0 w-full h-full overflow-visible">
           <filter id="nav-goo" x="-50%" y="-100%" width="200%" height="300%">
             <feGaussianBlur in="SourceGraphic" stdDeviation="4" />
             <feColorMatrix values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -8" />
           </filter>
+          <g filter="url(#nav-goo)">
+            <rect ref={pill} x="0" y="0" width="0" height="0" fill="#fff" />
+            <rect ref={drop} x="0" y="0" width="0" height="0" fill="#fff" />
+          </g>
         </svg>
-        <div aria-hidden className="pointer-events-none absolute inset-0" style={{ filter: "url(#nav-goo)" }}>
-          <span ref={pill} className="absolute left-0 top-0 rounded-full bg-white scale-0" />
-          <span ref={drop} className="absolute left-0 top-0 rounded-full bg-white scale-0" />
-        </div>
         {COLS.map((col, c) => (
           <div key={c} className="flex flex-col items-start">
             {col.map(([l, h, page]) => (
