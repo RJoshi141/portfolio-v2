@@ -18,7 +18,7 @@ export const isVideo = (src) => typeof src === "string" && /\.(mp4|webm|mov)(\?|
 // ---------------------------------------------------------------- devices
 // screen boxes measured off the frame PNGs (same numbers as the current site)
 const BOX = {
-  phone: { aspect: "aspect-[2025/4139]", screen: { left: "5.2%", top: "2.3%", width: "89.6%", height: "95.4%" }, round: "rounded-[18%/8.5%]", under: true },
+  phone: { aspect: "aspect-[2025/4139]", screen: { left: "5.2%", top: "2.3%", width: "89.6%", height: "95.4%" }, round: "rounded-[13%/6%]", under: true },
   landscape: { aspect: "aspect-[895/438]", screen: { left: "2.46%", top: "5.48%", width: "94.97%", height: "89.27%" }, round: "rounded-[7%/15%]", under: true },
   laptop: { aspect: "aspect-[1400/846]", screen: { left: "10.8%", top: "2.8%", width: "78.5%", height: "84.4%" }, round: "", under: true },
   watch: { aspect: "aspect-[1347/1496]", screen: { left: "9.5%", top: "9.1%", width: "75.3%", height: "81.6%" }, round: "rounded-[14%/11.5%]", under: false },
@@ -151,16 +151,21 @@ export const usePageMotion = (ref) => {
   useLayoutEffect(() => {
     let a, b, dead = false;
     const wait = settled;
+    // keep the page hidden until its intro is wired: otherwise, on a reload, the finished page
+    // flashes for a frame (while fonts load) before the ink and fades reset it
+    const el = ref.current;
+    if (el) el.style.visibility = "hidden";
     document.fonts.ready.then(() => {
       if (dead || !ref.current) return;
       a = wire(ref.current, { phase: "now", delay: 0.1, ready: wait });
+      ref.current.style.visibility = "";
       wait.then(() => {
         if (dead || !ref.current) return;
         b = wire(ref.current, { phase: "scroll" });
         ScrollTrigger.refresh();
       });
     });
-    return () => { dead = true; a?.revert(); b?.revert(); };
+    return () => { dead = true; a?.revert(); b?.revert(); if (el) el.style.visibility = ""; };
   }, [ref]);
 };
 
@@ -196,7 +201,7 @@ export const Walkthrough = ({ frame, chapters, landscape = false }) => {
   const b = landscape ? BOX.landscape : BOX.phone;
   return (
     <div className={`grid gap-8 md:gap-12 items-center ${landscape ? "" : "md:grid-cols-[auto_1fr]"}`}>
-      <div className={`relative mx-auto ${b.aspect} ${landscape ? "w-full md:w-[80%]" : "h-[30rem] md:h-[36rem]"}`}>
+      <div className={`relative mx-auto ${b.aspect} ${landscape ? "w-full md:w-[52%]" : "h-[30rem] md:h-[36rem]"}`}>
         <div className={`absolute overflow-hidden bg-black ${b.round}`} style={b.screen}>
           <video key={shown} src={c.mp4} poster={c.poster} autoPlay muted playsInline
             onLoadedData={() => setDark(false)} onError={() => setDark(false)}
@@ -205,9 +210,10 @@ export const Walkthrough = ({ frame, chapters, landscape = false }) => {
         </div>
         {frame && <img src={frame} alt="" className="absolute inset-0 w-full h-full pointer-events-none" />}
       </div>
-      <ol className="border-t border-[var(--line)]">
+      {/* landscape: the chapters sit in one centered row under the phone */}
+      <ol className={landscape ? "mx-auto w-full md:w-[80%] grid md:grid-cols-3 gap-x-6 border-t border-[var(--line)] md:border-t-0" : "border-t border-[var(--line)]"}>
         {chapters.map((ch, i) => (
-          <li key={ch.label} className="border-b border-[var(--line)]">
+          <li key={ch.label} className={landscape ? "border-b md:border-b-0 md:border-t border-[var(--line)]" : "border-b border-[var(--line)]"}>
             <button type="button" onClick={() => go(i)} className="group w-full text-left py-4 md:py-5 flex gap-4 items-start">
               <span className={`mt-1.5 w-3 h-3 rounded-full shrink-0 transition-colors ${i === active ? "bg-[var(--fg)]" : "bg-[var(--line)] group-hover:bg-[var(--muted)]"}`} />
               <span className="flex-1">

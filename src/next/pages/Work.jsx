@@ -15,10 +15,20 @@ import zStart from "../../assets/case-studies/zoomies/start-poster.jpg";
 import zRun from "../../assets/case-studies/zoomies/sprite-run.png";
 import uRecord from "../../assets/case-studies/utter/iphone-record.png";
 import uInbox from "../../assets/case-studies/utter/iphone-inbox.png";
+import iphone from "../../assets/case-studies/iphone-frame.png";
+import bShelves from "../../assets/case-studies/bound/shelves.jpg";
+import bWire from "../../assets/case-studies/bound/wireframes.jpg";
+import bLedger from "../../assets/case-studies/bound/club-ledger.jpg";
 
 // hand-picked strips where the automatic pick isn't the best look
 const PICKS = {
   "iphone-duo": [{ type: "card", wide: true }], // one big look at the fold, nothing else
+  bound: [
+    { type: "card" },
+    { type: "phone", frame: iphone, poster: bShelves },
+    { type: "img", src: bWire, wide: true }, // the lo-fi core flow
+    { type: "phone", frame: iphone, poster: bLedger },
+  ],
   zoomies: [
     { type: "card" },
     { type: "sprite", src: zRun, frames: 8 }, // the running dog, animated off its sprite sheet

@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import {
   MessageCircle, Brain, Footprints, Heart, Ear, Target, Users, Check, Droplet,
-  ScanText, Mic, LayoutGrid, Database, Map, ChartSpline, Watch, AudioLines, Pause, Trash2, ArrowRight, Sparkles, ArrowLeftRight, Gamepad2, Grid3x3, Rocket, Laptop, Smartphone, BatteryCharging, Thermometer, Zap, FlaskConical,
+  ScanText, Mic, LayoutGrid, Database, Map, ChartSpline, Watch, AudioLines, Pause, Trash2, ArrowRight, Sparkles, ArrowLeftRight, Gamepad2, Grid3x3, Rocket, Laptop, Smartphone, BatteryCharging, Thermometer, Zap, FlaskConical, Layers, BookOpen, Star,
 } from "lucide-react";
 // full-color brand marks (devicon, MIT; OSM from simple-icons in its brand green; Lens drawn to match)
 import xcode from "../../assets/tools/color/xcode.png";
@@ -431,8 +431,175 @@ const CellScopeBoard = (props) => (
   </Board>
 );
 
+
+// Bound: paper and ink. Letterpress buttons, oak shelves, tear-off meetup tickets, index cards.
+const B = { paper: "#F2EADB", card: "#FAF5EA", ink: "#221A14", forest: "#2F4A35", oxblood: "#8A2C22", rust: "#B4572A", mustard: "#C69A3A", gilt: "#A9813A", oak: "#7A4B2E" };
+const fell = { fontFamily: '"IM Fell English SC", Georgia, serif' };
+const hanken = { fontFamily: '"Hanken Grotesk", Inter, sans-serif' };
+const dmono = { fontFamily: '"DM Mono", ui-monospace, monospace' };
+const bpaper = { ...hanken, backgroundColor: B.paper, color: B.ink };
+
+// square-cornered letterpress button with an inset hairline
+const Press = ({ children, fill, color = B.ink, onClick, active = true }) => (
+  <button type="button" onClick={onClick}
+    className="relative px-5 py-2.5 text-[0.95rem] tracking-wide transition-colors"
+    style={{ ...fell, background: fill && active ? fill : "transparent", color: fill && active ? B.card : color, border: `1px solid ${fill || color}` }}>
+    <span aria-hidden className="pointer-events-none absolute inset-[3px] border" style={{ borderColor: fill && active ? "rgba(250,245,234,.45)" : `${fill || color}55` }} />
+    <span className="relative">{children}</span>
+  </button>
+);
+
+const RSVP = () => {
+  const [v, setV] = useState("Going");
+  return (
+    <div className="flex gap-2">
+      {[["Going", B.forest], ["Maybe", B.rust], ["Can't", B.oxblood]].map(([l, c]) => (
+        <Press key={l} fill={c} active={v === l} color={c} onClick={() => setV(l)}>{l}</Press>
+      ))}
+    </div>
+  );
+};
+
+// spines stand on an oak plank; width follows page count; tap one to lift it with its paper slip
+const SPINES = [["Middlemarch", "#24382c", 880], ["Piranesi", "#1e1b1a", 272], ["Bleak House", "#5f8a86", 1017], ["Carrie", "#141212", 199], ["Persuasion", "#4a3557", 249], ["The Secret History", "#8a2c22", 559]];
+const Shelf = () => {
+  const [up, setUp] = useState(2);
+  return (
+    <div className="w-full max-w-md" onClick={() => setUp(null)}>
+      <div className="flex items-end justify-center gap-[3px] h-44 px-4">
+        {SPINES.map(([t, c, pages], i) => {
+          const lifted = up === i;
+          return (
+            <button key={t} type="button" onClick={(e) => { e.stopPropagation(); setUp(lifted ? null : i); }}
+              className="relative transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
+              style={{ width: 16 + pages / 30, height: 120 + (i % 3) * 14, transform: lifted ? "translateY(-26px)" : "none" }}>
+              {/* the paper slip slides up from under a lifted spine */}
+              <span className="absolute left-1/2 -translate-x-1/2 bottom-0 w-[150%] px-1 py-1 text-[0.55rem] leading-tight text-center transition-all duration-500"
+                style={{ ...dmono, background: B.card, color: B.ink, boxShadow: "0 1px 2px rgba(0,0,0,.15)", opacity: lifted ? 1 : 0, transform: lifted ? "translate(-50%, 34px)" : "translate(-50%, 0)" }}>
+                {pages} pp.
+              </span>
+              <span className="absolute inset-0 flex items-center justify-center" style={{ background: c, boxShadow: "inset -3px 0 0 rgba(0,0,0,.25), inset 2px 0 0 rgba(255,255,255,.08)" }}>
+                <span className="absolute inset-x-0 top-3 h-[3px]" style={{ background: B.gilt }} />
+                <span className="absolute inset-x-0 bottom-3 h-[3px]" style={{ background: B.gilt }} />
+                <span className="text-[0.62rem] whitespace-nowrap" style={{ ...serif, color: "#F2EADB", writingMode: "vertical-rl" }}>{t}</span>
+              </span>
+            </button>
+          );
+        })}
+      </div>
+      <div className="h-3 rounded-[2px]" style={{ background: `linear-gradient(${B.oak}, #5c3721)`, boxShadow: "0 6px 10px -4px rgba(0,0,0,.35)" }} />
+    </div>
+  );
+};
+
+// a tear-off ticket: perforated stub on the left, ink stamp when you're going
+const Ticket = () => {
+  const [going, setGoing] = useState(true);
+  return (
+    <button type="button" onClick={() => setGoing(!going)} className="relative flex w-full max-w-md text-left" style={{ background: B.card, boxShadow: "0 2px 6px rgba(34,26,20,.12)" }}>
+      <div className="w-24 shrink-0 flex flex-col items-center justify-center py-5 border-r-2 border-dashed" style={{ borderColor: "#d8ccb6" }}>
+        <span className="text-[0.6rem] tracking-[0.2em]" style={{ ...dmono, color: B.oxblood }}>NOV</span>
+        <span className="text-4xl leading-none" style={{ ...serif, color: B.ink }}>14</span>
+        <span className="text-[0.6rem] mt-1" style={dmono}>7:00 PM</span>
+      </div>
+      {/* perforation notches at the tear line */}
+      <span className="absolute left-[5.6rem] -top-2 w-4 h-4 rounded-full" style={{ background: B.paper }} />
+      <span className="absolute left-[5.6rem] -bottom-2 w-4 h-4 rounded-full" style={{ background: B.paper }} />
+      <div className="relative flex-1 p-5">
+        <p className="text-[0.6rem] tracking-[0.2em]" style={{ ...dmono, color: "#8a7a66" }}>THIS MONTH</p>
+        <p className="mt-1 text-2xl leading-tight" style={{ ...serif, color: B.ink }}>Piranesi</p>
+        <p className="mt-1 text-xs" style={{ color: "#6b5d4f" }}>Priya's place · Inner Sunset</p>
+        <span className="absolute right-4 top-1/2 -translate-y-1/2 rotate-[-14deg] px-2 py-1 text-sm tracking-[0.15em] border-2 rounded-sm transition-all duration-300"
+          style={{ ...fell, color: B.forest, borderColor: B.forest, opacity: going ? 0.85 : 0, transform: `translateY(-50%) rotate(-14deg) scale(${going ? 1 : 1.6})` }}>
+          Going
+        </span>
+      </div>
+    </button>
+  );
+};
+
+// a ruled index card note, with the page it was written on
+const IndexNote = () => (
+  <div className="relative w-full max-w-[17rem] p-4 pt-3" style={{ background: B.card, boxShadow: "0 2px 6px rgba(34,26,20,.12)", backgroundImage: "repeating-linear-gradient(transparent 0 23px, #d9e2ea 23px 24px)", backgroundPosition: "0 38px" }}>
+    <div className="absolute inset-x-0 top-[34px] h-px" style={{ background: "#d99a8f" }} />
+    <div className="flex items-center justify-between text-[0.65rem]" style={dmono}>
+      <span style={{ color: B.oxblood }}>p. 184</span>
+      <span className="flex gap-0.5" style={{ color: B.mustard }}>{[0, 1, 2, 3].map((i) => <Star key={i} className="w-3 h-3 fill-current" />)}<Star className="w-3 h-3" /></span>
+    </div>
+    <p className="mt-5 text-[1.05rem] leading-[24px]" style={{ ...serif, color: B.ink }}>The House feeds him and he thanks it. I can't stop thinking about that.</p>
+    <span className="mt-3 inline-block px-2 py-0.5 text-[0.6rem] tracking-[0.12em]" style={{ ...dmono, color: B.forest, border: `1px solid ${B.forest}` }}>DISCUSS AT MEETUP</span>
+  </div>
+);
+
+// notes past your page fold away until you ask for them
+const Folded = () => {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="w-full max-w-[17rem]">
+      <button type="button" onClick={() => setOpen(!open)} className="w-full flex items-center justify-between px-4 py-3 text-sm" style={{ background: B.card, borderTop: `1px dashed ${B.gilt}`, borderBottom: `1px dashed ${B.gilt}` }}>
+        <span style={serif} className="text-[1.05rem] italic">3 notes past p. 212</span>
+        <span className="text-[0.6rem] tracking-[0.15em]" style={{ ...dmono, color: B.oxblood }}>{open ? "HIDE" : "REVEAL"}</span>
+      </button>
+      <div className="grid transition-[grid-template-rows] duration-500" style={{ gridTemplateRows: open ? "1fr" : "0fr" }}>
+        <div className="overflow-hidden">
+          <p className="px-4 py-3 text-xs" style={{ background: "#efe5d3", color: "#6b5d4f" }}>
+            <span style={{ ...dmono, color: B.oxblood }}>p. 240 · </span>So the Other was lying the whole time.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// a cut-paper silhouette in a coloured oval, facing right
+const Silhouette = ({ bg, kind = "tophat" }) => (
+  <svg viewBox="0 0 80 100" className="w-16 h-20">
+    <ellipse cx="40" cy="50" rx="38" ry="48" fill={bg} />
+    <g fill={B.ink}>
+      {kind === "tophat" && (<><rect x="22" y="14" width="30" height="24" rx="2" /><rect x="15" y="36" width="44" height="5" rx="2.5" /></>)}
+      {kind === "bowler" && (<><path d="M20 40 C20 22 54 22 54 40 Z" /><rect x="14" y="38" width="46" height="5" rx="2.5" /></>)}
+      {kind === "updo" && (<><circle cx="26" cy="30" r="10" /><path d="M24 44 C24 30 50 28 52 42 Z" /></>)}
+      {/* head, nose and chin to the right, then neck and shoulders */}
+      <path d="M24 41 C22 52 24 60 30 64 L30 70 C20 72 12 80 10 92 L70 92 C68 82 60 74 50 71 L49 65 C53 63 55 60 54 57 L57 55 L54 52 C56 50 57 48 55 46 L52 41 Z" />
+    </g>
+  </svg>
+);
+
+const BoundBoard = (props) => (
+  <Board {...props}>
+    <Cell bg={bpaper} note="Letterpress buttons: square corners and an inset hairline, set in IM Fell small caps. Forest for the main action.">
+      <div className="flex flex-col items-center gap-3">
+        <Press fill={B.forest}>Join a club</Press>
+        <Press>Start a club</Press>
+      </div>
+    </Cell>
+    <Cell bg={bpaper} note="RSVP. Tap one: Going fills in forest, Maybe in rust, Can't in oxblood.">
+      <RSVP />
+    </Cell>
+    <Cell bg={bpaper} note="Portraits: Victorian cut-paper silhouettes, all facing right, in a coloured oval instead of initials.">
+      <div className="flex gap-3">
+        <Silhouette bg="#c9b48f" kind="tophat" />
+        <Silhouette bg="#a9bfa7" kind="updo" />
+        <Silhouette bg="#d4a595" kind="bowler" />
+      </div>
+    </Cell>
+    <Cell bg={bpaper} wide note="The meetup ticket: the month on a perforated stub, the book and the place. Tap it: Going lands an ink stamp.">
+      <Ticket />
+    </Cell>
+    <Cell bg={bpaper} note="A note on a ruled index card: the page it was written on, a star rating and a discuss-at-meetup tag.">
+      <IndexNote />
+    </Cell>
+    <Cell bg={bpaper} wide note="Spines on an oak plank. Width follows page count. Tap one to lift it off the shelf with its paper slip; tap the shelf to put it back.">
+      <Shelf />
+    </Cell>
+    <Cell bg={bpaper} note="Notes past your page stay folded until you choose to reveal them. Tap to open.">
+      <Folded />
+    </Cell>
+  </Board>
+);
+
 export const ComponentBoard = ({ kind, ...props }) =>
-  kind === "even" ? <EvenBoard {...props} /> : kind === "layer" ? <LayerBoard {...props} /> : kind === "utter" ? <UtterBoard {...props} /> : kind === "lumon" ? <LumonBoard {...props} /> : kind === "cellscope" ? <CellScopeBoard {...props} /> : null;
+  kind === "even" ? <EvenBoard {...props} /> : kind === "layer" ? <LayerBoard {...props} /> : kind === "utter" ? <UtterBoard {...props} /> : kind === "lumon" ? <LumonBoard {...props} /> : kind === "cellscope" ? <CellScopeBoard {...props} /> : kind === "bound" ? <BoundBoard {...props} /> : null;
 
 // ---------------------------------------------------------------- tools grid
 const LOGOS = { xcode, swift, python, fastapi, postgresql, docker, openstreetmap, googlelens, expo, figma, firebase, nestjs, nextjs, react, typescript, pixilart, html5, css3, javascript, vercel, flask };
@@ -454,6 +621,8 @@ export const TILES = {
   pixel: [Grid3x3, "linear-gradient(160deg,#5ac8fa,#2b6fd6)"],
   eas: [Rocket, "linear-gradient(160deg,#4630eb,#1f1a5c)"],
   flask: [FlaskConical, "linear-gradient(160deg,#3a3a3c,#111)"],
+  swiftui: [Layers, "linear-gradient(160deg,#4aa8ff,#1f5fe0)"],
+  book: [BookOpen, "linear-gradient(160deg,#c9a86a,#8a5a2b)"],
 };
 
 export const Tools = ({ items }) => (

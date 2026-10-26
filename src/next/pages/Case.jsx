@@ -8,6 +8,8 @@ import { featured, selected, findProject } from "../../revamp/data/projects";
 import { Device, DragStrip, CardVisual, Roll, Walkthrough, go, isVideo, pad, usePageMotion } from "../shared";
 import { Footer } from "../NextApp";
 import { EmpathyMap, ComponentBoard, TILES } from "../../revamp/components/CaseExtras";
+// pieces reused from the previous site: Utter's watch-to-phone demo, Zoomies' sprite sheets and art shelf
+import { WatchDemo, Sprites, AssetShelf } from "../../revamp/pages/CaseStudy";
 // current tool logos (from the maintained svg-logos set): Firebase's 2024 flame, the 2024 CSS mark,
 // the newer Docker whale. Xcode is the real Xcode 26 app icon; the rest have no newer version.
 import figma from "../../assets/tools/latest/figma.svg";
@@ -31,24 +33,26 @@ import xcode from "../../assets/tools/color/xcode.png";
 import openstreetmap from "../../assets/tools/color/openstreetmap.svg";
 import googlelens from "../../assets/tools/color/googlelens.svg";
 import pixilart from "../../assets/tools/color/pixilart.svg";
+import supabase from "../../assets/tools/latest/supabase.svg";
+import resend from "../../assets/tools/latest/resend.svg";
 
-const LOGOS = { figma, typescript, react, nextjs, vercel, nestjs, firebase, expo, swift, python, fastapi, postgresql, docker, flask, html5, css3: css, javascript, xcode, openstreetmap, googlelens, pixilart };
+const LOGOS = { figma, typescript, react, nextjs, vercel, nestjs, firebase, expo, swift, python, fastapi, postgresql, docker, flask, html5, css3: css, javascript, xcode, openstreetmap, googlelens, pixilart, supabase, resend };
 // single-color black marks flip to white on the dark theme
-const INK = ["nextjs", "vercel", "expo", "flask"];
+const INK = ["nextjs", "vercel", "expo", "flask", "resend"];
 
 const all = [...featured, ...selected];
 
 // ---------------------------------------------------------------- collect a section's media
 const fromSrc = (it, caption) => {
   const o = typeof it === "object" && it?.src ? it : { src: it };
-  return { type: isVideo(o.src) ? "video" : "image", src: o.src, caption: o.caption || caption, tall: o.tall };
+  return { type: isVideo(o.src) ? "video" : "image", src: o.src, caption: o.caption || caption, tall: o.tall, wide: o.wide, small: o.small };
 };
 const media = (s) => {
   const out = [];
   if (s.image) out.push(fromSrc(s.image, s.caption));
   (s.images || []).forEach((it) => out.push(fromSrc(it)));
   if (s.video) out.push(fromSrc(s.video, s.caption));
-  (s.media || []).forEach((m) => (Array.isArray(m.src) ? m.src : [m.src]).forEach((it) => out.push(fromSrc(it, m.caption || m.label))));
+  (s.media || []).forEach((m) => (Array.isArray(m.src) ? m.src : [m.src]).forEach((it) => out.push({ ...fromSrc(it, m.caption || m.label), wide: m.wide })));
   if (s.phoneImage) out.push({ type: "image", src: s.phoneImage, tall: true });
   if (s.phoneDemo) out.push({ type: "device", kind: "phone", ...s.phoneDemo });
   [...(s.phonesBefore || []), ...(s.phones || [])].forEach((p) => out.push({ type: "device", kind: "phone", ...p }));
@@ -60,15 +64,17 @@ const media = (s) => {
 };
 
 // one piece of media, kept modest: phones at a fixed height, everything else capped
-const Item = ({ m, strip, lightArt }) => {
+const Item = ({ m, strip, lightArt, ph }) => {
+  // ph: a phone height override (the centered layout sizes phones down)
   const phone = (m.type === "device" && m.kind === "phone") || m.tall;
+  const PH = ph || "h-[28rem] md:h-[34rem]";
   return (
     <figure className={strip ? "shrink-0" : ""}>
       <div className={`flex items-center justify-center ${strip ? (phone ? "h-[26rem] md:h-[30rem]" : "h-[16rem] md:h-[22rem]") : ""}`}>
         {m.type === "video" && <video autoPlay muted loop playsInline poster={m.poster} src={m.src} className={strip ? "h-full w-auto" : "w-full h-auto max-h-[70vh] object-contain"} />}
         {m.type === "image" && !lightArt && (
           <img src={m.src} alt="" loading="lazy" draggable="false"
-            className={strip ? "h-full w-auto" : phone ? "h-[28rem] md:h-[34rem] w-auto" : "w-full h-auto max-h-[70vh] object-contain"} />
+            className={strip ? "h-full w-auto" : phone ? `${PH} w-auto` : "w-full h-auto max-h-[70vh] object-contain"} />
         )}
         {/* light line art: on the light theme the drawing is repainted in Layer's deep green by
             using the image as a mask over a solid fill; on dark it shows as drawn */}
@@ -79,7 +85,7 @@ const Item = ({ m, strip, lightArt }) => {
           </span>
         )}
         {m.type === "device" && (
-          <Device {...m} className={m.kind === "phone" ? (strip ? "h-full" : "h-[28rem] md:h-[34rem]") : m.kind === "landscape" ? (strip ? "h-full" : "w-full md:w-[85%]") : strip ? "h-full" : "w-full md:w-[90%]"} />
+          <Device {...m} className={m.kind === "phone" ? (strip ? "h-full" : PH) : m.kind === "landscape" ? (strip ? "h-full" : "w-full md:w-[85%]") : strip ? "h-full" : "w-full md:w-[90%]"} />
         )}
       </div>
       {m.caption && <figcaption className={`mt-4 text-sm leading-[1.55] text-[var(--muted)] ${strip ? "max-w-[18rem]" : "max-w-md"} ${phone && !strip ? "mx-auto text-center" : ""}`}>{m.caption}</figcaption>}
@@ -96,7 +102,7 @@ const Gallery = ({ items, lightArt }) => {
 };
 
 // ---------------------------------------------------------------- hero media, centered and modest
-const HERO_WIDTH = { utter: "w-[80%] md:w-[38%]" };
+const HERO_WIDTH = { utter: "w-[80%] md:w-[38%]", bound: "w-[85%] md:w-[40%]" };
 const Hero = ({ p }) => {
   let inner;
   if (p.heroVideo) inner = <video autoPlay muted loop playsInline poster={p.heroVideo.poster} src={p.heroVideo.mp4} className="w-full h-auto" />;
@@ -107,7 +113,7 @@ const Hero = ({ p }) => {
     inner = isVideo(src) ? <video autoPlay muted loop playsInline src={src} className="w-full h-auto" /> : <img src={src} alt="" className="w-full h-auto" />;
   } else inner = <div className="relative aspect-[4/3] flex items-center justify-center"><CardVisual p={p} /></div>;
   // most heroes sit at about two thirds width; tall ones (Utter's watch) get less
-  const width = HERO_WIDTH[p.slug] || "w-full md:w-[68%]";
+  const width = HERO_WIDTH[p.slug] || "w-full md:w-[52%]";
   return <div data-fade data-delay="0.2"><div data-clip className={`mt-16 md:mt-24 mx-auto ${width}`}>{inner}</div></div>;
 };
 
@@ -209,6 +215,152 @@ const Chapter = ({ s, n }) => {
   );
 };
 
+// ---------------------------------------------------------------- a chapter, centered (layout: "center")
+// The work leads. Copy is small, always left aligned, and sits beside the visuals (alternating
+// sides down the page) instead of stacked above them. Wide pieces (the empathy map, the component
+// board, the steps) get the small text block on top, then run across, scaled down a touch.
+const isPhone = (m) => (m.type === "device" && m.kind === "phone") || m.tall;
+
+const Copy = ({ s, n, wide }) => {
+  const own = s.body ? (Array.isArray(s.body) ? s.body : [s.body]) : [];
+  // "pair" sections (two mini sections side by side) fold into one block
+  const paras = [...own, ...(s.pair || []).map((x) => x.body).filter(Boolean)];
+  const heading = s.heading || s.pair?.map((x) => x.heading).join(" / ");
+  const list = s.list || s.pair?.flatMap((x) => x.list || []);
+  return (
+    <div className={`w-full shrink-0 ${wide ? "md:max-w-md" : "md:w-[19rem]"}`}>
+      <Label>({pad(n)})</Label>
+      {heading && <h2 data-split="lines" className="mt-3 text-base md:text-[1.15rem] font-medium leading-[1.25] tracking-[-0.015em]">{heading}</h2>}
+      {paras.map((t) => (
+        <p key={t} data-split="lines" className="mt-3 text-[0.88rem] leading-[1.65] text-[var(--muted)]">{t}</p>
+      ))}
+      {list?.length > 0 && (
+        <ul className="mt-5">
+          {list.map((t, i) => (
+            <li key={t} data-fade className="flex gap-3 py-2 border-t border-[var(--line)] text-[0.82rem] leading-[1.5]">
+              <span className="mono text-[0.6rem] text-[var(--muted)] pt-0.5">({pad(i + 1)})</span><span>{t}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+      {s.brand?.colors && (
+        <div className="mt-6 flex flex-wrap gap-x-3 gap-y-3">
+          {s.brand.colors.map((c) => (
+            <div key={c.hex} data-fade className="w-10 text-center" title={c.hex}>
+              <div className="aspect-square rounded-full ring-1 ring-[var(--line)]" style={{ backgroundColor: c.hex }} />
+              <p className="mt-1 text-[0.58rem] leading-tight">{c.name}</p>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+const CenterChapter = ({ s, n }) => {
+  const items = media(s);
+  const big = s.walkthrough || s.empathy || s.components || s.steps || s.sprites || s.assets;
+  const flip = n % 2 === 0; // alternate which side the copy sits on
+
+  // text only: one small left-aligned block in the middle of the page
+  if (!items.length && !big)
+    return <section className="pt-24 md:pt-36 mx-auto max-w-md"><Copy s={s} n={n} wide /></section>;
+
+  // wide pieces: copy on top (left aligned), the piece underneath
+  if (big)
+    return (
+      <section className="pt-24 md:pt-36 mx-auto max-w-5xl">
+        <Copy s={s} n={n} wide />
+        {s.steps && (
+          <ol className="mt-10 grid sm:grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-8">
+            {s.steps.map((st, i) => (
+              <li key={st.label} data-fade className="border-t border-[var(--line)] pt-3">
+                <Label>({pad(i + 1)})</Label>
+                <p className="mt-2 text-[0.85rem] font-medium">{st.label}</p>
+                {st.text && <p className="mt-1.5 text-[0.78rem] text-[var(--muted)] leading-[1.55]">{st.text}</p>}
+              </li>
+            ))}
+          </ol>
+        )}
+        {s.walkthrough && <div data-fade className="mt-10"><Walkthrough {...s.walkthrough} /></div>}
+        {/* Zoomies: the Pixilart laptop big, then the sheets and the art shelf (dark panels, kept as drawn) */}
+        {(s.sprites || s.assets) && items.length > 0 && <div className="[&_figure>div]:mx-auto [&_.aspect-\[1400\/846\]]:!w-full md:[&_.aspect-\[1400\/846\]]:!w-[92%]"><Gallery items={items} /></div>}
+        {(s.sprites || s.assets) && (
+          <div className="cx [&_figure]:!my-8 [&_figcaption]:text-xs">
+            {s.sprites && <Sprites sheets={s.sprites} />}
+            {s.assets && <AssetShelf items={s.assets} />}
+          </div>
+        )}
+        {(s.empathy || s.components) && (
+          <div data-fade className="cx mt-10 [zoom:0.82]">
+            {s.empathy ? <EmpathyMap bare map={s.empathy} /> : <ComponentBoard bare kind={s.components} />}
+          </div>
+        )}
+      </section>
+    );
+
+  const hasCopy = s.heading || s.body || s.pair;
+  // media with no copy of its own: just the visuals, centered
+  if (!hasCopy && s.row)
+    return (
+      <section className="pt-16 md:pt-24 mx-auto max-w-5xl flex flex-wrap justify-center gap-6 md:gap-10 [&_figcaption]:max-w-[15rem] [&_figcaption]:text-xs">
+        {items.map((m, i) => <div key={i} data-fade><Item m={m} ph="h-[22rem] md:h-[28rem]" /></div>)}
+      </section>
+    );
+  if (!hasCopy) return <section className="pt-16 md:pt-24 mx-auto max-w-5xl"><Gallery items={items} lightArt={s.lightArt} /></section>;
+
+  // lots of wide pieces: copy on top, the pieces in a strip / grid underneath
+  const phones = items.every(isPhone);
+  // a grid of everything at once (Utter's sketches), no scrolling
+  if (s.grid)
+    return (
+      <section className="pt-24 md:pt-36 mx-auto max-w-5xl">
+        <Copy s={s} n={n} wide />
+        <div className="mt-10 grid grid-cols-2 gap-x-8 gap-y-10">
+          {(s.media || []).map((m) => (
+            <figure key={m.src} data-fade>
+              <img src={m.src} alt="" loading="lazy" className="w-full h-auto max-h-[22rem] object-contain" />
+              <figcaption className="mt-3 text-xs leading-[1.6] text-[var(--muted)]"><span className="text-[var(--fg)]">{m.label}.</span> {m.text}</figcaption>
+            </figure>
+          ))}
+        </div>
+      </section>
+    );
+  // full-width pieces (Joydrop's before/after boards): one per row, stacked
+  if (items.some((m) => m.wide))
+    return (
+      <section className="pt-24 md:pt-36 mx-auto max-w-5xl">
+        <Copy s={s} n={n} wide />
+        {items.map((m, i) => (
+          <figure key={i} data-fade className="mt-10 md:mt-14">
+            <img src={m.src} alt="" loading="lazy" className={`mx-auto w-full h-auto object-contain ${m.small ? "max-h-[17rem] md:max-h-[19rem]" : "max-h-[30rem]"}`} />
+            {m.caption && <figcaption className="mt-3 mx-auto max-w-2xl text-xs leading-[1.6] text-[var(--muted)]">{m.caption}</figcaption>}
+          </figure>
+        ))}
+      </section>
+    );
+  if (items.length > 3 || (!phones && items.length > 1))
+    return (
+      <section className="pt-24 md:pt-36 mx-auto max-w-5xl [&_figcaption]:text-xs">
+        <Copy s={s} n={n} wide />
+        <Gallery items={items} lightArt={s.lightArt} />
+      </section>
+    );
+
+  // visuals with copy beside them
+  const ph = items.length > 1 ? "h-[20rem] md:h-[27rem]" : "h-[24rem] md:h-[31rem]";
+  return (
+    <section className="pt-24 md:pt-36">
+      <div className={`mx-auto max-w-5xl flex flex-col md:items-center gap-10 md:gap-16 ${flip ? "md:flex-row-reverse" : "md:flex-row"}`}>
+        <Copy s={s} n={n} />
+        <div data-fade className={`flex-1 min-w-0 flex justify-center gap-4 md:gap-6 [&_figcaption]:max-w-[15rem] [&_figcaption]:mx-auto [&_figcaption]:text-center [&_figcaption]:text-xs ${phones ? "" : "md:max-w-[42rem]"}`}>
+          {items.map((m, i) => <Item key={i} m={m} lightArt={s.lightArt} ph={ph} />)}
+        </div>
+      </div>
+    </section>
+  );
+};
+
 export default function Case({ slug }) {
   const root = useRef(null);
   usePageMotion(root);
@@ -219,6 +371,9 @@ export default function Case({ slug }) {
   const next = rest.find((x) => !x.link);
   const flow = p.flow ? [{ heading: p.flow.heading, body: p.flow.body, steps: p.flow.steps }] : [];
   const sections = [...flow, ...p.sections];
+  const center = p.layout !== "classic";
+  const centerHead = false; // the header block keeps the original layout even in the centered case study
+  const Ch = center ? CenterChapter : Chapter;
 
   return (
     <main ref={root} className="px-5 md:px-10 pt-36 md:pt-44">
@@ -226,12 +381,12 @@ export default function Case({ slug }) {
         <Label>({pad(idx + 1)}) Case study</Label>
         <a href="#/work" onClick={go("#/work")} className="text-sm text-[var(--muted)]"><Roll>All works</Roll></a>
       </div>
-      <h1 data-split="morph" data-now className="mt-6 text-[16vw] md:text-[8.5vw] leading-[0.9] tracking-[-0.055em]">{p.name}</h1>
+      <h1 data-split="morph" data-now className={centerHead ? "mt-20 md:mt-24 text-center text-[13vw] md:text-[5.5vw] leading-[0.95] tracking-[-0.05em]" : "mt-6 text-[16vw] md:text-[8.5vw] leading-[0.9] tracking-[-0.055em]"}>{p.name}</h1>
 
-      <div className="mt-10 md:mt-14 grid md:grid-cols-12 gap-x-10 gap-y-8">
-        <p data-split="lines" data-now data-delay="0.3" className="md:col-span-7 text-lg md:text-[1.45rem] font-medium leading-[1.3] tracking-[-0.02em]">{p.summary}</p>
-        <dl data-fade data-now data-delay="0.5" className="md:col-span-4 md:col-start-9 grid grid-cols-2 gap-x-6 gap-y-5 content-start">
-          {[["Role", p.role], ["Platform", p.platform], ["Stack", p.stack.slice(0, 3).join(", ")]].map(([l, v]) => (
+      <div className={centerHead ? "mt-6 md:mt-8" : "mt-10 md:mt-14 grid md:grid-cols-12 gap-x-10 gap-y-8"}>
+        <p data-split="lines" data-now data-delay="0.3" className={centerHead ? "mx-auto max-w-xl text-base md:text-[1.05rem] font-medium leading-[1.6] text-[var(--muted)]" : "md:col-span-6 text-base md:text-[1.12rem] font-medium leading-[1.5] tracking-[-0.01em]"}>{p.summary}</p>
+        <dl data-fade data-now data-delay="0.5" className={centerHead ? "mx-auto mt-12 max-w-4xl grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-6 border-t border-[var(--line)] pt-6" : "md:col-span-4 md:col-start-9 grid grid-cols-2 gap-x-6 gap-y-5 content-start"}>
+          {[["Role", p.role], ["Platform", p.platform], ["Stack", p.stackLabel || p.stack.slice(0, 3).join(", ")]].map(([l, v]) => (
             <div key={l}><dt><Label>{l}</Label></dt><dd className="mt-1.5 text-sm md:text-[0.95rem] leading-snug">{v}</dd></div>
           ))}
           {/* Code: the repo (with its live star count) and the live site, if there is one */}
@@ -249,13 +404,15 @@ export default function Case({ slug }) {
       </div>
 
       <Hero p={p} />
+      {/* Utter: the watch recording handing its memo to the iPhone inbox */}
+      {p.demo?.phone && <div data-fade className="cx mx-auto mt-16 md:mt-24 max-w-5xl"><WatchDemo {...p.demo} /></div>}
 
-      {sections.map((s, i) => <Chapter key={s.heading || s.key || i} s={s} n={i + 1} />)}
+      {sections.map((s, i) => <Ch key={s.heading || s.key || i} s={s} n={i + 1} />)}
 
       {p.metrics?.length > 0 && (
-        <section className="pt-24 md:pt-36 grid md:grid-cols-12 gap-x-10 gap-y-8">
-          <div className="md:col-span-4"><Label>Impact</Label><h2 data-split="lines" className="mt-3 text-2xl md:text-[2rem] leading-[1.1] tracking-[-0.03em]">Numbers that <span className="serif italic">moved</span>.</h2></div>
-          <div className="md:col-span-8 grid grid-cols-2 gap-x-8 gap-y-10">
+        <section className={center ? "pt-24 md:pt-36 mx-auto max-w-5xl" : "pt-24 md:pt-36 grid md:grid-cols-12 gap-x-10 gap-y-8"}>
+          <div className={center ? "" : "md:col-span-4"}><Label>Impact</Label><h2 data-split="lines" className={center ? "mt-3 text-base md:text-[1.15rem] font-medium" : "mt-3 text-2xl md:text-[2rem] leading-[1.1] tracking-[-0.03em]"}>Numbers that <span className="serif italic">moved</span>.</h2></div>
+          <div className={center ? "mt-8 grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-8 [&_p:first-child]:!text-4xl [&_p:first-child]:md:!text-5xl" : "md:col-span-8 grid grid-cols-2 gap-x-8 gap-y-10"}>
             {p.metrics.map((m) => {
               const num = parseFloat(m.value);
               const plain = String(num) === m.value; // only plain whole numbers count up
@@ -272,9 +429,9 @@ export default function Case({ slug }) {
 
       {p.tools?.length > 0 && (
         // the tools as their real icons, name underneath
-        <section className="pt-24 md:pt-36 grid md:grid-cols-12 gap-x-10 gap-y-8">
-          <div className="md:col-span-4"><Label>Built with</Label></div>
-          <ul className="md:col-span-8 grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 gap-x-4 gap-y-8">
+        <section className={center ? "pt-28 md:pt-44 text-center" : "pt-24 md:pt-36 grid md:grid-cols-12 gap-x-10 gap-y-8"}>
+          <div className={center ? "" : "md:col-span-4"}><Label>Built with</Label></div>
+          <ul className={center ? "mx-auto mt-8 max-w-3xl flex flex-wrap justify-center gap-x-6 gap-y-6 [&>li]:w-16 [zoom:0.8]" : "md:col-span-8 grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 gap-x-4 gap-y-8"}>
             {p.tools.map((t, i) => {
               const tile = TILES[t.icon];
               const G = tile?.[0];

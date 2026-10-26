@@ -11,6 +11,26 @@ import duoFoldPoster from "../../assets/case-studies/duo/duo-fold-poster.jpg";
 import duoCardMp4 from "../../assets/case-studies/duo/duo-fold-card.mp4";
 import duoCardPoster from "../../assets/case-studies/duo/duo-fold-card-poster.jpg";
 import layerCard from "../../assets/case-studies/layer/card-3d.png";
+import boundHero from "../../assets/case-studies/bound/hero-2phones.png"; // start screen + shelves, two floating phones
+import boundWireframes from "../../assets/case-studies/bound/wireframes.jpg";
+import boundJoinMp4 from "../../assets/case-studies/bound/join.mp4";
+import boundJoinPoster from "../../assets/case-studies/bound/join-poster.jpg";
+import boundShelfMp4 from "../../assets/case-studies/bound/shelf.mp4";
+import boundShelfPoster from "../../assets/case-studies/bound/shelf-poster.jpg";
+import boundAddMp4 from "../../assets/case-studies/bound/add-book.mp4";
+import boundAddPoster from "../../assets/case-studies/bound/add-book-poster.jpg";
+import boundMeetupMp4 from "../../assets/case-studies/bound/meetup.mp4";
+import boundMeetupPoster from "../../assets/case-studies/bound/meetup-poster.jpg";
+import boundLogPages from "../../assets/case-studies/bound/log-pages.jpg";
+import boundBookNotes from "../../assets/case-studies/bound/book-notes.jpg";
+import boundComposer from "../../assets/case-studies/bound/note-composer.jpg";
+import boundLedger from "../../assets/case-studies/bound/club-ledger.jpg";
+import boundStart from "../../assets/case-studies/bound/start-screen.jpg";
+import boundShelves from "../../assets/case-studies/bound/shelves.jpg";
+import boundIcons from "../../assets/case-studies/bound/app-icons.jpg";
+import boundTearSpec from "../../assets/case-studies/bound/tear-spec.jpg";
+import boundPortraits from "../../assets/case-studies/bound/portrait-picker.jpg";
+import boundSignIn from "../../assets/case-studies/bound/sign-in.jpg";
 import layerHero3phones from "../../assets/case-studies/layer/hero-3phones.png";
 import layerShelf from "../../assets/case-studies/layer/shelf.png";
 import layerProduct from "../../assets/case-studies/layer/product.png";
@@ -420,6 +440,7 @@ export const projects = [
         // TODO: rewrite these in your words
         body: "Before writing any code I sketched the three moments that matter on the wrist: before you speak, while you're speaking, and right after.",
         // compact rows: label + note left, sketch right (optional inset sizes the sketch in its panel)
+        grid: true, // next site: all four sketches shown at once in a grid, not a scroll strip
         media: [
           {
             label: "v1 · Idle screen",
@@ -464,6 +485,7 @@ export const projects = [
       {
         // iPhone screens in one row, each on its own grey panel with a note underneath
         key: "iphone-screens",
+        row: true, // next site: the three phones centered in one row
         inset: "w-[92%] h-[92%]",
         bare: true, // screenshots sit straight on the page, no grey panels
         images: [
@@ -481,11 +503,13 @@ export const projects = [
         images: [
           {
             src: utterWatchRecordReview,
+            wide: true, small: true, // next site: one per row, kept compact
             inset: "w-[80%] h-[60%]",
             caption: "Record and review. The idle screen is just a mic that breathes. Holding it swaps in a live waveform and timer, and letting go lands on a review screen to play it back, trash it, or send it to your iPhone.",
           },
           {
             src: utterWatchSyncConfirm,
+            wide: true, small: true, // next site: one per row, kept compact
             inset: "w-[62%] h-[58%]",
             caption: "Sync and confirm. A spinner while WatchConnectivity hands the file off, then a clear Sent to iPhone with one tap to record the next thought.",
           },
@@ -685,6 +709,206 @@ struct ProductDraft {
       { name: "WidgetKit", icon: "widget" },
       { name: "Google Lens", logo: "googlelens", note: "Photo search" },
       { name: "Open Beauty Facts", icon: "database", note: "Product data" },
+    ],
+    metrics: [],
+    gallery: [],
+  },
+  {
+    slug: "bound",
+    name: "Bound",
+    tagline: "A book club app with spoiler-safe notes",
+    featured: true,
+    tags: ["iOS", "SwiftUI", "Supabase"],
+    frame: boundHero,
+    tint: "#1b1612",
+    hero: boundHero,
+    heroBare: true,
+    stars: 0, // GitHub stars as of Oct 2026; the badge refreshes live
+    github: "https://github.com/RJoshi141/bound",
+    summary:
+      "Bound is a book club app for iOS. Your books sit on wooden shelves, your club leaves spoiler-safe notes in the margins, and the monthly meetup gets planned in the app instead of a group chat.",
+    role: "Solo: design, engineering",
+    platform: "iOS 26",
+    year: "2026",
+    stack: ["Swift", "SwiftUI", "SwiftData", "Supabase"],
+    stackLabel: "Swift, SwiftUI, SwiftData, Supabase (Postgres, Auth, Realtime)",
+    layout: "center", // trial: a centered, quieter case study layout (see Case.jsx)
+    sections: [
+      {
+        heading: "Why I built it",
+        body: "I'm in a book club, and it lives in five places. The book gets picked in a group chat, progress sits on Goodreads, notes go in a notes app, and the meetup date gets lost in the thread. Nobody wants spoilers, but nobody knows what page everyone else is on.",
+      },
+      {
+        heading: "Who it's for",
+        body: "Hosts and members of a monthly book club.",
+        empathy: {
+          who: "Hosts and members of a monthly book club.",
+          says: ["Wait, what page are we reading up to?", "Who's hosting this month?"],
+          thinks: ["Is it safe to read the group chat yet?", "What did we even read last spring?"],
+          does: ["Scrolls the group chat for the address", "Keeps a reading log somewhere else", "Votes on the next pick with emoji reactions"],
+          feels: ["behind", "spoiled", "scattered", "excited to talk about the book"],
+          hears: ["\"No spoilers!\" followed by a spoiler"],
+          needs: ["One place for the book, the notes and the meetup", "Notes that don't ruin the ending"],
+        },
+      },
+      {
+        heading: "Process",
+        body: [
+          "I started with lo-fi wireframes of the core flow: Join, then Shelves, Book, Meetup and the Club ledger.",
+          "The early concept gated spoilers by chapter and had custom shelves. The final build gates by page instead, which is more precise.",
+          "The look came from paper and ink: old library cards, bookcloth covers, letterpress.",
+        ],
+        image: { src: boundWireframes, caption: "The core flow, lo-fi: Join, Shelves, Book, Meetup, Club." },
+      },
+      {
+        // one phone plays the three shelf moments in turn, with chapters beside it (like Layer's "Made for your skin")
+        heading: "From the first tap to the shelf",
+        body: "Pick a chapter or let it play through.",
+        walkthrough: {
+          frame: iphoneFrame,
+          chapters: [
+            {
+              label: "Tear into the app",
+              text: "The start screen is an oil painting of stacked books. Leaving it, and finishing the join step, rips the page along a ragged edge and lifts it away. It only plays at those two moments, so it never gets old. Inspired by niccolomiranda.com.",
+              mp4: boundJoinMp4,
+              poster: boundJoinPoster,
+            },
+            {
+              label: "Shelves that feel like shelves",
+              text: "To read, Reading now and Finished, on oak planks. Spine width follows page count, and each spine takes its colour from the right edge of the real cover. Tap one and it lifts with a paper slip underneath.",
+              mp4: boundShelfMp4,
+              poster: boundShelfPoster,
+            },
+            {
+              label: "Add any book",
+              text: "Search Open Library by title, author or ISBN, or scan the barcode on the back. Real covers, page counts and a heart for favourites.",
+              mp4: boundAddMp4,
+              poster: boundAddPoster,
+            },
+          ],
+        },
+      },
+      {
+        heading: "The tear, frame by frame",
+        body: "A dark sheet drops over the screen with a ripped, fibrous edge. The screen swaps underneath, then the sheet tears back up to reveal it. With Reduce Motion on, it's a short crossfade instead.",
+        image: { src: boundTearSpec, caption: "The motion spec: drop, swap, tear back, settle." },
+      },
+      {
+        heading: "Notes that don't spoil",
+        body: "Every note saves the page its author was on. Notes past your page fold into a \"3 notes past p. 212\" row until you choose to reveal them.",
+        list: [
+          "Notes are ruled index cards with a star rating.",
+          "Tag one \"discuss at meetup\" to bring it up in person.",
+          "Edit or delete your own.",
+        ],
+        phones: [
+          { frame: iphoneFrame, poster: boundLogPages, caption: "Log your page. Every note you write remembers it." },
+          { frame: iphoneFrame, poster: boundBookNotes, caption: "The club's notes on ruled index cards, with the club average up top." },
+          { frame: iphoneFrame, poster: boundComposer, caption: "Write a note: a rating, quick tags, and a spoiler switch tied to your page." },
+        ],
+      },
+      {
+        heading: "Live with your club",
+        body: "A note, RSVP or vote on one phone shows up on everyone else's in about a second.",
+        // TODO: two phones side by side, one change landing on both
+      },
+      {
+        heading: "The monthly meetup",
+        body: "A tear-off ticket per month: the book, the date, the place, a map, and a perforated edge.",
+        list: [
+          "RSVP Going, Maybe or Can't. Going lands an ink stamp on the ticket.",
+          "The host puts books up for a vote and members vote.",
+          "The host plans the meetup from the winner.",
+        ],
+        phoneBeside: true,
+        phoneDemo: { frame: iphoneFrame, mp4: boundMeetupMp4, poster: boundMeetupPoster, caption: "The host picks the vote winner, a time and a place, then sends the ticket. RSVP right on it." },
+      },
+      {
+        heading: "The club ledger",
+        body: "Every past meetup, styled like a library due-date card, with the club's average rating and yours.",
+        phones: [{ frame: iphoneFrame, poster: boundLedger, caption: "Books passed to you, the ledger, and the club's silhouettes." }],
+      },
+      {
+        heading: "Portraits",
+        body: "Instead of initials, everyone picks one of six Victorian cut-paper silhouettes: top hat, updo, feather hat, bowler, bonnet, curls. All face right, in a coloured oval.",
+        phones: [{ frame: iphoneFrame, poster: boundPortraits, caption: "Pick a silhouette and an oval colour." }],
+      },
+      {
+        heading: "Sign-in without passwords",
+        body: "Join with a club's 6-character invite code, or start a club and get one to share. Sign-in is an 8-digit code sent to your email.",
+        phones: [{ frame: iphoneFrame, poster: boundSignIn, caption: "Welcome back: an email, then an 8-digit code." }],
+      },
+      {
+        heading: "Who sees what lives in the database",
+        body: "Shelves work offline. Clubs stay live. The rules sit in Postgres, not the app.",
+        steps: [
+          { label: "Offline first", text: "Your shelves live on the phone in SwiftData and sync to Postgres about a second after each change. The app pulls the server copy when it opens." },
+          { label: "Live club data", text: "Members, meetups, RSVPs, votes and notes come from Supabase, and Realtime pushes changes as they happen." },
+          { label: "Row-level security", text: "Clubmates can read your shelf, only hosts plan meetups and run the vote, and recommendations are visible only to sender and recipient." },
+          { label: "Invite codes", text: "Creating and joining a club are database functions, so a code can't be guessed into someone else's club from the client." },
+          { label: "The ledger", text: "A database view over past meetups, so it never goes stale." },
+          { label: "Books and covers", text: "Open Library for search, ISBN lookup and covers. VisionKit scans barcodes and only accepts 978/979 codes, the ones printed on books. Core Image averages the cover's right edge for the spine colour." },
+          { label: "Email codes", text: "Sent through a custom SMTP sender on Resend." },
+          { label: "The tear", text: "A custom animatable SwiftUI shape. The torn edge rips left to right, then the page lifts straight up over 2.6 seconds." },
+        ],
+      },
+      {
+        heading: "Design",
+        body: "Paper and ink. UnifrakturMaguntia blackletter for the masthead, Instrument Serif for headings and italic shelf names, IM Fell English SC for letterpress buttons, Hanken Grotesk for body and DM Mono for labels.",
+        brand: {
+          colors: [
+            { name: "Paper", hex: "#F2EADB" },
+            { name: "Card", hex: "#FAF5EA" },
+            { name: "Ink", hex: "#221A14" },
+            { name: "Forest", hex: "#2F4A35" },
+            { name: "Oxblood", hex: "#8A2C22" },
+            { name: "Rust", hex: "#B4572A" },
+            { name: "Mustard", hex: "#C69A3A" },
+            { name: "Gilt", hex: "#A9813A" },
+            { name: "Oak", hex: "#7A4B2E" },
+          ],
+        },
+        list: [
+          "Buttons are square-cornered letterpress with an inset hairline.",
+          "RSVP fills: Going in forest, Maybe in rust, Can't in oxblood.",
+          "Menus are custom paper cards instead of the system menu.",
+          "The app icon is a red wax seal with a blackletter B.",
+          "The start, join and start-a-club screens each use a different oil painting of books.",
+        ],
+        phones: [
+          { frame: iphoneFrame, poster: boundStart, caption: "Ink: blackletter over an oil painting, letterpress buttons below." },
+          { frame: iphoneFrame, poster: boundShelves, caption: "Paper: Instrument Serif shelf names, DM Mono counts, oak planks." },
+        ],
+      },
+      {
+        heading: "App icon",
+        body: "Six directions, each checked at real size on a home screen. The wax seal won: it still reads at 60px and feels like an invitation.",
+        image: { src: boundIcons, caption: "Blackletter B, On the shelf, Ribbon marker, Wax seal, Cameo, Torn page." },
+      },
+      {
+        heading: "Exploring UI components",
+        body: "The pieces that make up Bound, rebuilt here in code. Tap them.",
+        components: "bound",
+      },
+      {
+        heading: "What's next",
+        list: [
+          "Recommendations: pass a book to a clubmate.",
+          "Sign in with Apple, and a TestFlight beta for my own club.",
+          "Meetup reminders and add-to-calendar.",
+        ],
+      },
+    ],
+    tools: [
+      { name: "Xcode", logo: "xcode" },
+      { name: "Swift", logo: "swift" },
+      { name: "SwiftUI", icon: "swiftui" },
+      { name: "SwiftData", icon: "database" },
+      { name: "Supabase", logo: "supabase" },
+      { name: "PostgreSQL", logo: "postgresql" },
+      { name: "Open Library", icon: "book" },
+      { name: "VisionKit", icon: "scan" },
+      { name: "Resend", logo: "resend" },
     ],
     metrics: [],
     gallery: [],
