@@ -83,3 +83,9 @@ img.logo-ink { transition: transform .4s; }
 
 /* black single-color logos (Next.js, Vercel, Expo, Flask) turn white on the dark theme */
 [data-theme="dark"] img.icon-ink { filter: invert(1); }
+
+/* sprite sheets (Zoomies): the looping strips step through their frames with this */
+@keyframes sprite-play {
+  from { background-position-x: 0%; }
+  to { background-position-x: 100%; }
+}
