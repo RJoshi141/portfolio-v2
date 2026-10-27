@@ -62,8 +62,8 @@ const autoShots = (p) => {
   const seen = new Set();
   const add = (t) => { const k = t.src || t.poster || t.type; if (!k || seen.has(k)) return; seen.add(k); out.push(t); };
   (p.sections || []).forEach((s) => {
-    [...(s.phonesBefore || []), ...(s.phones || [])].forEach((ph) => ph.poster && add({ type: "phone", frame: ph.frame, poster: ph.poster }));
-    if (s.phoneDemo?.poster) add({ type: "phone", frame: s.phoneDemo.frame, poster: s.phoneDemo.poster });
+    [...(s.phonesBefore || []), ...(s.phones || [])].forEach((ph) => ph.poster && add({ type: "phone", kind: ph.kind, frame: ph.frame, poster: ph.poster }));
+    if (s.phoneDemo?.poster) add({ type: "phone", kind: s.phoneDemo.kind, frame: s.phoneDemo.frame, poster: s.phoneDemo.poster });
     if (isImg(s.phoneImage)) add({ type: "img", src: s.phoneImage });
     (s.pair || []).forEach((x) => isImg(x.phoneImage) && add({ type: "img", src: x.phoneImage }));
     if (isImg(s.image?.src || s.image)) add({ type: "img", src: s.image?.src || s.image });
@@ -82,7 +82,7 @@ const autoShots = (p) => {
 const Tile = ({ p, t }) => (
   <div className={`relative shrink-0 h-full overflow-hidden bg-[var(--fg)] flex items-center justify-center ${t.wide ? "aspect-[16/10]" : "aspect-[4/5]"}`}>
     {t.type === "card" && <div className="absolute inset-[10%] flex items-center justify-center [&_img]:object-contain [&_video]:object-contain"><CardVisual p={p} /></div>}
-    {t.type === "phone" && <Device kind="phone" frame={t.frame} poster={t.poster} className="h-[82%]" />}
+    {t.type === "phone" && <Device kind={t.kind || "phone"} frame={t.frame} poster={t.poster} className="h-[82%]" />}
     {t.type === "img" && <img src={t.src} alt="" loading="lazy" className="absolute inset-[8%] w-[84%] h-[84%] object-contain" />}
     {t.type === "imgs" && <div className="absolute inset-[8%] flex items-center justify-center gap-[6%]">{t.srcs.map((src) => <img key={src} src={src} alt="" loading="lazy" className="h-full w-auto object-contain" />)}</div>}
     {t.type === "landscape" && <div className="absolute inset-[12%] flex items-center justify-center"><Device kind="landscape" frame={landscapeFrame} poster={t.poster} className="w-full" /></div>}

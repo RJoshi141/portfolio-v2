@@ -19,6 +19,8 @@ export const isVideo = (src) => typeof src === "string" && /\.(mp4|webm|mov)(\?|
 // screen boxes measured off the frame PNGs (same numbers as the current site)
 const BOX = {
   phone: { aspect: "aspect-[2025/4139]", screen: { left: "5.2%", top: "2.3%", width: "89.6%", height: "95.4%" }, round: "rounded-[13%/6%]", under: true },
+  // iPhone 17 frame (Layer revamp), measured off iphone-17-frame.png (450x920)
+  phone17: { aspect: "aspect-[450/920]", screen: { left: "5.2%", top: "2.4%", width: "89.6%", height: "95.2%" }, round: "rounded-[15%/7%]", under: true },
   landscape: { aspect: "aspect-[895/438]", screen: { left: "2.46%", top: "5.48%", width: "94.97%", height: "89.27%" }, round: "rounded-[7%/15%]", under: true },
   laptop: { aspect: "aspect-[1400/846]", screen: { left: "10.8%", top: "2.8%", width: "78.5%", height: "84.4%" }, round: "", under: true },
   watch: { aspect: "aspect-[1347/1496]", screen: { left: "9.5%", top: "9.1%", width: "75.3%", height: "81.6%" }, round: "rounded-[14%/11.5%]", under: false },
@@ -54,7 +56,7 @@ export const CardVisual = ({ p, fit = "contain" }) => {
   if (c?.kind === "image") return <img src={c.src} alt="" className="absolute inset-0 w-full h-full object-cover" />;
   if (c?.kind === "video")
     return <video autoPlay muted loop playsInline poster={c.poster} src={c.mp4} className="absolute inset-0 w-full h-full object-cover" />;
-  if (c?.kind === "phone") return <Device kind="phone" {...c} className="h-[80%]" />;
+  if (c?.kind === "phone" || c?.kind === "phone17") return <Device {...c} className="h-[80%]" />;
   if (c?.kind === "landscape") return <Device kind="landscape" {...c} className="w-[76%]" />;
   if (c?.kind === "watch") return <Device kind="watch" {...c} className="h-[52%]" />;
   if (c) return <Device kind="laptop" {...c} className="w-[82%]" />;
@@ -185,7 +187,7 @@ export const GridLines = () => (
 // one device that plays several recordings in turn with a quick blink to black between them,
 // and the chapters as a list you can click (beside on desktop, under on phones)
 import { useState as useS } from "react";
-export const Walkthrough = ({ frame, chapters, landscape = false }) => {
+export const Walkthrough = ({ frame, chapters, landscape = false, kind = "phone" }) => {
   const [active, setActive] = useS(0);
   const [shown, setShown] = useS(0);
   const [dark, setDark] = useS(false);
@@ -198,7 +200,7 @@ export const Walkthrough = ({ frame, chapters, landscape = false }) => {
   };
   useEffect(() => () => clearTimeout(t.current), []);
   const c = chapters[shown];
-  const b = landscape ? BOX.landscape : BOX.phone;
+  const b = landscape ? BOX.landscape : BOX[kind] || BOX.phone;
   return (
     <div className={`grid gap-8 md:gap-12 items-center ${landscape ? "" : "md:grid-cols-[auto_1fr]"}`}>
       <div className={`relative mx-auto ${b.aspect} ${landscape ? "w-full md:w-[52%]" : "h-[30rem] md:h-[36rem]"}`}>

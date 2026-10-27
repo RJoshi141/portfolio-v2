@@ -66,7 +66,7 @@ const media = (s) => {
 // one piece of media, kept modest: phones at a fixed height, everything else capped
 const Item = ({ m, strip, lightArt, ph }) => {
   // ph: a phone height override (the centered layout sizes phones down)
-  const phone = (m.type === "device" && m.kind === "phone") || m.tall;
+  const phone = (m.type === "device" && /^phone/.test(m.kind)) || m.tall;
   const PH = ph || "h-[28rem] md:h-[34rem]";
   return (
     <figure className={strip ? "shrink-0" : ""}>
@@ -85,7 +85,7 @@ const Item = ({ m, strip, lightArt, ph }) => {
           </span>
         )}
         {m.type === "device" && (
-          <Device {...m} className={m.kind === "phone" ? (strip ? "h-full" : PH) : m.kind === "landscape" ? (strip ? "h-full" : "w-full md:w-[85%]") : strip ? "h-full" : "w-full md:w-[90%]"} />
+          <Device {...m} className={/^phone/.test(m.kind) ? (strip ? "h-full" : PH) : m.kind === "landscape" ? (strip ? "h-full" : "w-full md:w-[85%]") : strip ? "h-full" : "w-full md:w-[90%]"} />
         )}
       </div>
       {m.caption && <figcaption className={`mt-4 text-sm leading-[1.55] text-[var(--muted)] ${strip ? "max-w-[18rem]" : "max-w-md"} ${phone && !strip ? "mx-auto text-center" : ""}`}>{m.caption}</figcaption>}
@@ -102,12 +102,12 @@ const Gallery = ({ items, lightArt }) => {
 };
 
 // ---------------------------------------------------------------- hero media, centered and modest
-const HERO_WIDTH = { utter: "w-[80%] md:w-[38%]", bound: "w-[85%] md:w-[40%]" };
+const HERO_WIDTH = { utter: "w-[80%] md:w-[38%]", bound: "w-[85%] md:w-[40%]", layer: "w-[92%] md:w-[48%]" };
 const Hero = ({ p }) => {
   let inner;
   if (p.heroVideo) inner = <video autoPlay muted loop playsInline poster={p.heroVideo.poster} src={p.heroVideo.mp4} className="w-full h-auto" />;
   else if (p.landscapeDemo) inner = <Device kind="landscape" {...p.landscapeDemo} className="w-full" />;
-  else if (p.phoneDemo) inner = <Device kind="phone" {...p.phoneDemo} className="h-[34rem] mx-auto" />;
+  else if (p.phoneDemo) inner = <Device kind="phone" {...p.phoneDemo} className="h-[28rem] md:h-[32rem] mx-auto" />;
   else if (p.heroImage || p.hero) {
     const src = p.heroImage || p.hero;
     inner = isVideo(src) ? <video autoPlay muted loop playsInline src={src} className="w-full h-auto" /> : <img src={src} alt="" className="w-full h-auto" />;
@@ -219,7 +219,7 @@ const Chapter = ({ s, n }) => {
 // The work leads. Copy is small, always left aligned, and sits beside the visuals (alternating
 // sides down the page) instead of stacked above them. Wide pieces (the empathy map, the component
 // board, the steps) get the small text block on top, then run across, scaled down a touch.
-const isPhone = (m) => (m.type === "device" && m.kind === "phone") || m.tall;
+const isPhone = (m) => (m.type === "device" && /^phone/.test(m.kind)) || m.tall;
 
 const Copy = ({ s, n, wide }) => {
   const own = s.body ? (Array.isArray(s.body) ? s.body : [s.body]) : [];
