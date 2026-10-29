@@ -45,7 +45,7 @@ const all = [...featured, ...selected];
 // ---------------------------------------------------------------- collect a section's media
 const fromSrc = (it, caption) => {
   const o = typeof it === "object" && it?.src ? it : { src: it };
-  return { type: isVideo(o.src) ? "video" : "image", src: o.src, caption: o.caption || caption, tall: o.tall, wide: o.wide, small: o.small };
+  return { type: isVideo(o.src) ? "video" : "image", src: o.src, caption: o.caption || caption, tall: o.tall, wide: o.wide, small: o.small, rounded: o.rounded };
 };
 const media = (s) => {
   const out = [];
@@ -74,7 +74,7 @@ const Item = ({ m, strip, lightArt, ph }) => {
         {m.type === "video" && <video autoPlay muted loop playsInline poster={m.poster} src={m.src} className={strip ? "h-full w-auto" : "w-full h-auto max-h-[70vh] object-contain"} />}
         {m.type === "image" && !lightArt && (
           <img src={m.src} alt="" loading="lazy" draggable="false"
-            className={strip ? "h-full w-auto" : phone ? `${PH} w-auto` : "w-full h-auto max-h-[70vh] object-contain"} />
+            className={`${strip ? "h-full w-auto" : phone ? `${PH} w-auto` : "w-full h-auto max-h-[70vh] object-contain"} ${m.rounded ? "rounded-2xl md:rounded-[1.75rem]" : ""}`} />
         )}
         {/* light line art: on the light theme the drawing is repainted in Layer's deep green by
             using the image as a mask over a solid fill; on dark it shows as drawn */}
@@ -332,8 +332,8 @@ const CenterChapter = ({ s, n }) => {
       <section className="pt-24 md:pt-36 mx-auto max-w-5xl">
         <Copy s={s} n={n} wide />
         {items.map((m, i) => (
-          <figure key={i} data-fade className="mt-10 md:mt-14">
-            <img src={m.src} alt="" loading="lazy" className={`mx-auto w-full h-auto object-contain ${m.small ? "max-h-[17rem] md:max-h-[19rem]" : "max-h-[30rem]"}`} />
+          <figure key={i} data-fade className="mt-14 md:mt-20 mx-auto md:w-[78%]">
+            <img src={m.src} alt="" loading="lazy" className={`mx-auto w-full h-auto object-contain ${m.small ? "max-h-[17rem] md:max-h-[19rem]" : "max-h-[30rem]"} ${m.rounded ? "rounded-2xl md:rounded-[1.75rem]" : ""}`} />
             {m.caption && <figcaption className="mt-3 mx-auto max-w-2xl text-xs leading-[1.6] text-[var(--muted)]">{m.caption}</figcaption>}
           </figure>
         ))}

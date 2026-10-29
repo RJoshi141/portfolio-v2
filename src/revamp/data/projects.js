@@ -47,6 +47,7 @@ import boundLedger from "../../assets/case-studies/bound/club-ledger.jpg";
 import boundStart from "../../assets/case-studies/bound/start-screen.jpg";
 import boundShelves from "../../assets/case-studies/bound/shelves.jpg";
 import boundIcons from "../../assets/case-studies/bound/app-icons.jpg";
+import boundIconHome from "../../assets/case-studies/bound/icon-homescreen.jpg";
 import boundTearSpec from "../../assets/case-studies/bound/tear-spec.jpg";
 import boundPortraits from "../../assets/case-studies/bound/portrait-picker.jpg";
 import boundSignIn from "../../assets/case-studies/bound/sign-in.jpg";
@@ -877,7 +878,10 @@ export const projects = [
       {
         heading: "App icon",
         body: "Six directions, each checked at real size on a home screen. The wax seal won: it still reads at 60px and feels like an invitation.",
-        image: { src: boundIcons, caption: "Blackletter B, On the shelf, Ribbon marker, Wax seal, Cameo, Torn page." },
+        images: [
+          { src: boundIcons, wide: true, caption: "Blackletter B, On the shelf, Ribbon marker, Wax seal, Cameo, Torn page." },
+          { src: boundIconHome, wide: true, rounded: true, caption: "The wax seal on a real home screen, next to Apple's own icons." },
+        ],
       },
       {
         heading: "Exploring UI components",
