@@ -47,7 +47,7 @@ import boundLedger from "../../assets/case-studies/bound/club-ledger.jpg";
 import boundStart from "../../assets/case-studies/bound/start-screen.jpg";
 import boundShelves from "../../assets/case-studies/bound/shelves.jpg";
 import boundIcons from "../../assets/case-studies/bound/app-icons.jpg";
-import boundIconHome from "../../assets/case-studies/bound/icon-homescreen.jpg";
+import boundIconHome from "../../assets/case-studies/bound/icon-homescreen.png";
 import boundTearSpec from "../../assets/case-studies/bound/tear-spec.jpg";
 import boundPortraits from "../../assets/case-studies/bound/portrait-picker.jpg";
 import boundSignIn from "../../assets/case-studies/bound/sign-in.jpg";
