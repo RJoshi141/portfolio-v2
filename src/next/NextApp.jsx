@@ -229,24 +229,19 @@ export const Footer = () => {
     setTimeout(() => setCopied(false), 1800);
   };
   return (
-    <footer className="pt-32 md:pt-48 pb-8">
-      <p className="mono text-[0.7rem] uppercase tracking-[0.2em] text-[var(--muted)]">(Contact)</p>
-      <a href="#/contact" onClick={go("#/contact")} data-cursor="Say hi" className="roll-host block mt-6">
-        <span data-split="morph" className="block text-[13vw] md:text-[9.5vw] leading-[0.9] tracking-[-0.05em]">Let's <span className="serif italic">talk</span></span>
-      </a>
-      <button type="button" data-fade onClick={copy} data-cursor={copied ? "Copied" : "Copy"} className="group mt-6 flex items-baseline gap-4 text-left text-lg md:text-2xl text-[var(--muted)] hover:text-[var(--fg)] transition-colors">
+    // just the bottom row, always visible (no reveal on scroll): ©, the email to copy, socials
+    <footer className="mt-32 md:mt-48 pt-6 pb-8 border-t border-[var(--line)] grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 text-sm items-baseline">
+      <p className="text-[var(--muted)]">© 2026 Ritika Joshi</p>
+      <button type="button" onClick={copy} data-cursor={copied ? "Copied" : "Copy"} className="group flex items-baseline gap-3 text-left text-[var(--muted)] hover:text-[var(--fg)] transition-colors md:justify-self-center">
         <span>ritikajoshi141@gmail.com</span>
-        <span className={`mono text-[0.7rem] uppercase tracking-[0.15em] transition-opacity ${copied ? "opacity-100 text-[var(--fg)]" : "opacity-60 group-hover:opacity-100"}`} aria-live="polite">
+        <span className={`mono text-[0.65rem] uppercase tracking-[0.15em] transition-opacity ${copied ? "opacity-100 text-[var(--fg)]" : "opacity-60 group-hover:opacity-100"}`} aria-live="polite">
           [ {copied ? "Copied" : "Copy"} ]
         </span>
       </button>
-      <div data-fade className="mt-24 md:mt-32 pt-6 border-t border-[var(--line)] grid grid-cols-2 md:grid-cols-3 gap-6 text-sm">
-        <p className="text-[var(--muted)]">© 2026 Ritika Joshi</p>
-        <div className="flex flex-wrap gap-x-5 gap-y-1 md:col-span-2 md:justify-end">
-          {socials.filter((s) => s.label !== "Email").map((s) => (
-            <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer"><Roll>{s.label}</Roll></a>
-          ))}
-        </div>
+      <div className="flex flex-wrap gap-x-5 gap-y-1 md:justify-end">
+        {socials.filter((s) => s.label !== "Email").map((s) => (
+          <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer"><Roll>{s.label}</Roll></a>
+        ))}
       </div>
     </footer>
   );
@@ -254,7 +249,8 @@ export const Footer = () => {
 
 // ---------------------------------------------------------------- app
 export default function NextApp() {
-  const [loaded, setLoaded] = useState(false);
+  // no loading screen: the site opens straight onto the page
+  const loaded = true;
   // light by default like most of the references; remembers the visitor's pick
   const [theme, setTheme] = useState(() => { try { return localStorage.getItem("next-theme") || "light"; } catch { return "light"; } });
   const [lenis, setLenis] = useState(null);
@@ -324,7 +320,6 @@ export default function NextApp() {
 
   return (
     <LenisCtx.Provider value={lenis}>
-      {!loaded && <Loader onDone={() => setLoaded(true)} />}
       <Cursor />
       <Nav route={current} theme={theme} setTheme={setTheme} />
       {loaded && pages.map(({ id, route, entering }) => {

@@ -63,47 +63,24 @@ const Pass = () => {
   );
 };
 
-// Writing: a clean index. One line per piece (number, title, where and when), and the cover
-// floats next to the cursor while you hover a row. On phones the cover sits under the title.
-const WritingList = () => {
-  const box = useRef(null);
-  const card = useRef(null);
-  const [hover, setHover] = useState(null);
-  useEffect(() => {
-    const el = box.current;
-    const x = gsap.quickTo(card.current, "x", { duration: 0.6, ease: "power3" });
-    const y = gsap.quickTo(card.current, "y", { duration: 0.6, ease: "power3" });
-    const mv = (e) => { const r = el.getBoundingClientRect(); x(e.clientX - r.left); y(e.clientY - r.top); };
-    el.addEventListener("pointermove", mv);
-    return () => el.removeEventListener("pointermove", mv);
-  }, []);
-  return (
-    <div ref={box} className="relative" onPointerLeave={() => setHover(null)}>
-      <ul className="border-t border-[var(--line)]">
-        {writing.map((w, i) => (
-          <li key={w.link} data-fade data-delay={i * 0.08} onPointerEnter={() => setHover(i)}>
-            <a href={w.link} target="_blank" rel="noopener noreferrer"
-               className={`group grid grid-cols-[2.5rem_1fr] md:grid-cols-[4rem_1fr_12rem_7rem] items-baseline gap-x-4 gap-y-3 py-6 md:py-8 border-b border-[var(--line)] transition-opacity duration-500 ${hover != null && hover !== i ? "md:opacity-35" : ""}`}>
-              <span className="mono text-xs text-[var(--muted)]">{String(i + 1).padStart(3, "0")}</span>
-              <span className="text-xl md:text-[2.1rem] font-medium leading-[1.15] tracking-[-0.03em] transition-transform duration-500 group-hover:translate-x-3">{w.title}</span>
-              <span className="col-start-2 md:col-start-auto mono uppercase text-[0.7rem] md:text-xs text-[var(--muted)]">{w.where} · {w.when}</span>
-              <span className="hidden md:block mono uppercase text-xs text-[var(--muted)] text-right">{w.read}</span>
-              <img src={w.image} alt="" loading="lazy" className="md:hidden col-start-2 w-full aspect-[16/10] object-cover" />
-            </a>
-          </li>
-        ))}
-      </ul>
-      {/* the floating cover, held just to the right of the cursor so the cursor never sits on it */}
-      <div ref={card} className="pointer-events-none absolute left-0 top-0 z-10 hidden md:block">
-        <div className={`translate-x-10 -translate-y-1/2 w-[20rem] aspect-[16/10] overflow-hidden transition-[opacity,transform] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${hover != null ? "opacity-100 scale-100" : "opacity-0 scale-75"}`}>
-          {writing.map((w, i) => (
-            <img key={w.link} src={w.image} alt="" className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${hover === i ? "opacity-100" : "opacity-0"}`} />
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-};
+// Writing: a loose gallery of cards, like a portfolio grid. Each column a different image height
+// so it reads as a staggered wall; title underneath with the source and date in grey.
+const SHAPES = ["aspect-[16/10]", "aspect-[4/5]", "aspect-square"];
+const WritingList = () => (
+  <ul className="max-w-4xl grid grid-cols-2 lg:grid-cols-3 gap-x-5 gap-y-10 items-start">
+    {writing.map((w, i) => (
+      <li key={w.link}>
+        <a href={w.link} target="_blank" rel="noopener noreferrer" className="group block">
+          <div className="overflow-hidden border border-[var(--line)]">
+            <img src={w.image} alt="" loading="lazy" className={`w-full ${SHAPES[i % SHAPES.length]} object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.03]`} />
+          </div>
+          <h3 className="mt-3 text-[0.95rem] md:text-base font-medium leading-[1.55]">{w.title}</h3>
+          <p className="text-[0.95rem] md:text-base font-medium leading-[1.55] text-[var(--muted)]">{w.where} · {w.when}</p>
+        </a>
+      </li>
+    ))}
+  </ul>
+);
 
 export default function About() {
   const root = useRef(null);
@@ -171,7 +148,7 @@ export default function About() {
       </section>
 
       <section className="mt-32 md:mt-48">
-        <h2 data-split="morph" className="text-5xl md:text-8xl tracking-[-0.05em] mb-12">Writing</h2>
+        <h2 data-fade className="serif italic font-normal text-2xl md:text-3xl text-[var(--muted)] mb-8 md:mb-12">writing</h2>
         <WritingList />
       </section>
       <Footer />

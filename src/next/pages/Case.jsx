@@ -102,7 +102,7 @@ const Gallery = ({ items, lightArt }) => {
 };
 
 // ---------------------------------------------------------------- hero media, centered and modest
-const HERO_WIDTH = { utter: "w-[80%] md:w-[38%]", bound: "w-full md:w-[80%]", layer: "w-[92%] md:w-[48%]" };
+const HERO_WIDTH = { utter: "w-[80%] md:w-[38%]", bound: "w-full md:w-[80%]", joydrop: "w-full md:w-[80%]", layer: "w-[92%] md:w-[48%]" };
 const Hero = ({ p, clip = true }) => {
   let inner;
   if (p.heroVideo) inner = <video autoPlay muted loop playsInline poster={p.heroVideo.poster} src={p.heroVideo.mp4} className="w-full h-auto" />;
@@ -550,11 +550,22 @@ const GroupChat = ({ chat, frame }) => {
 };
 
 const Rows = ({ children }) => <div className="mt-10 md:mt-12 space-y-10 md:space-y-14">{children}</div>;
-const PhoneIn = ({ m }) => <Device {...m} caption={undefined} className="h-[80%]" />;
+const PhoneIn = ({ m }) => m.type === "image"
+  ? <img src={m.src} alt="" loading="lazy" className="h-[82%] w-auto object-contain" />
+  : <Device {...m} caption={undefined} className="h-[80%]" />;
 
+// a section can mix a wide "before" image with phones: the images go first, the phones after
 const StoryVisuals = ({ s, p }) => {
-  const items = media(s);
-  if (!items.length) return null;
+  const all = media(s);
+  if (!all.length) return null;
+  const framed = all.filter((m) => m.type === "device");
+  if (framed.length && framed.length < all.length) {
+    const flat = all.filter((m) => m.type !== "device");
+    return <><StoryItems items={flat} s={s} p={p} /><StoryItems items={framed} s={s} p={p} /></>;
+  }
+  return <StoryItems items={all} s={s} p={p} />;
+};
+const StoryItems = ({ items, s, p }) => {
   const phones = items.every(isPhone);
   const tone = s.grain ? p.grain : "neutral";
   if (phones && items.length === 1) {
@@ -643,6 +654,16 @@ const StoryChapter = ({ s, p, i }) => {
       )}
       {s.decision && <StoryDecision d={s.decision} />}
       {s.learned && <TwoCol rows={s.learned} />}
+      {s.stats && (
+        <div className="mt-8 grid grid-cols-3 gap-x-6 md:gap-x-10">
+          {s.stats.map((m) => (
+            <div key={m.label} className="pt-4 border-t border-[var(--line)]">
+              <p className="text-[2rem] md:text-[3.2rem] font-medium leading-none tracking-[-0.04em]">{m.value}</p>
+              <p className="mt-2 text-[0.82rem] md:text-[0.95rem] leading-[1.45] text-[var(--muted)]">{m.label}</p>
+            </div>
+          ))}
+        </div>
+      )}
       {s.steps && <TwoCol rows={s.steps.map((st) => ({ title: st.label, text: st.text }))} />}
       {s.brand?.colors && (
         <div className="mt-8 flex flex-wrap gap-4">

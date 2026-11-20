@@ -171,6 +171,19 @@ import joydropHomeHighlight from "../../assets/case-studies/joydrop/home-after-h
 import joydropHomeComments from "../../assets/case-studies/joydrop/home-after-comments.jpg";
 import joydropCardPhones from "../../assets/project-frames/joydrop-phones.png";
 import joydropHero from "../../assets/case-studies/joydrop/hero-3phones.png";
+// blurred photo backdrops for the phone panels (Pexels)
+import joydropBgCheer from "../../assets/case-studies/joydrop/bg-cheer.jpg";
+import joydropBgCoffee from "../../assets/case-studies/joydrop/bg-coffee.jpg";
+import joydropBgLaugh from "../../assets/case-studies/joydrop/bg-laugh.jpg";
+import joydropBgNight from "../../assets/case-studies/joydrop/bg-night.jpg";
+import joydropBgWindow from "../../assets/case-studies/joydrop/bg-window.jpg";
+import joydropBgHands from "../../assets/case-studies/joydrop/bg-hands.jpg";
+import joydropBgTalk from "../../assets/case-studies/joydrop/bg-talk.jpg";
+import joydropBgNeon from "../../assets/case-studies/joydrop/bg-neon.jpg";
+import joydropBgHallway from "../../assets/case-studies/joydrop/bg-hallway.jpg";
+import joydropBgHuddle from "../../assets/case-studies/joydrop/bg-huddle.jpg";
+import joydropBgCrowd from "../../assets/case-studies/joydrop/bg-crowd.jpg";
+import joydropBgDance from "../../assets/case-studies/joydrop/bg-dance.jpg";
 import iphoneFrame from "../../assets/case-studies/iphone-frame.png";
 import utterPhoneMp4 from "../../assets/case-studies/utter/iphone-demo.mp4";
 import utterPhoneWebm from "../../assets/case-studies/utter/iphone-demo.webm";
@@ -225,147 +238,128 @@ export const projects = [
     heroInset: "w-[85%] h-[85%]",
     siteLabel: "joydrop.me",
     stack: ["Expo", "React Native", "NestJS", "Next.js", "Firebase", "EAS"],
+    layout: "story",
+    accent: "#7B2FFF",
+    grain: "radial-gradient(130% 110% at 15% 5%, #F8F5FD 0%, #E9DFFA 40%, #CDB8F4 75%, #B99DEF 100%)",
     sections: [
       {
-        heading: "The product",
-        body: [
-          "A friend shows up for you. A coworker handles something hard. You notice, you mean to say something, and the moment passes. Joydrop catches it: find the person, say the thing, send. It takes about 30 seconds, and they keep it for good.",
-          "It's not a feed and it's not a group chat, so nothing competes with the message. Communities give a team, club, or friend group a shared record of who showed up and how.",
-        ],
-        // text and phone share one row
-        phoneBeside: true,
-        phoneSize: "walkthrough", // same phone height as the walkthrough players and Layer's scan
-        phoneDemo: { frame: iphoneFrame, mp4: joydropFeedMp4, poster: joydropFeedPoster },
+        eyebrow: "Solution", nav: "Solution",
+        heading: "Recognition that takes 30 seconds and lasts",
+        body: "Find the person, say the thing, send. They keep it for good.",
+        phoneDemo: { tone: `center / cover no-repeat url(${joydropBgCheer})`, frame: iphoneFrame, mp4: joydropFeedMp4, poster: joydropFeedPoster, caption: "The app, start to finish." },
       },
       {
-        heading: "Getting to iOS",
-        body: [
-          "Joydrop started on the web. Getting it onto phones meant an Expo app, and a few native problems standing between us and real devices.",
-          "I fixed 4+ iOS build and toolchain blockers (Xcode signing, CocoaPods, compiler bugs) so QA could run on real hardware, then set up EAS and CI/CD and released builds to TestFlight myself.",
-        ],
+        eyebrow: "Problem", nav: "Problem",
+        heading: "The moment to say thanks always passes",
+        body: "A friend shows up for you. A coworker handles something hard. You mean to say something, then the moment passes, or a group chat buries it by morning.",
       },
       {
-        heading: "Redesigning the UI",
-        // TODO: rewrite in your words
-        body: [
-          "The first version was the web app squeezed onto a phone: a white screen, a stock blue button, and a generic welcome that could belong to any product.",
-          "For iOS I rebuilt it on the new brand system: a warm near-black canvas, Fraunces for headlines, Space Mono for labels and inputs, and Volt, a single electric violet, as the only accent. The copy follows the brand voice too. \"Seen starts here.\" says what the app is for before you've even logged in.",
-        ],
-        // brand swatches + type specimen, rendered under the before/after
+        eyebrow: "Engineering", nav: "Getting to iOS",
+        heading: "From a web app to real iPhones",
+        body: "Joydrop started on the web. I fixed 4+ iOS build blockers (Xcode signing, CocoaPods, compiler bugs) so QA could test on real devices, then set up EAS, CI/CD and TestFlight releases myself.",
+      },
+      {
+        eyebrow: "Visual design", nav: "Redesign",
+        heading: "One violet, everything else warm black",
+        body: "The first version was the web app squeezed onto a phone. I rebuilt it on the new brand: a warm near-black canvas, Fraunces for headlines, Space Mono for labels, and Volt as the only accent.",
         brand: {
           colors: [
-            { name: "Dark", hex: "#0D0B09", note: "Background" },
-            { name: "Ink", hex: "#1C1612", note: "Surfaces" },
-            { name: "Volt", hex: "#7B2FFF", note: "The only accent" },
-            { name: "White", hex: "#F5F0E8", note: "Warm white" },
-            { name: "Grain", hex: "#C9B99A", note: "Metadata" },
-            { name: "Ash", hex: "#8A7F74", note: "Body on dark" },
+            { name: "Dark", hex: "#0D0B09" },
+            { name: "Ink", hex: "#1C1612" },
+            { name: "Volt", hex: "#7B2FFF" },
+            { name: "White", hex: "#F5F0E8" },
+            { name: "Grain", hex: "#C9B99A" },
+            { name: "Ash", hex: "#8A7F74" },
           ],
         },
-        // before/after side by side, each on its own grey panel
-        bare: true, // login before/after phones without grey panels
         images: [
-          { src: joydropLoginBefore, tall: true, inset: "w-[90%] h-[90%]", caption: "Before. The web app's login, viewed on a phone." },
-          { src: joydropLoginAfter, tall: true, inset: "w-[90%] h-[90%]", caption: "After. The native iOS login." },
+          { src: joydropLoginBefore, tall: true, caption: "Before. The web login, on a phone." },
+          { src: joydropLoginAfter, tall: true, caption: "After. The native iOS login: \"Seen starts here.\"" },
         ],
       },
       {
-        heading: "Home feed",
-        // TODO: rewrite in your words
-        body: [
-          "The home feed is where most Joydrops get read, so it got the biggest rework. The Figma version had a separate Highlights carousel sitting on top of the feed, which pushed the actual posts below the fold.",
-          "On iOS the feed leads with the posts. A dropdown switches between For You and Highlight, and highlighted Joydrops fill the card in violet instead of living in their own row. Cards sit at a slight tilt like notes pinned to a board, messages are set in monospace, and comments open in a sheet that supports GIFs and @ tags.",
-        ],
-        image: joydropHomeBefore,
-        wide: true,
-        inset: "w-[70%] h-[88%]",
-        caption: "Before. The Figma design: a Highlights carousel above the feed, and comments in a plain sheet.",
-        compactPhones: true,
+        tag: "Key decision",
+        eyebrow: "Design decision", nav: "Design decisions",
+        heading: "Posts first, highlights inside the feed",
+        body: "The feed is where most Joydrops get read, so it got the biggest rework.",
+        decision: {
+          options: [
+            { label: "Highlights carousel on top", note: "The Figma design. It pushed the actual posts below the fold." },
+            { label: "Posts first, Highlight as a view", note: "A dropdown switches between For You and Highlight." },
+          ],
+          chose: 1,
+          why: "People open the app to read what someone said, so that comes first.",
+        },
+        image: { src: joydropHomeBefore, caption: "Before. The Figma design, with a Highlights carousel above the feed." },
         phones: [
-          { frame: iphoneFrame, poster: joydropHomeFeed, caption: "After. The For You feed, with posts first and a quick search and send up top." },
-          { frame: iphoneFrame, poster: joydropHomeHighlight, caption: "After. Highlight view: featured Joydrops fill the card in violet, with the Dots and badge they came with." },
-          { frame: iphoneFrame, poster: joydropHomeComments, caption: "After. Comments with reactions, replies, GIFs, and @ tagging." },
+          { frame: iphoneFrame, poster: joydropHomeFeed, caption: "After. The For You feed: posts first, with search and send up top. Cards tilt like notes pinned to a board.", tone: `center / cover no-repeat url(${joydropBgCoffee})` },
+          { frame: iphoneFrame, poster: joydropHomeHighlight, caption: "After. Highlight view: featured Joydrops fill the card in violet, with the Dots and badge they came with.", tone: `center / cover no-repeat url(${joydropBgLaugh})` },
+          { frame: iphoneFrame, poster: joydropHomeComments, caption: "After. Comments with reactions, replies, GIFs and @ tagging.", tone: `center / cover no-repeat url(${joydropBgNight})` },
         ],
       },
       {
-        heading: "Onboarding",
-        // TODO: rewrite in your words
-        body: [
-          "I added two pieces to onboarding. Before sign-up, a short questionnaire asks about the last time you saw someone do something great, and where that recognition usually ends up. By the time you reach the login screen, you already know why Joydrop exists. After sign-up, a 30-second tour walks you through the feed, sending your first Joydrop, and finding a community to join.",
-        ],
-        // before: the old four-slide carousel (web + mobile), shown above the new recordings
-        image: joydropOnboardingBefore,
-        wide: true,
-        inset: "w-[78%] h-[80%]",
-        caption: "Before. Four swipeable slides shared by web and mobile, each explaining a feature before you'd used the app.",
-        // after: two recordings, each in its own grey box
-        compactPhones: true,
+        tag: "Key decision",
+        eyebrow: "Design decision",
+        heading: "Answer the why before sign-up",
+        decision: {
+          options: [
+            { label: "Four feature slides", note: "Shared by web and mobile, explaining features before you'd used them." },
+            { label: "A questionnaire, then a tour", note: "A few questions before sign-up, a 30-second tour after." },
+          ],
+          chose: 1,
+          why: "By the time you reach the login screen, you already know why Joydrop exists.",
+        },
+        image: { src: joydropOnboardingBefore, caption: "Before. Four swipeable slides." },
         phones: [
-          { frame: iphoneFrame, mp4: joydropQuestionnaireMp4, poster: joydropQuestionnairePoster, caption: "After. The questionnaire: a few quick questions that answer the why before you sign up." },
-          { frame: iphoneFrame, mp4: joydropTourMp4, poster: joydropTourPoster, caption: "After. The app tour: coach marks for the feed, sending a Joydrop, and joining a community." },
+          { frame: iphoneFrame, mp4: joydropQuestionnaireMp4, poster: joydropQuestionnairePoster, caption: "The questionnaire: the last time you saw someone do something great.", tone: `center / cover no-repeat url(${joydropBgWindow})` },
+          { frame: iphoneFrame, mp4: joydropTourMp4, poster: joydropTourPoster, caption: "The tour: the feed, your first Joydrop, a community to join.", tone: `center / cover no-repeat url(${joydropBgHands})` },
         ],
       },
       {
-        heading: "Shipping Communities",
-        body: "Communities let people create public or private groups, invite others, and handle join requests on their own. I built it end to end, from the backend to the screens.",
-        list: [
-          "Public and private groups",
-          "Invites",
-          "Join requests the group can manage itself",
-        ],
-        // before (old web UI) then after (new iOS UI), each full width with a caption
-        // TODO: rewrite captions in your words
+        eyebrow: "Core flows", nav: "Communities",
+        heading: "Groups that run themselves",
+        body: "I built Communities end to end, from the backend to the screens.",
+        list: ["Public and private groups", "Invites", "Join requests the group manages itself"],
         media: [
-          {
-            src: joydropCommunitiesBefore,
-            wide: true,
-            inset: "w-[94%] h-[90%]",
-            caption: "Before. The first version of Communities: browse your groups and recommended ones, create a community with an icon, description and public or private vibe, accept the guidelines to send it for admin approval, then see it in My Communities. Deleting asks for confirmation and spells out what gets removed.",
-          },
-          {
-            src: joydropCommunitiesAfter,
-            wide: true,
-            inset: "w-[90%] h-[88%]",
-            caption: "After. The same flow on iOS in the new brand. An empty state that points you to Discover Communities, a create sheet with default icons and a 20-character name limit, communities as cards with Send joydrop right on them, and a delete sheet that also covers pending invites.",
-          },
+          { src: joydropCommunitiesBefore, wide: true, caption: "Before. The first version: browse, create, wait for admin approval, delete with a confirmation." },
+          { src: joydropCommunitiesAfter, wide: true, caption: "After. The same flow on iOS: an empty state that points to Discover, a create sheet, cards with Send joydrop right on them." },
         ],
       },
       {
-        heading: "Notifications",
-        // TODO: rewrite in your words
-        body: [
-          "Push notifications with Expo and NestJS across 8+ trigger types, shipped alongside the iOS release.",
-          "Each trigger has its own title so you can tell what happened without opening the app: a Joydrop received, a new post in one of your communities, a community invite, a connection request, or a reply to your comment.",
-        ],
-        // real device screenshots in iPhone frames, each in its own grey box
-        compactPhones: true,
+        eyebrow: "Core flows", nav: "Notifications",
+        heading: "You know what happened before you open it",
+        body: "Push notifications with Expo and NestJS across 8+ triggers, each with its own title: a Joydrop received, a community post, an invite, a connection request, a reply.",
         phones: [
-          { frame: iphoneFrame, poster: joydropNotifLock, caption: "Grouped on the lock screen: Joydrops, community posts, invites, connection requests, and replies." },
-          { frame: iphoneFrame, poster: joydropNotifBanner, caption: "The first test push landing as a banner outside the app, with the badge count on the icon." },
+          { frame: iphoneFrame, poster: joydropNotifLock, caption: "Grouped on the lock screen.", tone: `center / cover no-repeat url(${joydropBgCrowd})` },
+          { frame: iphoneFrame, poster: joydropNotifBanner, caption: "The first test push, as a banner.", tone: `center / cover no-repeat url(${joydropBgDance})` },
         ],
       },
       {
-        heading: "In-app notifications",
-        // TODO: rewrite in your words; before screens coming
-        body: [
-          "Inside the app, notifications split into two tabs: For You for things that happened to you, and Community for the groups you're in. Each tab is grouped into Last 7 days, Last 30 days, and a collapsible Older section, so the recent stuff stays on top.",
-          "Every row puts the person or community first, with a small colored badge on the avatar that tells you what kind of notification it is at a glance: pink for a celebration, blue for a reply, green for a new connection or a welcome, red for an invite. Community names are set in the brand serif so they stand out from the monospace body, and the next step lives right on the row: send your first Joydrop to a new connection, or accept or decline an invite without opening anything.",
-        ],
-        compactPhones: true,
-        // before (old web list) and after (new For You tab), side by side
+        eyebrow: "Core flows",
+        heading: "Person first, next step on the row",
+        body: "Two tabs, For You and Community, grouped by recency. A colored badge on the avatar tells you the type at a glance, and you can accept an invite or send a first Joydrop without opening anything.",
         phones: [
-          { frame: iphoneFrame, poster: joydropInappBeforeList, caption: "Before. One flat list of cards grouped by age, with the same blue buttons on every row." },
-          { frame: iphoneFrame, poster: joydropInappForYou, caption: "After. Tabs for For You and Community, grouped by recency, with a colored badge for each type and the next step right on the row." },
+          { frame: iphoneFrame, poster: joydropInappBeforeList, caption: "Before. One flat list, the same blue buttons on every row.", tone: `center / cover no-repeat url(${joydropBgTalk})` },
+          { frame: iphoneFrame, poster: joydropInappForYou, caption: "After. Tabs, recency groups, a badge per type.", tone: `center / cover no-repeat url(${joydropBgNeon})` },
         ],
       },
       {
-        heading: "Search",
-        // TODO: rewrite in your words
-        body: "Search got the same treatment. It now opens as its own screen with Users and Communities tabs, and the recommendation cards keep one job each: send a Joydrop in violet, connect in black. Once you're already connected, the connect button drops away and send takes the full width.",
-        compactPhones: true,
+        eyebrow: "Core flows",
+        heading: "One job per button",
+        body: "Search opens as its own screen with Users and Communities tabs. Send is violet, connect is black, and once you're connected, send takes the full width.",
         phones: [
-          { frame: iphoneFrame, poster: joydropSearchBefore, caption: "Before. A single search box above a grid of recommendations, with the same blue buttons as every other screen." },
-          { frame: iphoneFrame, poster: joydropSearchAfter, caption: "After. Search by email or username, switch between Users and Communities, and act right from the card." },
+          { frame: iphoneFrame, poster: joydropSearchBefore, caption: "Before. One search box above a grid of blue buttons.", tone: `center / cover no-repeat url(${joydropBgHallway})` },
+          { frame: iphoneFrame, poster: joydropSearchAfter, caption: "After. Users and Communities, and you act right from the card.", tone: `center / cover no-repeat url(${joydropBgHuddle})` },
+        ],
+      },
+      {
+        tag: "Impact",
+        eyebrow: "Impact", nav: "Impact",
+        heading: "From a web app to a shipped iOS app",
+        stats: [
+          { value: "~30%", label: "Faster app performance" },
+          { value: "8+", label: "Push notification triggers" },
+          { value: "4+", label: "iOS build blockers fixed" },
         ],
       },
     ],
@@ -381,11 +375,7 @@ export const projects = [
       { name: "Firebase", logo: "firebase" },
       { name: "Xcode", logo: "xcode" },
     ],
-    metrics: [
-      { value: "~30%", label: "Faster app performance" },
-      { value: "8+", label: "Push notification triggers" },
-      { value: "4+", label: "iOS build blockers fixed" },
-    ],
+    metrics: [], // shown as the Impact chapter instead
     gallery: [],
   },
   {
@@ -911,16 +901,10 @@ export const projects = [
           "Meetup reminders.",
         ],
       },
-      {
-        tag: "Impact",
-        eyebrow: "Impact", nav: "Impact",
-        heading: "One app instead of five",
-        body: "Nobody gets spoiled on the way.",
-      },
+      
       {
         tag: "What I learned",
         eyebrow: "Reflection", nav: "Reflection",
-        heading: "Solve it for your own circle first",
         learned: [
           { title: "Start with your own circle.", text: "I knew who it was for because I was one of them." },
           { title: "Then make it play.", text: "The torn page, the ink stamp, the spine that lifts." },
