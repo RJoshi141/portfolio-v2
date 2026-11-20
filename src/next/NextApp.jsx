@@ -338,7 +338,7 @@ export default function NextApp() {
             style={entering ? { visibility: "hidden" } : undefined}
           >
             {/* drafting lines behind every page except works, resume and contact */}
-            {!((route.page === "work" && !route.slug) || ["contact", "resume"].includes(route.page)) && <GridLines />}
+            {!((route.page === "work" && (!route.slug || findProject(route.slug)?.layout === "story")) || ["contact", "resume"].includes(route.page)) && <GridLines />}
             <div className="relative z-10"><Page slug={route.slug} /></div>
           </div>
         );

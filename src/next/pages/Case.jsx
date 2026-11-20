@@ -5,9 +5,9 @@
 import { useEffect, useRef, useState } from "react";
 import { ArrowUpRight, Star } from "lucide-react";
 import { featured, selected, findProject } from "../../revamp/data/projects";
-import { Device, DragStrip, CardVisual, Roll, Walkthrough, go, isVideo, pad, usePageMotion } from "../shared";
-import { Footer } from "../NextApp";
-import { EmpathyMap, ComponentBoard, TILES } from "../../revamp/components/CaseExtras";
+import { Device, DragStrip, CardVisual, Grain, Roll, Walkthrough, go, isVideo, pad, usePageMotion } from "../shared";
+import { Footer, useLenis } from "../NextApp";
+import { EmpathyMap, ComponentBoard, BoundPieces, TILES } from "../../revamp/components/CaseExtras";
 // pieces reused from the previous site: Utter's watch-to-phone demo, Zoomies' sprite sheets and art shelf
 import { WatchDemo, Sprites, AssetShelf } from "../../revamp/pages/CaseStudy";
 // current tool logos (from the maintained svg-logos set): Firebase's 2024 flame, the 2024 CSS mark,
@@ -102,8 +102,8 @@ const Gallery = ({ items, lightArt }) => {
 };
 
 // ---------------------------------------------------------------- hero media, centered and modest
-const HERO_WIDTH = { utter: "w-[80%] md:w-[38%]", bound: "w-[85%] md:w-[40%]", layer: "w-[92%] md:w-[48%]" };
-const Hero = ({ p }) => {
+const HERO_WIDTH = { utter: "w-[80%] md:w-[38%]", bound: "w-full md:w-[80%]", layer: "w-[92%] md:w-[48%]" };
+const Hero = ({ p, clip = true }) => {
   let inner;
   if (p.heroVideo) inner = <video autoPlay muted loop playsInline poster={p.heroVideo.poster} src={p.heroVideo.mp4} className="w-full h-auto" />;
   else if (p.landscapeDemo) inner = <Device kind="landscape" {...p.landscapeDemo} className="w-full" />;
@@ -114,7 +114,9 @@ const Hero = ({ p }) => {
   } else inner = <div className="relative aspect-[4/3] flex items-center justify-center"><CardVisual p={p} /></div>;
   // most heroes sit at about two thirds width; tall ones (Utter's watch) get less
   const width = HERO_WIDTH[p.slug] || "w-full md:w-[52%]";
-  return <div data-fade data-delay="0.2"><div data-clip className={`mt-16 md:mt-24 mx-auto ${width}`}>{inner}</div></div>;
+  // grainy gradient cover when the project has one
+  if (p.grain) inner = <Grain tone={p.grain} className="px-[20%] py-12 md:py-16">{inner}</Grain>;
+  return <div data-fade data-delay="0.2"><div data-clip={clip ? "" : undefined} className={`mt-16 md:mt-24 mx-auto ${width}`}>{inner}</div></div>;
 };
 
 // GitHub star count: starts from the number saved in projects.js, then refreshes from the
@@ -229,7 +231,7 @@ const Copy = ({ s, n, wide }) => {
   const list = s.list || s.pair?.flatMap((x) => x.list || []);
   return (
     <div className={`w-full shrink-0 ${wide ? "md:max-w-md" : "md:w-[19rem]"}`}>
-      <Label>({pad(n)})</Label>
+      <Label>({pad(n)}){s.tag ? ` ${s.tag}` : ""}</Label>
       {heading && <h2 data-split="lines" className="mt-3 text-base md:text-[1.15rem] font-medium leading-[1.25] tracking-[-0.015em]">{heading}</h2>}
       {paras.map((t) => (
         <p key={t} data-split="lines" className="mt-3 text-[0.88rem] leading-[1.65] text-[var(--muted)]">{t}</p>
@@ -242,6 +244,14 @@ const Copy = ({ s, n, wide }) => {
             </li>
           ))}
         </ul>
+      )}
+      {/* "What I learned": bold lead, then a line */}
+      {s.learned && (
+        <div className="mt-4 space-y-3">
+          {s.learned.map((l) => (
+            <p key={l.title} data-fade className="text-[0.88rem] leading-[1.65]"><span className="font-medium">{l.title}</span> <span className="text-[var(--muted)]">{l.text}</span></p>
+          ))}
+        </div>
       )}
       {s.brand?.colors && (
         <div className="mt-6 flex flex-wrap gap-x-3 gap-y-3">
@@ -257,8 +267,64 @@ const Copy = ({ s, n, wide }) => {
   );
 };
 
-const CenterChapter = ({ s, n }) => {
+const Fig = ({ m }) => (
+  <figure data-fade className="mt-12 md:mt-16 mx-auto md:w-[78%]">
+    <img src={m.src} alt="" loading="lazy" className={`mx-auto w-full h-auto object-contain max-h-[30rem] ${m.rounded ? "rounded-2xl md:rounded-[1.75rem]" : ""}`} />
+    {m.caption && <figcaption className="mt-3 mx-auto max-w-2xl text-xs leading-[1.6] text-[var(--muted)]">{m.caption}</figcaption>}
+  </figure>
+);
+
+// "Key decision": the options I weighed, the one I picked, and one line of why
+const Decision = ({ d }) => (
+  <div className="mt-8 max-w-3xl">
+    {d.chips ? (
+      <div className="flex flex-wrap gap-2">
+        {d.options.map((o, i) => (
+          <span key={o.label} data-fade className={`px-3 py-1.5 text-[0.78rem] border ${i === d.chose ? "border-[var(--fg)] text-[var(--fg)]" : "border-[var(--line)] text-[var(--muted)]"}`}>
+            {i === d.chose && <span className="mr-1.5">✓</span>}{o.label}
+          </span>
+        ))}
+      </div>
+    ) : (
+      <div className={`grid gap-3 ${d.options.length === 2 ? "sm:grid-cols-2" : "sm:grid-cols-3"}`}>
+        {d.options.map((o, i) => {
+          const on = i === d.chose;
+          return (
+            <div key={o.label} data-fade className={`p-4 border ${on ? "border-[var(--fg)]" : "border-[var(--line)]"}`}>
+              <p className="mono text-[0.58rem] uppercase tracking-[0.18em] text-[var(--muted)]">{on ? "✓ Chose" : "Considered"}</p>
+              <p className={`mt-2 text-[0.9rem] font-medium ${on ? "" : "text-[var(--muted)]"}`}>{o.label}</p>
+              {o.note && <p className="mt-1 text-[0.78rem] leading-[1.55] text-[var(--muted)]">{o.note}</p>}
+            </div>
+          );
+        })}
+      </div>
+    )}
+    {d.why && (
+      <p data-fade className="mt-5 text-[0.88rem] leading-[1.65]">
+        <span className="mono text-[0.6rem] uppercase tracking-[0.18em] text-[var(--muted)] mr-2">Why</span>{d.why}
+      </p>
+    )}
+  </div>
+);
+
+const CenterChapter = ({ s, n, p }) => {
   const items = media(s);
+  const tone = s.grain ? p?.grain : undefined;
+
+  if (s.decision) {
+    const phonesOnly = items.length > 0 && items.every(isPhone);
+    return (
+      <section className="pt-24 md:pt-36 mx-auto max-w-5xl">
+        <Copy s={s} n={n} wide />
+        <Decision d={s.decision} />
+        {phonesOnly ? (
+          <Grain tone={tone} className="mt-10 md:mt-12 py-10 md:py-14 px-4 flex justify-center gap-3 md:gap-8 [&_figcaption]:hidden">
+            {items.map((m, i) => <div key={i} data-fade><Item m={m} ph="h-[17rem] md:h-[25rem]" /></div>)}
+          </Grain>
+        ) : items.map((m, i) => <Fig key={i} m={m} />)}
+      </section>
+    );
+  }
   const big = s.walkthrough || s.empathy || s.components || s.steps || s.sprites || s.assets;
   const flip = n % 2 === 0; // alternate which side the copy sits on
 
@@ -282,7 +348,7 @@ const CenterChapter = ({ s, n }) => {
             ))}
           </ol>
         )}
-        {s.walkthrough && <div data-fade className="mt-10"><Walkthrough {...s.walkthrough} /></div>}
+        {s.walkthrough && <div data-fade className="mt-10"><Walkthrough {...s.walkthrough} stage={tone} /></div>}
         {/* Zoomies: the Pixilart laptop big, then the sheets and the art shelf (dark panels, kept as drawn) */}
         {(s.sprites || s.assets) && items.length > 0 && <div className="[&_figure>div]:mx-auto [&_.aspect-\[1400\/846\]]:!w-full md:[&_.aspect-\[1400\/846\]]:!w-[92%]"><Gallery items={items} /></div>}
         {(s.sprites || s.assets) && (
@@ -361,6 +427,290 @@ const CenterChapter = ({ s, n }) => {
   );
 };
 
+// ---------------------------------------------------------------- story layout (layout: "story")
+// After rachelchen.tech: a legend down the left, one aligned column of content, a small grey
+// eyebrow over a serif heading, grey body copy, and visuals that always sit under their text.
+// every phone sits in its own square grainy panel; a lone phone always gets the same box (SOLO),
+// so all the single phones on the page match
+const SOLO = "w-full md:w-[62%]";
+const Square = ({ tone, className = "", children }) => (
+  <Grain tone={tone} className={`aspect-square flex items-center justify-center ${className}`}>{children}</Grain>
+);
+const Row = ({ tone, phone, title, text, children }) => (
+  <div data-fade className="grid md:grid-cols-[62%_minmax(0,1fr)] gap-4 md:gap-10 md:items-end">
+    <Square tone={tone}>{children || <PhoneIn m={phone} />}</Square>
+    {(title || text) && (
+      <div className="md:pb-2">
+        {title && <p className="text-[1.02rem] md:text-[1.1rem] font-medium">{title}</p>}
+        {text && <p className={`${title ? "mt-2" : ""} text-[0.93rem] md:text-[0.98rem] leading-[1.6] text-[var(--muted)]`}>{text}</p>}
+      </div>
+    )}
+  </div>
+);
+// an iMessage group thread (iOS 26 look) that types itself out, message by message, then starts over
+const AV = { Priya: "#E8A87C", Sam: "#7FA7D6", Maya: "#B39BD3", Leo: "#8DBF95", Jess: "#E2A8BA" };
+const BLUE = "#1C8CFA";
+// the little curl at the bottom corner of the last bubble in a run
+const Tail = ({ me }) => (
+  <svg viewBox="0 0 10 12" className={`absolute bottom-0 w-[7px] h-[9px] ${me ? "-right-[3px]" : "-left-[3px] -scale-x-100"}`} aria-hidden>
+    <path d="M0 0 C0 6 2 10 10 12 C5 12 1 11 0 9 Z" fill={me ? BLUE : "#E9E9EB"} />
+  </svg>
+);
+const Avatar = ({ name, size = "w-[1.15rem] h-[1.15rem] md:w-[1.4rem] md:h-[1.4rem]" }) => (
+  <span className={`${size} shrink-0 rounded-full text-[0.45rem] md:text-[0.55rem] font-semibold text-white flex items-center justify-center`} style={{ background: AV[name] || "#bbb" }}>{name[0]}</span>
+);
+const GroupChat = ({ chat, frame }) => {
+  const [n, setN] = useState(0);
+  const [typing, setTyping] = useState(false);
+  const box = useRef(null);
+  const msgs = chat.messages;
+  const total = msgs.length;
+  useEffect(() => {
+    let t;
+    if (n >= total) { t = setTimeout(() => setN(0), 3200); return () => clearTimeout(t); }
+    setTyping(true);
+    t = setTimeout(() => { setTyping(false); setN((x) => x + 1); }, n === 0 ? 900 : 1150 + Math.min(msgs[n].text.length * 18, 700));
+    return () => clearTimeout(t);
+  }, [n, total]);
+  useEffect(() => { const el = box.current; if (el) el.scrollTo({ top: el.scrollHeight, behavior: n ? "smooth" : "auto" }); }, [n, typing]);
+  const next = msgs[n];
+  const shown = msgs.slice(0, n);
+  return (
+    <Device kind="phone" frame={frame} className="h-[80%]">
+      <div className="relative w-full h-full bg-white text-black" style={{ fontFamily: "-apple-system, 'SF Pro Text', Inter, sans-serif" }}>
+        {/* the thread scrolls under a frosted header and the floating input bar */}
+        <div ref={box} className="absolute inset-0 overflow-hidden px-[4%] pt-[46%] pb-[24%] text-[0.56rem] md:text-[0.66rem] leading-[1.28]">
+          {shown.map((m, i) => {
+            const prev = msgs[i - 1], nxt = shown[i + 1];
+            const first = !m.me && prev?.from !== m.from;
+            const last = !nxt || nxt.from !== m.from || !!nxt.me !== !!m.me;
+            return (
+              <div key={i} className={`${first || (m.me && !prev?.me) ? "mt-[0.55rem]" : "mt-[0.14rem]"}`}>
+                {first && <p className="ml-[1.6rem] md:ml-[1.9rem] mb-[0.12rem] text-[0.45rem] md:text-[0.52rem] text-black/45">{m.from}</p>}
+                <div className={`flex items-end gap-[0.3rem] ${m.me ? "justify-end" : ""}`}>
+                  {!m.me && (last ? <Avatar name={m.from} /> : <span className="w-[1.15rem] md:w-[1.4rem] shrink-0" />)}
+                  <span className={`relative max-w-[74%] px-[0.6rem] py-[0.32rem] rounded-[0.95rem] ${m.me ? "text-white" : ""}`} style={{ background: m.me ? BLUE : "#E9E9EB" }}>
+                    {m.text}
+                    {m.react && (
+                      <span className={`absolute -top-[0.7rem] ${m.me ? "-left-[0.55rem]" : "-right-[0.55rem]"} w-[1.15rem] h-[1.15rem] rounded-full flex items-center justify-center text-[0.55rem] ring-2 ring-white`} style={{ background: "#E9E9EB" }}>{m.react}</span>
+                    )}
+                  </span>
+                </div>
+                {m.reply && <p className="ml-[1.9rem] md:ml-[2.2rem] mt-[0.15rem] text-[0.48rem] md:text-[0.56rem] font-medium" style={{ color: BLUE }}>1 Reply</p>}
+              </div>
+            );
+          })}
+          {typing && next && (
+            <div className={`mt-[0.55rem] flex items-end gap-[0.3rem] ${next.me ? "justify-end" : ""}`}>
+              {!next.me && <Avatar name={next.from} />}
+              <span className="relative px-[0.6rem] py-[0.45rem] rounded-[0.95rem] flex gap-[3px]" style={{ background: next.me ? BLUE : "#E9E9EB" }}>
+                {[0, 1, 2].map((d) => <span key={d} className="typing-dot w-[4px] h-[4px] rounded-full" style={{ background: next.me ? "#fff" : "#8e8e93", animationDelay: `${d * 0.18}s` }} />)}
+              </span>
+            </div>
+          )}
+        </div>
+        {/* header: status bar, back pill, group photo, name pill, video button */}
+        <div className="absolute inset-x-0 top-0 pb-[9%]" style={{ background: "linear-gradient(#fff 0%, #fff 78%, rgba(255,255,255,0) 100%)" }}>
+          <div className="flex justify-between items-center px-[9%] pt-[5.5%] text-[0.5rem] md:text-[0.6rem] font-semibold">
+            <span>9:41</span>
+            <span className="flex items-center gap-[3px]">
+              <span className="flex items-end gap-[1px]">{[3, 4, 5, 6].map((h) => <span key={h} className="w-[2px] bg-black rounded-[1px]" style={{ height: h }} />)}</span>
+              <span className="w-[13px] h-[6px] rounded-[2px] border border-black/60 p-[1px]"><span className="block h-full w-[70%] bg-black rounded-[1px]" /></span>
+            </span>
+          </div>
+          <div className="relative mt-[5%] h-[3.1rem] md:h-[3.6rem]">
+            <span className="absolute left-[4%] top-[0.35rem] px-[0.4rem] py-[0.2rem] rounded-full bg-white shadow-[0_1px_4px_rgba(0,0,0,.12)] flex items-center gap-[0.2rem] text-[0.55rem]">
+              <svg viewBox="0 0 8 14" className="w-[5px] h-[9px]"><path d="M7 1 L1 7 L7 13" stroke="#000" strokeWidth="1.6" fill="none" strokeLinecap="round" strokeLinejoin="round" /></svg>
+              <span className="w-[0.75rem] h-[0.75rem] rounded-full bg-black text-white text-[0.42rem] font-semibold flex items-center justify-center">2</span>
+            </span>
+            <span className="absolute right-[4%] top-[0.35rem] w-[1.25rem] h-[1.25rem] rounded-full bg-white shadow-[0_1px_4px_rgba(0,0,0,.12)] flex items-center justify-center">
+              <svg viewBox="0 0 18 12" className="w-[9px] h-[6px]"><rect x="1" y="1" width="11" height="10" rx="2.5" stroke="#000" strokeWidth="1.4" fill="none" /><path d="M12.5 4.5 L17 2 L17 10 L12.5 7.5" stroke="#000" strokeWidth="1.4" fill="none" strokeLinejoin="round" /></svg>
+            </span>
+            <div className="absolute left-1/2 -translate-x-1/2 top-0 flex flex-col items-center">
+              <span className="w-[1.9rem] h-[1.9rem] md:w-[2.2rem] md:h-[2.2rem] rounded-full grid grid-cols-2 overflow-hidden ring-1 ring-black/5">
+                {Object.keys(AV).slice(0, 4).map((k) => <span key={k} className="flex items-center justify-center text-[0.4rem] font-semibold text-white" style={{ background: AV[k] }}>{k[0]}</span>)}
+              </span>
+              <span className="-mt-[0.3rem] px-[0.45rem] py-[0.15rem] rounded-full bg-white shadow-[0_1px_4px_rgba(0,0,0,.12)] text-[0.52rem] md:text-[0.6rem] font-semibold whitespace-nowrap flex items-center gap-[0.2rem]">
+                {chat.title}<svg viewBox="0 0 6 10" className="w-[3px] h-[6px]"><path d="M1 1 L5 5 L1 9" stroke="#999" strokeWidth="1.4" fill="none" /></svg>
+              </span>
+            </div>
+          </div>
+        </div>
+        {/* floating input: plus button and the iMessage pill */}
+        <div className="absolute inset-x-0 bottom-0 px-[4%] pb-[7%] pt-[3%] flex items-center gap-[0.3rem] bg-gradient-to-t from-white via-white/90 to-white/0">
+          <span className="w-[1.3rem] h-[1.3rem] shrink-0 rounded-full bg-white shadow-[0_1px_4px_rgba(0,0,0,.14)] flex items-center justify-center text-[0.8rem] leading-none text-black/70">+</span>
+          <span className="flex-1 h-[1.3rem] rounded-full bg-white shadow-[0_1px_4px_rgba(0,0,0,.14)] px-[0.55rem] flex items-center justify-between text-[0.52rem] md:text-[0.6rem] text-black/30">
+            iMessage
+            <span className="flex items-center gap-[1.5px]">{[3, 6, 4, 7, 3].map((h, k) => <span key={k} className="w-[1.5px] rounded-full bg-black/35" style={{ height: h }} />)}</span>
+          </span>
+        </div>
+      </div>
+    </Device>
+  );
+};
+
+const Rows = ({ children }) => <div className="mt-10 md:mt-12 space-y-10 md:space-y-14">{children}</div>;
+const PhoneIn = ({ m }) => <Device {...m} caption={undefined} className="h-[80%]" />;
+
+const StoryVisuals = ({ s, p }) => {
+  const items = media(s);
+  if (!items.length) return null;
+  const phones = items.every(isPhone);
+  const tone = s.grain ? p.grain : "neutral";
+  if (phones && items.length === 1) {
+    const m = items[0];
+    return (
+      <figure data-fade className="mt-10 md:mt-12">
+        <Square tone={m.tone || tone} className={SOLO}><PhoneIn m={m} /></Square>
+        {m.caption && <figcaption className="mt-3 text-[0.8rem] leading-[1.55] text-[var(--muted)]">{m.caption}</figcaption>}
+      </figure>
+    );
+  }
+  // three or more: one per row, caption beside; two can share a row
+  if (phones && items.length >= 3) return <Rows>{items.map((m, i) => <Row key={i} tone={m.tone || tone} phone={m} text={m.caption} />)}</Rows>;
+  if (phones) {
+    return (
+      <div className="mt-10 md:mt-12 grid grid-cols-2 gap-4 md:gap-5">
+        {items.map((m, i) => (
+          <figure key={i} data-fade>
+            <Square tone={m.tone || tone}><PhoneIn m={m} /></Square>
+            {m.caption && <figcaption className="mt-3 text-[0.8rem] leading-[1.55] text-[var(--muted)]">{m.caption}</figcaption>}
+          </figure>
+        ))}
+      </div>
+    );
+  }
+  return items.map((m, i) => (
+    <figure key={i} data-fade className={`mt-10 md:mt-12 ${m.small ? "w-[75%] md:w-[48%]" : ""}`}>
+      {m.type === "video"
+        ? <video autoPlay muted loop playsInline poster={m.poster} src={m.src} className="w-full h-auto" />
+        : <img src={m.src} alt="" loading="lazy" className={`w-full h-auto ${m.rounded ? "rounded-2xl md:rounded-[1.75rem]" : ""}`} />}
+      {m.caption && <figcaption className="mt-3 text-[0.8rem] leading-[1.55] text-[var(--muted)]">{m.caption}</figcaption>}
+    </figure>
+  ));
+};
+
+const StoryDecision = ({ d }) => (
+  <div className="mt-8">
+    {d.chips ? (
+      <div className="flex flex-wrap gap-2">
+        {d.options.map((o, i) => (
+          <span key={o.label} data-fade className={`px-3 py-1.5 text-[0.85rem] border ${i === d.chose ? "border-[var(--fg)] text-[var(--fg)]" : "border-[var(--line)] text-[var(--muted)]"}`}>
+            {i === d.chose && <span className="mr-1.5">✓</span>}{o.label}
+          </span>
+        ))}
+      </div>
+    ) : (
+      <div className="grid sm:grid-cols-2 gap-x-10 gap-y-6">
+        {d.options.map((o, i) => {
+          const on = i === d.chose;
+          return (
+            <div key={o.label} data-fade className={`pt-4 border-t ${on ? "border-[var(--fg)]" : "border-[var(--line)]"}`}>
+              <p className="text-[0.8rem] text-[var(--muted)]">{on ? "Chose" : "Considered"}</p>
+              <p className={`mt-1 text-[1.05rem] font-medium ${on ? "" : "text-[var(--muted)]"}`}>{o.label}</p>
+              {o.note && <p className="mt-1.5 text-[0.95rem] leading-[1.6] text-[var(--muted)]">{o.note}</p>}
+            </div>
+          );
+        })}
+      </div>
+    )}
+    {d.why && <blockquote data-fade className="mt-8 pl-4 md:pl-5 border-l-2 text-[1.05rem] md:text-[1.3rem] font-medium leading-[1.45] tracking-[-0.01em]" style={{ borderColor: "var(--fg)" }}>{d.why}</blockquote>}
+  </div>
+);
+
+const TwoCol = ({ rows }) => (
+  <div className="mt-8 grid md:grid-cols-2 gap-x-10 gap-y-8">
+    {rows.map((r) => (
+      <div key={r.title} data-fade>
+        <p className="text-[1.05rem] font-medium">{r.title}</p>
+        <p className="mt-2 text-[0.98rem] leading-[1.65] text-[var(--muted)]">{r.text}</p>
+      </div>
+    ))}
+  </div>
+);
+
+const StoryChapter = ({ s, p, i }) => {
+  const paras = s.body ? (Array.isArray(s.body) ? s.body : [s.body]) : [];
+  return (
+    <section data-nav={s.nav || undefined} id={`s-${i}`} className="pt-20 md:pt-40">
+      {s.eyebrow && <p className="text-[0.85rem] md:text-[0.95rem] text-[var(--muted)]">{s.eyebrow}</p>}
+      {s.heading && <h2 data-split="lines" className="mt-2 md:mt-3 text-[1.45rem] md:text-[2.3rem] font-medium leading-[1.15] tracking-[-0.025em]">{s.heading}</h2>}
+      {paras.map((t) => <p key={t} data-split="lines" className="mt-4 md:mt-5 max-w-2xl text-[0.95rem] md:text-[1.08rem] leading-[1.65] text-[var(--muted)]">{t}</p>)}
+      {s.list && (
+        <ul className="mt-6 max-w-2xl">
+          {s.list.map((t) => <li key={t} data-fade className="py-2.5 border-t border-[var(--line)] text-[0.98rem] leading-[1.55]">{t}</li>)}
+        </ul>
+      )}
+      {s.decision && <StoryDecision d={s.decision} />}
+      {s.learned && <TwoCol rows={s.learned} />}
+      {s.steps && <TwoCol rows={s.steps.map((st) => ({ title: st.label, text: st.text }))} />}
+      {s.brand?.colors && (
+        <div className="mt-8 flex flex-wrap gap-4">
+          {s.brand.colors.map((c) => (
+            <div key={c.hex} data-fade className="w-14 text-center">
+              <div className="aspect-square rounded-full ring-1 ring-[var(--line)]" style={{ backgroundColor: c.hex }} />
+              <p className="mt-1.5 text-[0.7rem]">{c.name}</p>
+              <p className="mono text-[0.55rem] text-[var(--muted)]">{c.hex}</p>
+            </div>
+          ))}
+        </div>
+      )}
+      {s.walkthrough && <div data-fade className="mt-10 md:mt-12"><Walkthrough {...s.walkthrough} stage={s.grain ? p.grain : undefined} /></div>}
+      {s.flows && <Rows>{s.flows.map((f) => <Row key={f.label} tone={f.tone} phone={{ kind: "phone", frame: f.frame, mp4: f.mp4, poster: f.poster }} title={f.label} text={f.text} />)}</Rows>}
+      {s.chat && <Rows><Row tone={s.chat.tone} text={s.chat.text}><GroupChat chat={s.chat} frame={s.chat.frame} /></Row></Rows>}
+      {s.cards && <Rows>{s.cards.map((c) => <Row key={c.title} tone="neutral" phone={{ kind: "phone", ...c.phone }} title={c.title} text={c.text} />)}</Rows>}
+      <StoryVisuals s={s} p={p} />
+      {s.components === "bound" && <div className="mt-10 md:mt-12"><BoundPieces /></div>}
+      {(s.empathy || (s.components && s.components !== "bound")) && (
+        <div data-fade className="cx mt-10 md:mt-12">
+          {s.empathy ? <EmpathyMap bare map={s.empathy} /> : <ComponentBoard bare kind={s.components} />}
+        </div>
+      )}
+    </section>
+  );
+};
+
+// the legend: section names down the left, the current one marked in the project's colour
+const Legend = ({ sections, accent }) => {
+  const lenis = useLenis();
+  const [on, setOn] = useState(0);
+  const entries = sections.map((s, i) => ({ i, label: s.nav })).filter((e) => e.label);
+  useEffect(() => {
+    const tick = () => {
+      let cur = entries[0]?.i ?? 0;
+      for (const e of entries) {
+        const el = document.getElementById(`s-${e.i}`);
+        if (el && el.getBoundingClientRect().top < window.innerHeight * 0.45) cur = e.i;
+      }
+      setOn(cur);
+    };
+    tick();
+    window.addEventListener("scroll", tick, { passive: true });
+    return () => window.removeEventListener("scroll", tick);
+  }, [sections]);
+  const jump = (i) => {
+    const el = document.getElementById(`s-${i}`);
+    if (!el) return;
+    lenis ? lenis.scrollTo(el, { offset: -110 }) : el.scrollIntoView({ behavior: "smooth" });
+  };
+  return (
+    <nav className="sticky top-[34vh] space-y-2.5">
+      {entries.map((e) => {
+        const active = e.i === on;
+        return (
+          <button key={e.i} type="button" onClick={() => jump(e.i)} className="relative block text-left text-[0.95rem] transition-colors"
+            style={{ color: active ? accent : "var(--muted)" }}>
+            <span className="inline-flex items-center gap-2.5">
+              <span className="h-px transition-all duration-300" style={{ width: active ? 18 : 0, background: accent }} />
+              <span className={`transition-transform duration-300 ${active ? "" : "-translate-x-2.5"}`}>{e.label}</span>
+            </span>
+          </button>
+        );
+      })}
+    </nav>
+  );
+};
+
 export default function Case({ slug }) {
   const root = useRef(null);
   usePageMotion(root);
@@ -372,6 +722,7 @@ export default function Case({ slug }) {
   const flow = p.flow ? [{ heading: p.flow.heading, body: p.flow.body, steps: p.flow.steps }] : [];
   const sections = [...flow, ...p.sections];
   const center = p.layout !== "classic";
+  const story = p.layout === "story";
   const centerHead = false; // the header block keeps the original layout even in the centered case study
   const Ch = center ? CenterChapter : Chapter;
 
@@ -403,11 +754,16 @@ export default function Case({ slug }) {
         </dl>
       </div>
 
-      <Hero p={p} />
+      <Hero p={p} clip={!story} />
       {/* Utter: the watch recording handing its memo to the iPhone inbox */}
       {p.demo?.phone && <div data-fade className="cx mx-auto mt-16 md:mt-24 max-w-5xl"><WatchDemo {...p.demo} /></div>}
 
-      {sections.map((s, i) => <Ch key={s.heading || s.key || i} s={s} n={i + 1} />)}
+      {story ? (
+        <div className="mt-6 md:grid md:grid-cols-[minmax(0,1fr)_minmax(0,52rem)_minmax(0,1fr)] md:gap-x-10">
+          <aside className="hidden md:block pl-4"><Legend sections={sections} accent={p.accent || "var(--fg)"} /></aside>
+          <div data-still className="min-w-0">{sections.map((s, i) => <StoryChapter key={s.heading || s.key || i} s={s} p={p} i={i} />)}</div>
+        </div>
+      ) : sections.map((s, i) => <Ch key={s.heading || s.key || i} s={s} n={i + 1} p={p} />)}
 
       {p.metrics?.length > 0 && (
         <section className={center ? "pt-24 md:pt-36 mx-auto max-w-5xl" : "pt-24 md:pt-36 grid md:grid-cols-12 gap-x-10 gap-y-8"}>
@@ -428,10 +784,12 @@ export default function Case({ slug }) {
       )}
 
       {p.tools?.length > 0 && (
-        // the tools as their real icons, name underneath
-        <section className={center ? "pt-28 md:pt-44 text-center" : "pt-24 md:pt-36 grid md:grid-cols-12 gap-x-10 gap-y-8"}>
-          <div className={center ? "" : "md:col-span-4"}><Label>Built with</Label></div>
-          <ul className={center ? "mx-auto mt-8 max-w-3xl flex flex-wrap justify-center gap-x-6 gap-y-6 [&>li]:w-16 [zoom:0.8]" : "md:col-span-8 grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 gap-x-4 gap-y-8"}>
+        // the tools as their real icons, name underneath (story: left aligned in the content column)
+        <section data-still={story || undefined} className={story ? "pt-20 md:pt-40 md:grid md:grid-cols-[minmax(0,1fr)_minmax(0,52rem)_minmax(0,1fr)] md:gap-x-10" : center ? "pt-28 md:pt-44 text-center" : "pt-24 md:pt-36 grid md:grid-cols-12 gap-x-10 gap-y-8"}>
+          {story && <div className="hidden md:block" />}
+          <div className={story ? "" : "contents"}>
+          <div className={story ? "" : center ? "" : "md:col-span-4"}>{story ? <p className="text-[0.85rem] md:text-[0.95rem] text-[var(--muted)]">Built with</p> : <Label>Built with</Label>}</div>
+          <ul className={story ? "mt-6 flex flex-wrap gap-x-6 gap-y-6 [&>li]:w-16" : center ? "mx-auto mt-8 max-w-3xl flex flex-wrap justify-center gap-x-6 gap-y-6 [&>li]:w-16 [zoom:0.8]" : "md:col-span-8 grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 gap-x-4 gap-y-8"}>
             {p.tools.map((t, i) => {
               const tile = TILES[t.icon];
               const G = tile?.[0];
@@ -452,6 +810,7 @@ export default function Case({ slug }) {
               );
             })}
           </ul>
+          </div>
         </section>
       )}
 

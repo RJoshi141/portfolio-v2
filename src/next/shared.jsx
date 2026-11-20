@@ -26,11 +26,11 @@ const BOX = {
   watch: { aspect: "aspect-[1347/1496]", screen: { left: "9.5%", top: "9.1%", width: "75.3%", height: "81.6%" }, round: "rounded-[14%/11.5%]", under: false },
 };
 
-export const Device = ({ kind = "phone", frame, mp4, webm, poster, className = "" }) => {
+export const Device = ({ kind = "phone", frame, mp4, webm, poster, className = "", children }) => {
   const b = BOX[kind] || BOX.phone;
   const screen = (
     <div className={`absolute overflow-hidden bg-black ${b.round}`} style={b.screen}>
-      {mp4 ? (
+      {children ? children : mp4 ? (
         <video autoPlay muted loop playsInline poster={poster} className="w-full h-full object-cover">
           {webm && <source src={webm} type="video/webm" />}
           <source src={mp4} type="video/mp4" />
@@ -187,7 +187,13 @@ export const GridLines = () => (
 // one device that plays several recordings in turn with a quick blink to black between them,
 // and the chapters as a list you can click (beside on desktop, under on phones)
 import { useState as useS } from "react";
-export const Walkthrough = ({ frame, chapters, landscape = false, kind = "phone" }) => {
+// grainy gradient panel (film-grain noise over a soft gradient) behind hero visuals
+export const Grain = ({ tone, className = "", children }) =>
+  tone === "neutral" ? <div className={`grain grain-neutral ${className}`}>{children}</div>
+  : tone ? <div className={`grain ${className}`} style={{ background: tone }}>{children}</div>
+       : <div className={className}>{children}</div>;
+
+export const Walkthrough = ({ frame, chapters, landscape = false, kind = "phone", stage }) => {
   const [active, setActive] = useS(0);
   const [shown, setShown] = useS(0);
   const [dark, setDark] = useS(false);
@@ -203,7 +209,8 @@ export const Walkthrough = ({ frame, chapters, landscape = false, kind = "phone"
   const b = landscape ? BOX.landscape : BOX[kind] || BOX.phone;
   return (
     <div className={`grid gap-8 md:gap-12 items-center ${landscape ? "" : "md:grid-cols-[auto_1fr]"}`}>
-      <div className={`relative mx-auto ${b.aspect} ${landscape ? "w-full md:w-[52%]" : "h-[30rem] md:h-[36rem]"}`}>
+      <Grain tone={stage} className={stage ? "px-10 py-10 md:px-16 md:py-12" : ""}>
+      <div className={`relative mx-auto ${b.aspect} ${landscape ? "w-full md:w-[52%]" : stage ? "h-[26rem] md:h-[32rem]" : "h-[30rem] md:h-[36rem]"}`}>
         <div className={`absolute overflow-hidden bg-black ${b.round}`} style={b.screen}>
           <video key={shown} src={c.mp4} poster={c.poster} autoPlay muted playsInline
             onLoadedData={() => setDark(false)} onError={() => setDark(false)}
@@ -212,6 +219,7 @@ export const Walkthrough = ({ frame, chapters, landscape = false, kind = "phone"
         </div>
         {frame && <img src={frame} alt="" className="absolute inset-0 w-full h-full pointer-events-none" />}
       </div>
+      </Grain>
       {/* landscape: the chapters sit in one centered row under the phone */}
       <ol className={landscape ? "mx-auto w-full md:w-[80%] grid md:grid-cols-3 gap-x-6 border-t border-[var(--line)] md:border-t-0" : "border-t border-[var(--line)]"}>
         {chapters.map((ch, i) => (

@@ -58,7 +58,7 @@ const QUADRANTS = [
 
 // bare: just the grid, no heading or top spacing (the new site supplies its own chapter heading)
 export const EmpathyMap = ({ heading, body, map, bare }) => (
-  <motion.section {...rise} className={bare ? "" : "pt-20 md:pt-32"}>
+  <motion.section {...(bare ? {} : rise)} className={bare ? "" : "pt-20 md:pt-32"}>
     {!bare && <Head heading={heading} body={body} />}
     {/* hairline grid: 1px gaps over a grey backing draw the lines between cells */}
     <div className={`${bare ? "" : "mt-10 md:mt-14"} grid md:grid-cols-3 gap-px bg-neutral-800 border border-neutral-800`}>
@@ -113,7 +113,7 @@ const Cell = ({ bg, note, children, wide }) => (
 );
 
 const Board = ({ heading, body, children, bare }) => (
-  <motion.section {...rise} className={bare ? "" : "pt-20 md:pt-32"}>
+  <motion.section {...(bare ? {} : rise)} className={bare ? "" : "pt-20 md:pt-32"}>
     {!bare && <Head heading={heading} body={body} />}
     <div className={`${bare ? "" : "mt-10 md:mt-14"} grid md:grid-cols-3 gap-px bg-neutral-800 border border-neutral-800`}>{children}</div>
   </motion.section>
@@ -501,7 +501,7 @@ const Press = ({ children, fill, color = B.ink, onClick, active = true }) => (
 const RSVP = () => {
   const [v, setV] = useState("Going");
   return (
-    <div className="flex gap-2">
+    <div className="flex flex-wrap justify-center gap-2">
       {[["Going", B.forest], ["Maybe", B.rust], ["Can't", B.oxblood]].map(([l, c]) => (
         <Press key={l} fill={c} active={v === l} color={c} onClick={() => setV(l)}>{l}</Press>
       ))}
@@ -645,6 +645,31 @@ const BoundBoard = (props) => (
       <Folded />
     </Cell>
   </Board>
+);
+
+// Bound, story layout: the same pieces as specimens on paper, two to a row, a short label under each
+const Spec = ({ label, wide, children }) => (
+  <figure className={wide ? "sm:col-span-2" : ""}>
+    <div className="min-h-[14rem] md:min-h-[17rem] flex items-center justify-center p-6 md:p-8" style={{ ...bpaper, border: "1px solid #e4e4e1" }}>
+      {children}
+    </div>
+    <figcaption className="mt-3 text-[0.8rem] leading-[1.55] text-[var(--muted)]">{label}</figcaption>
+  </figure>
+);
+export const BoundPieces = () => (
+  <div className="grid sm:grid-cols-2 gap-x-4 gap-y-8">
+    <Spec label="Letterpress buttons">
+      <div className="flex flex-col items-center gap-3"><Press fill={B.forest}>Join a club</Press><Press>Start a club</Press></div>
+    </Spec>
+    <Spec label="RSVP. Tap one."><RSVP /></Spec>
+    <Spec wide label="The meetup ticket. Tap it."><Ticket /></Spec>
+    <Spec label="A note on an index card"><IndexNote /></Spec>
+    <Spec label="Notes past your page. Tap to open."><Folded /></Spec>
+    <Spec label="The shelf. Tap a spine."><Shelf /></Spec>
+    <Spec label="Cut-paper portraits">
+      <div className="flex gap-3"><Silhouette bg="#c9b48f" kind="tophat" /><Silhouette bg="#a9bfa7" kind="updo" /><Silhouette bg="#d4a595" kind="bowler" /></div>
+    </Spec>
+  </div>
 );
 
 export const ComponentBoard = ({ kind, ...props }) =>
