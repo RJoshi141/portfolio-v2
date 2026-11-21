@@ -550,7 +550,9 @@ const GroupChat = ({ chat, frame }) => {
 };
 
 const Rows = ({ children }) => <div className="mt-10 md:mt-12 space-y-10 md:space-y-14">{children}</div>;
-const PhoneIn = ({ m }) => m.type === "image"
+const PhoneIn = ({ m }) => m.kind === "landscape"
+  ? <Device {...m} caption={undefined} className="w-[86%]" />
+  : m.type === "image"
   ? <img src={m.src} alt="" loading="lazy" className="h-[82%] w-auto object-contain" />
   : <Device {...m} caption={undefined} className="h-[76%]" />;
 
@@ -634,16 +636,22 @@ const StoryDecision = ({ d }) => (
   </div>
 );
 
-const TwoCol = ({ rows }) => (
-  <div className="mt-8 grid md:grid-cols-2 gap-x-10 gap-y-8">
-    {rows.map((r) => (
-      <div key={r.title} data-fade>
-        <p className="text-[1.05rem] font-medium">{r.title}</p>
-        <p className="mt-2 text-[0.98rem] leading-[1.65] text-[var(--muted)]">{r.text}</p>
-      </div>
-    ))}
-  </div>
-);
+const TwoCol = ({ rows }) => {
+  const code = rows.some((r) => r.code);
+  return (
+    <div className={`mt-8 grid ${code ? "" : "md:grid-cols-2"} gap-x-10 gap-y-8`}>
+      {rows.map((r) => (
+        <div key={r.title} data-fade>
+          <p className="text-[1.05rem] font-medium">{r.title}</p>
+          <p className="mt-2 max-w-2xl text-[0.98rem] leading-[1.65] text-[var(--muted)]">{r.text}</p>
+          {r.code && (
+            <pre className="mt-4 overflow-x-auto bg-[#1C1C1B] border border-white/[0.06] p-4 md:p-5 text-[0.72rem] md:text-[0.78rem] leading-[1.6] text-[#E6E4DE]"><code className="mono">{r.code}</code></pre>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+};
 
 const StoryChapter = ({ s, p, i, prev }) => {
   // same eyebrow as the chapter before: no repeated label, and the heading drops to a subheading
@@ -664,7 +672,7 @@ const StoryChapter = ({ s, p, i, prev }) => {
       {s.decision && <StoryDecision d={s.decision} />}
       {s.learned && <TwoCol rows={s.learned} />}
       {s.stats && (
-        <div className="mt-8 grid grid-cols-3 gap-x-6 md:gap-x-10">
+        <div className="mt-8 grid gap-x-6 md:gap-x-10" style={{ gridTemplateColumns: `repeat(${s.stats.length}, minmax(0, 1fr))` }}>
           {s.stats.map((m) => (
             <div key={m.label} className="pt-4 border-t border-[var(--line)]">
               <p className="text-[2rem] md:text-[3.2rem] font-medium leading-none tracking-[-0.04em]">{m.value}</p>
@@ -673,7 +681,7 @@ const StoryChapter = ({ s, p, i, prev }) => {
           ))}
         </div>
       )}
-      {s.steps && !s.watchDemo && !s.duo && <TwoCol rows={s.steps.map((st) => ({ title: st.label, text: st.text }))} />}
+      {s.steps && !s.watchDemo && !s.duo && <TwoCol rows={s.steps.map((st) => ({ title: st.label, text: st.text, code: st.code }))} />}
       {s.brand?.colors && (
         <div className="mt-8 flex flex-wrap gap-4">
           {s.brand.colors.map((c) => (
@@ -747,6 +755,14 @@ const StoryChapter = ({ s, p, i, prev }) => {
           ))}
         </div>
       )}
+      {s.mac && (
+        <figure className="mt-10 md:mt-12">
+          <Grain tone={s.mac.tone || "neutral"} className="py-8 md:py-12 flex justify-center"><Device kind="laptop" {...s.mac} className="w-[84%]" /></Grain>
+          {s.mac.caption && <figcaption className="mt-3 text-[0.8rem] leading-[1.55] text-[var(--muted)]">{s.mac.caption}</figcaption>}
+        </figure>
+      )}
+      {s.sprites && <div className="[&>div]:!my-10 md:[&>div]:!my-12"><Sprites still sheets={s.sprites} /></div>}
+      {s.assets && <AssetShelf still items={s.assets} className="grain grain-dark mt-10 md:mt-12" />}
       {s.flows && <Rows>{s.flows.map((f) => <Row key={f.label} tone={f.tone} phone={{ kind: f.kind || "phone", frame: f.frame, mp4: f.mp4, poster: f.poster }} title={f.label} text={f.text} />)}</Rows>}
       {s.chat && <Rows><Row tone={s.chat.tone} text={s.chat.text}><GroupChat chat={s.chat} frame={s.chat.frame} /></Row></Rows>}
       {s.cards && <Rows>{s.cards.map((c) => <Row key={c.title} tone="neutral" phone={{ kind: "phone", ...c.phone }} title={c.title} text={c.text} />)}</Rows>}

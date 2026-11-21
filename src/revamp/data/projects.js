@@ -897,89 +897,72 @@ export const projects = [
     platform: "iOS 26",
     year: "2026",
     stack: ["SwiftUI", "MapKit", "Swift Charts", "FastAPI", "PostGIS", "pgRouting", "Python"],
+    layout: "story",
+    accent: "#1D4ED8",
     sections: [
       {
-        heading: "Why I built it",
-        body: "For someone in a wheelchair, a route is only as good as its worst block. AccessMap proved a slope-aware map could work in Seattle. I wanted it for San Francisco, built end to end: data pipeline, routing engine and app.",
+        eyebrow: "Solution", nav: "Solution",
+        heading: "Directions that know the hills",
+        body: "Tell it how you get around. It plans around the slopes and curbs that would stop you, and shows you why.",
+        flows: [
+          {
+            label: "Get started",
+            text: "One question first: how do you get around? A manual chair, a power chair, a cane or a stroller each set their own uphill, downhill and curb limits, so every route after that is planned for you.",
+            frame: iphoneFrame, mp4: evenAppStartMp4, poster: evenAppStartPoster,
+            tone: "radial-gradient(120% 100% at 20% 0%, #EEF3FF 0%, #C9D8FF 45%, #8FADF7 80%, #5A82EE 100%)",
+          },
+          {
+            label: "Search",
+            text: "Search only suggests places Even can actually route to, and checks that where you are is covered first. No dead ends after you've already picked a destination.",
+            frame: iphoneFrame, mp4: evenPickLocationMp4, poster: evenPickLocationPoster,
+            tone: "radial-gradient(120% 100% at 80% 0%, #FBFAF7 0%, #ECEAE3 50%, #D6D3CA 100%)",
+          },
+          {
+            label: "Tap anywhere",
+            text: "Tap any sidewalk to see its incline and surface before you commit, then start or end a route right there. The map becomes something you can question, not just follow.",
+            frame: iphoneFrame, mp4: evenChangeLocationMp4, poster: evenChangeLocationPoster,
+            tone: "radial-gradient(120% 100% at 50% 100%, #F0F8F2 0%, #CFE8D6 45%, #9BCFAA 80%, #6BB283 100%)",
+          },
+        ],
       },
       {
-        // empathy map: who Even is for, in their own words
-        heading: "Who it's for",
-        body: "A route is only as good as its worst block. This is who that matters to.",
-        empathy: {
-          who: "Manual and power wheelchair users, people with walkers or canes, and parents pushing strollers in San Francisco.",
-          says: ["Is there a ramp on that corner?", "The map said 12 minutes. It took me 40."],
-          thinks: ["One steep block and the whole trip fails.", "I don't want to get stuck halfway."],
-          does: ["Checks Street View before leaving", "Plans around hills from memory", "Sticks to long routes they already know"],
-          feels: ["anxious", "stuck", "frustrated", "cautious", "dependent"],
-          hears: ["\"It's just around the corner.\"", "Directions built for distance and time, not slope"],
-          needs: ["A route that fits their limits", "A reason to trust it before they go"],
-        },
+        eyebrow: "Problem", nav: "Problem",
+        heading: "A route is only as good as its worst block",
+        body: "Map apps send everyone the same way. In San Francisco that can mean a 15% hill or a corner with no curb ramp, and one of those is enough to end the trip.",
       },
       {
-        // one iPhone that plays the three flows in turn, with chapters beside it (desktop) or under it (phones)
-        heading: "Three moves",
-        body: "Pick a chapter or let it play through.",
-        walkthrough: {
-          frame: iphoneFrame,
-          chapters: [
-            {
-              label: "Get started",
-              text: "One question: how do you get around? Each answer sets its own slope and curb limits.",
-              mp4: evenAppStartMp4,
-              poster: evenAppStartPoster,
-            },
-            {
-              label: "Search",
-              text: "Search only suggests places Even can route to, and checks your location is covered first.",
-              mp4: evenPickLocationMp4,
-              poster: evenPickLocationPoster,
-            },
-            {
-              label: "Tap anywhere",
-              text: "Tap a sidewalk to see its incline and surface, then start or end a route right there.",
-              mp4: evenChangeLocationMp4,
-              poster: evenChangeLocationPoster,
-            },
-          ],
-        },
-      },
-      {
+        eyebrow: "Engineering", nav: "Data",
         heading: "Building the map from open data",
         body: "No single dataset knows where you can roll, so Even stitches four into one graph.",
         steps: [
-          {
-            label: "Sidewalks",
-            text: "OpenStreetMap sidewalks, crossings, steps and elevators, loaded into PostGIS.",
-          },
+          { label: "Sidewalks", text: "OpenStreetMap sidewalks, crossings, steps and elevators, loaded into PostGIS." },
           {
             label: "Slope",
-            text: "USGS elevation at ~10 m per pixel, so paths are cut into 15 m runs with a signed grade.",
-            file: "elevation.py",
+            text: "USGS elevation at about 10 m per pixel, so paths are cut into 15 m runs with a signed grade.",
             code: `# the DEM is ~10 m per pixel, so grades over shorter runs are mostly noise
 MIN_CHUNK_M = 15.0`,
           },
           {
             label: "Curb ramps",
-            text: "DataSF puts every ramp at the intersection center. Matching each ramp's corner label to the crossing end that points that way took coverage from 27% to 77%.",
-            file: "match_curbs.py",
+            text: "DataSF puts every ramp at the intersection center. Matching each ramp's corner label to the crossing that points that way took coverage from 27% to 77%.",
             code: `INTERSECTION_RADIUS_M = 35  # crosswalk ends sit 10-30 m from the center on wide streets
 MAX_CORNER_ANGLE = 67.5     # end's bearing must roughly point at the labeled corner`,
           },
-          {
-            label: "The graph",
-            text: "Split at every junction for pgRouting, with a check so routes never start on an island.",
-          },
+          { label: "The graph", text: "Split at every junction for pgRouting, with a check so routes never start on an island." },
         ],
       },
       {
-        heading: "Routing that knows your limits",
-        body: "Dijkstra over a cost built from your profile. If nothing fits the whole way, Even gets you as close as it can and says how far is left.",
+        eyebrow: "Design decision", nav: "Design decisions",
+        heading: "Your limit is a wall, not a penalty",
+        decision: {
+          options: [{ label: "Penalize steep blocks" }, { label: "Block anything over your limit" }],
+          chose: 1,
+          why: "A penalty can still be paid. A wall means the route never asks you to climb what you can't.",
+        },
         steps: [
           {
-            label: "Over your limits is a wall",
-            text: "-1 means impassable, and uphill and downhill are checked separately.",
-            file: "routing.py",
+            label: "Over your limits is impassable",
+            text: "-1 means the edge doesn't exist, and uphill and downhill are checked separately.",
             code: `# forward travel climbs at +grade; reverse travel climbs at -grade
 CASE WHEN grade > {up} OR -grade > {down} THEN -1 ELSE {WEIGHT} END AS cost,
 CASE WHEN -grade > {up} OR grade > {down} THEN -1 ELSE {WEIGHT} END AS reverse_cost`,
@@ -987,7 +970,6 @@ CASE WHEN -grade > {up} OR grade > {down} THEN -1 ELSE {WEIGHT} END AS reverse_c
           {
             label: "Everything else costs extra",
             text: "Hills, unsurveyed curbs and worn ramps make an edge feel longer than it is.",
-            file: "routing.py",
             code: `# a bad ramp makes its crosswalk cost 4x, so a ~15 m crossing
 # is worth a ~45 m detour to avoid
 WEIGHT = """length_m * (1 + abs(grade) / 10)
@@ -997,48 +979,44 @@ WEIGHT = """length_m * (1 + abs(grade) / 10)
         ],
       },
       {
+        eyebrow: "Core flows", nav: "Core flows",
         heading: "One route, and why",
-        bare: true, // trip info and directions phones straight on the page, no grey panels
-        body: "One route colored by slope, green under 3% and amber to 8%. The rest lives in two pop-ups.",
-        media: [
-          {
-            src: [
-              { src: evenTripInfo, tall: true, inset: "w-[86%] h-[90%]", caption: "Trip info: the slope profile against your limits, and what the shortest route would have cost you." },
-              { src: evenDirections, tall: true, inset: "w-[86%] h-[90%]", caption: "Directions: nine raw path pieces merged into five readable steps, each with slope and curb status." },
-            ],
-          },
+        body: "One line colored by slope, green under 3% and amber up to 8%. The reasoning lives in two pop-ups.",
+        images: [
+          { src: evenTripInfo, tall: true, caption: "Trip info: the slope profile against your limits, and what the shortest route would have cost you." },
+          { src: evenDirections, tall: true, caption: "Directions: nine raw path pieces merged into five readable steps, each with slope and curb status." },
         ],
       },
       {
-        heading: "Design",
-        body: "NYC subway signage meets neo-brutalism: bold Helvetica, thick borders, hard shadows. Blue is the only accent, so wherever it shows up, that's the thing to tap.",
+        eyebrow: "Visual design", nav: "Visual design",
+        heading: "Subway signage, one blue",
+        body: "Bold Helvetica, thick borders and hard shadows. Blue is the only accent, so wherever it shows up, that's the thing to tap.",
         brand: {
           colors: [
-            { name: "Paper", hex: "#FBFAF7", note: "Panels" },
-            { name: "Ink", hex: "#111111", note: "Text and borders" },
-            { name: "Blue", hex: "#1D4ED8", note: "The only accent" },
-            { name: "Light blue", hex: "#DCE6FF", note: "Selected rows" },
-            { name: "Easy", hex: "#15803D", note: "Under 3%" },
-            { name: "Moderate", hex: "#D98E04", note: "3 to 8%" },
+            { name: "Paper", hex: "#FBFAF7" },
+            { name: "Ink", hex: "#111111" },
+            { name: "Blue", hex: "#1D4ED8" },
+            { name: "Light blue", hex: "#DCE6FF" },
+            { name: "Easy", hex: "#15803D" },
+            { name: "Moderate", hex: "#D98E04" },
           ],
         },
       },
       {
-        // live UI components rebuilt in code, on the app's own grid paper
-        heading: "Exploring UI components",
-        body: "The pieces that make up Even, rebuilt here in code. Try pressing the buttons.",
-        components: "even",
-      },
-      {
-        heading: "What's next",
-        list: [
-          "Street names in directions.",
-          "BART elevator outages that reroute you.",
-          "A web client on the same API.",
+        eyebrow: "Impact", nav: "Impact",
+        heading: "Curb ramps the map can finally see",
+        stats: [
+          { value: "77%", label: "Curb coverage, up from 27%" },
+          { value: "4", label: "Mobility profiles" },
+          { value: "9 → 5", label: "Path pieces merged into direction steps" },
         ],
       },
+      {
+        eyebrow: "What's next",
+        heading: "Still to come",
+        list: ["Street names in directions.", "BART elevator outages that reroute you.", "A web client on the same API."],
+      },
     ],
-    // tools grid at the bottom of the case study
     tools: [
       { name: "Xcode", logo: "xcode" },
       { name: "Swift", logo: "swift", note: "SwiftUI" },
@@ -1050,11 +1028,7 @@ WEIGHT = """length_m * (1 + abs(grade) / 10)
       { name: "Docker", logo: "docker" },
       { name: "OpenStreetMap", logo: "openstreetmap" },
     ],
-    metrics: [
-      { value: "77%", label: "Curb coverage, up from 27%" },
-      { value: "4", label: "Mobility profiles" },
-      { value: "9 → 5", label: "Raw path pieces merged into direction steps on a test route" },
-    ],
+    metrics: [],
     gallery: [],
   },
   {
@@ -1078,27 +1052,30 @@ WEIGHT = """length_m * (1 + abs(grade) / 10)
     platform: "Web",
     year: "2026",
     stack: ["Python", "Flask", "SQLAlchemy", "PostgreSQL", "React", "TypeScript", "Zustand", "KendoReact"],
+    layout: "story",
+    accent: "#0071E3",
     sections: [
       {
-        heading: "Why I built it",
-        body: "Battery teams don't check a pack from a settings screen. They read the gas gauge directly, one register at a time, to catch a cell running hot or capacity fading faster than it should. I wanted to build that whole path myself: the bus, the decoding, the API, the database and the dashboard on top.",
-      },
-      {
-        heading: "What it shows",
-        body: "Two laptop packs and two phone batteries, simulated at 60× real time so a full charge cycle fits in a few minutes. Pick one and everything below follows it.",
-        clipsWidth: "mx-auto md:w-[68%]", // smaller, centered
+        eyebrow: "Solution", nav: "Solution",
+        heading: "Every battery, live",
+        body: "Two laptop packs and two phone batteries, simulated at 60x so a full charge cycle fits in a few minutes. Pick one and every chart follows it.",
         clips: [
-          { mp4: cellscopeChartsMp4, poster: cellscopeChartsPoster, caption: "Four synced charts instead of one with two y-axes. Hovering one moves the crosshair on all of them." },
+          { mp4: cellscopeChartsMp4, poster: cellscopeChartsPoster, caption: "Four synced charts instead of one with two y-axes. Hover one and the crosshair moves on all of them." },
         ],
       },
       {
+        eyebrow: "Problem", nav: "Problem",
+        heading: "Battery teams read the chip, not a settings screen",
+        body: "To catch a cell running hot or fading too fast, you read the gas gauge directly, one register at a time. I wanted to build that whole path: the bus, the decoding, the API, the database and the dashboard.",
+      },
+      {
+        eyebrow: "Engineering", nav: "Engineering",
         heading: "Reading the wire",
-        body: "Nothing comes off the bus as a nice number. Current is a signed 16-bit word, temperature is tenths of a kelvin, and status is a set of bit flags. Every value on the dashboard starts as one of these words.",
+        body: "Nothing comes off the bus as a nice number. Current is a signed 16-bit word, temperature is tenths of a kelvin, and status is a set of bit flags.",
         steps: [
           {
             label: "One decoder",
             text: "Takes anything with smbus2's read_word_data, so a real I²C adapter drops in without touching the API or the UI.",
-            file: "simulator.py",
             code: `def _signed16(word):
     return word - 0x10000 if word & 0x8000 else word  # two's complement
 
@@ -1110,34 +1087,36 @@ def read_battery(bus, addr=0x0B):
         "current_ma": _signed16(word("current")),
         "temp_c": round(word("temperature") / 10 - 273.15, 1),  # 0.1 K
         "status": word("battery_status"),  # bit flags
-        # ...plus capacity, cycle count and time to empty/full
     }`,
           },
         ],
-        clipsWidth: "mx-auto md:w-[68%]", // smaller, centered
         clips: [
-          { mp4: cellscopeRegsMp4, poster: cellscopeRegsPoster, caption: "The register inspector: each raw word next to what it means, flashing when it changes between polls." },
+          { mp4: cellscopeRegsMp4, poster: cellscopeRegsPoster, caption: "The register inspector: each raw word next to what it means, flashing when it changes." },
         ],
       },
       {
+        eyebrow: "Engineering",
         heading: "A battery worth watching",
-        body: "A random number generator makes a boring chart, so each battery runs a small physics model.",
-        stepRow: true,
+        body: "A random number makes a boring chart, so each battery runs a small physics model.",
         steps: [
-          { label: "Charge", text: "Charge left is current integrated over time, the same coulomb counting a real gas gauge does." },
+          { label: "Charge", text: "Current integrated over time, the same coulomb counting a real gas gauge does." },
           { label: "Voltage", text: "Read off a Li-ion curve, minus current times internal resistance, so it sags under load." },
-          { label: "Charging", text: "Constant current to 80%, then a taper as it fills, like a real charger." },
+          { label: "Charging", text: "Constant current to 80%, then a taper as it fills." },
           { label: "Heat and wear", text: "Heats with current squared, and loses a little capacity every cycle." },
         ],
       },
       {
-        heading: "Built for serverless",
-        body: "Vercel functions don't keep memory between requests, so the simulator can't either. Each poll rebuilds the battery from its last stored reading, steps it forward and reads it through the bus. Postgres is the only source of truth.",
+        eyebrow: "Design decision", nav: "Design decisions",
+        heading: "Postgres is the only memory",
+        decision: {
+          options: [{ label: "Keep the simulation in memory" }, { label: "Rebuild from the last reading" }],
+          chose: 1,
+          why: "Serverless functions forget everything between requests, so each poll picks up exactly where the database left off.",
+        },
         steps: [
           {
             label: "Stateless, throttled polling",
             text: "Ten open tabs still write one reading per tick, and a quiet hour resumes where it left off instead of draining every battery to zero.",
-            file: "telemetry.py",
             code: `def poll(battery, now):
     last = battery.latest_reading()
     if last and now - last.ts < MIN_INTERVAL:
@@ -1156,44 +1135,41 @@ def read_battery(bus, addr=0x0B):
         ],
       },
       {
+        eyebrow: "API",
         heading: "Two ways in",
-        body: "REST for the dashboard, and JSON-RPC 2.0 on the same Flask app for scripts and test rigs, with batch requests, notifications and the spec's error codes. Errors come back as JSON either way.",
+        body: "REST for the dashboard, and JSON-RPC 2.0 on the same Flask app for scripts and test rigs, with batch requests and the spec's error codes.",
       },
       {
-        heading: "Design",
-        body: "Quiet and close to Apple's own tools: SF Pro for text, SF Mono for every hex word and serial, one blue accent, and green or red only when a battery is charging or low. The laptop and phone icons are drawn from scratch to match.",
+        eyebrow: "Visual design", nav: "Visual design",
+        heading: "Close to Apple's own tools",
+        body: "SF Pro for text, SF Mono for every hex word and serial, one blue accent, and green or red only when a battery is charging or low.",
         brand: {
           colors: [
-            { name: "Paper", hex: "#F5F5F7", note: "Page" },
-            { name: "Ink", hex: "#1D1D1F", note: "Text and charge" },
-            { name: "Blue", hex: "#0071E3", note: "Accent and chart lines" },
-            { name: "Green", hex: "#34C759", note: "Charging" },
-            { name: "Red", hex: "#FF3B30", note: "Low and alarms" },
+            { name: "Paper", hex: "#F5F5F7" },
+            { name: "Ink", hex: "#1D1D1F" },
+            { name: "Blue", hex: "#0071E3" },
+            { name: "Green", hex: "#34C759" },
+            { name: "Red", hex: "#FF3B30" },
           ],
         },
-        media: [
-          {
-            bare: true, // phone screens straight on the page, no grey panels
-            src: [
-              { src: cellscopeMobileFleet, tall: true, inset: "w-[86%] h-[90%]", caption: "On a phone, the fleet stacks into one column." },
-              { src: cellscopeMobileDetail, tall: true, inset: "w-[86%] h-[90%]", caption: "Pack detail: stats go two-up and the charts stack." },
-            ],
-          },
+        images: [
+          { src: cellscopeMobileFleet, tall: true, caption: "On a phone, the fleet stacks into one column.", tone: "radial-gradient(120% 100% at 20% 0%, #F5F9FF 0%, #D9E9FB 50%, #A9CBF2 100%)" },
+          { src: cellscopeMobileDetail, tall: true, caption: "Pack detail: stats go two-up and the charts stack.", tone: "radial-gradient(120% 100% at 80% 0%, #F4FBF6 0%, #D4F0DC 50%, #9FDDB0 100%)" },
         ],
       },
       {
-        // live UI components rebuilt in code, on CellScope's light page
-        heading: "Exploring UI components",
-        body: "The pieces of the dashboard, rebuilt here in code.",
-        components: "cellscope",
+        eyebrow: "Impact", nav: "Impact",
+        heading: "One class away from real hardware",
+        stats: [
+          { value: "10", label: "Registers read every poll" },
+          { value: "17", label: "Tests across decoding, API and RPC" },
+          { value: "60x", label: "Simulated time" },
+        ],
       },
       {
-        heading: "What's next",
-        list: [
-          "Connect a real gas gauge through a Total Phase Aardvark.",
-          "Alembic migrations instead of create_all.",
-          "Alerts when a battery crosses a temperature or health limit.",
-        ],
+        eyebrow: "What's next",
+        heading: "Still to come",
+        list: ["A real gas gauge through a Total Phase Aardvark.", "Alembic migrations instead of create_all.", "Alerts when a battery crosses a temperature or health limit."],
       },
     ],
     tools: [
@@ -1204,12 +1180,7 @@ def read_battery(bus, addr=0x0B):
       { name: "TypeScript", logo: "typescript" },
       { name: "Vercel", logo: "vercel" },
     ],
-    metrics: [
-      { value: "10", label: "Smart Battery registers read every poll" },
-      { value: "17", label: "pytest tests across decoding, API and RPC" },
-      { value: "1", label: "Class to swap for real hardware" },
-      { value: "60×", label: "Simulated time, a full cycle in minutes" },
-    ],
+    metrics: [],
     gallery: [],
   },
   {
@@ -1318,66 +1289,67 @@ def read_battery(bus, addr=0x0B):
     stack: ["Swift", "SpriteKit", "Xcode"],
     // gameplay loop in a landscape iPhone at the top of the case study
     landscapeDemo: { frame: iphoneLandscapeFrame, mp4: zoomiesGameplayMp4, poster: zoomiesGameplayPoster },
+    layout: "story",
+    accent: "#3A9AD9",
+    grain: "radial-gradient(90% 80% at 0% 0%, #FFE58A 0%, rgba(255,229,138,0) 60%), radial-gradient(90% 90% at 100% 0%, #F7A8B8 0%, rgba(247,168,184,0) 62%), radial-gradient(100% 90% at 100% 100%, #B9A7F2 0%, rgba(185,167,242,0) 65%), linear-gradient(160deg, #FFF3D9 0%, #F8D3C6 45%, #9FD3F7 100%)",
+    layout: "story",
+    accent: "#3A9AD9",
+    grain: "radial-gradient(90% 80% at 0% 0%, #FFE58A 0%, rgba(255,229,138,0) 60%), radial-gradient(90% 90% at 100% 0%, #F7A8B8 0%, rgba(247,168,184,0) 62%), radial-gradient(100% 90% at 100% 100%, #B9A7F2 0%, rgba(185,167,242,0) 65%), linear-gradient(160deg, #FFF3D9 0%, #F8D3C6 45%, #9FD3F7 100%)",
     sections: [
       {
-        heading: "Why I made it",
-        body: "A visual effects class in undergrad got me hooked on pixel animation. I wanted to see those sprites actually move in something playable.",
-      },
-      {
-        heading: "What I built",
-        list: [
-          "Hand-drawn pixel sprites packed into texture atlases",
-          "Physics and collisions using SpriteKit category bit masks",
-          "Endless spawning, scoring, and custom game UI",
+        eyebrow: "Solution", nav: "Solution",
+        heading: "One tap, one dog, an endless road",
+        body: "Jump the logs, grab the bones, keep your five hearts.",
+        flows: [
+          {
+            label: "Splash",
+            text: "The pixel dog barks beside the wordmark on launch. It sets the tone before you've touched anything: this is a small, silly, hand-drawn game.",
+            kind: "landscape", frame: iphoneLandscapeFrame, mp4: zoomiesSplashMp4, poster: zoomiesSplashPoster,
+            tone: "radial-gradient(120% 100% at 20% 0%, #FFF9DC 0%, #FFEB99 45%, #FFD95C 80%, #F5C531 100%)",
+          },
+          {
+            label: "Tap to start",
+            text: "Five hearts and a distance counter, and nothing else. A bone gives a heart back, so there is always a reason to jump even when no log is coming.",
+            kind: "landscape", frame: iphoneLandscapeFrame, mp4: zoomiesStartMp4, poster: zoomiesStartPoster,
+            tone: "radial-gradient(120% 100% at 80% 0%, #F1F9FE 0%, #CFEAFB 45%, #A7D8F7 80%, #87CFFA 100%)",
+          },
+          {
+            label: "Menu and rules",
+            text: "Resume, rules, credits and exit, all as custom pixel buttons. Even the menus are drawn, so you never drop out of the world.",
+            kind: "landscape", frame: iphoneLandscapeFrame, mp4: zoomiesMenuMp4, poster: zoomiesMenuPoster,
+            tone: "radial-gradient(120% 100% at 50% 100%, #F8EFEA 0%, #E6CFC2 45%, #C9A38C 80%, #A9806A 100%)",
+          },
         ],
       },
       {
-        // one landscape iPhone that plays the other three screens in turn, pills underneath
-        heading: "The other screens",
-        body: "Pick a screen or let it play through.",
-        walkthrough: {
-          frame: iphoneLandscapeFrame,
-          landscape: true,
-          bottom: true,
-          chapters: [
-            { label: "Splash", text: "The pixel dog and wordmark on launch.", mp4: zoomiesSplashMp4, poster: zoomiesSplashPoster },
-            { label: "Tap to start", text: "Five hearts, a distance counter, and a bone to grab back a heart.", mp4: zoomiesStartMp4, poster: zoomiesStartPoster },
-            { label: "Menu and rules", text: "Resume, rules, credits and exit, all in custom pixel buttons.", mp4: zoomiesMenuMp4, poster: zoomiesMenuPoster },
-          ],
-        },
+        eyebrow: "Why I made it", nav: "Why",
+        heading: "Sprites that actually move",
+        body: "A visual effects class got me hooked on pixel animation. I wanted to see those sprites run in something playable.",
       },
       {
-        heading: "The sprites",
-        // TODO: rewrite in your words
-        body: [
-          "Every frame of the dog is drawn by hand in Pixilart on a 48 by 48 pixel grid, one strip per action. Each action starts from the idle pose and gets redrawn a few pixels at a time, previewed on loop, and exported as a single sprite sheet.",
-          "In the game, each strip is sliced into SpriteKit textures at runtime and played with its own timing. Filtering is set to nearest so the pixels stay sharp at any size, the same way they play below.",
-        ],
-        // behind the scenes: drawing the run cycle in Pixilart, shown before the finished sheets
-        laptop: {
-          frame: macbookFrame,
-          mp4: zoomiesPixilartMp4,
-          poster: zoomiesPixilartPoster,
-          caption: "Behind the scenes in Pixilart: the sprite gallery, then the run cycle frame by frame on the timeline, with the preview playing it back.",
+        eyebrow: "Process", nav: "Sprites",
+        heading: "Every frame drawn by hand",
+        body: "Each action starts from the idle pose on a 48 by 48 grid and gets redrawn a few pixels at a time. In the game, each strip is sliced into textures and played with nearest filtering, so the pixels stay sharp at any size.",
+        mac: {
+          frame: macbookFrame, mp4: zoomiesPixilartMp4, poster: zoomiesPixilartPoster,
+          tone: "radial-gradient(120% 100% at 20% 0%, #F3F1EE 0%, #E2DCD4 50%, #CDBFB0 100%)",
+          caption: "Drawing the run cycle in Pixilart, frame by frame, with the preview playing it back.",
         },
         // frame counts and timings match GameScene.swift
         sprites: [
           { name: "Idle", src: zoomiesSpriteIdle, frames: 16, ms: 120, note: "Waiting on the start screen, tail going." },
           { name: "Run", src: zoomiesSpriteRun, frames: 8, ms: 65, note: "The main loop, fast enough to feel like a sprint." },
-          { name: "Jump", src: zoomiesSpriteJump, frames: 7, ms: 40, note: "A quick leap over the log while the dog arcs up and back down." },
-          { name: "Bark", src: zoomiesSpriteBark, frames: 13, ms: 120, note: "Plays beside the Zoomies title on the splash screen." },
-          { name: "Hurt", src: zoomiesSpriteHurt, frames: 4, ms: 50, note: "Flashes red when the dog hits a log and loses a heart." },
-          { name: "Die", src: zoomiesSpriteDie, frames: 8, ms: 120, hold: 1000, note: "Out of hearts: a stumble and a flop before the game over screen." },
-          { name: "Sit", src: zoomiesSpriteSit, frames: 9, ms: 90, note: "Keeps you company on the credits screen." },
+          { name: "Jump", src: zoomiesSpriteJump, frames: 7, ms: 40, note: "A quick leap over the log." },
+          { name: "Bark", src: zoomiesSpriteBark, frames: 13, ms: 120, note: "Beside the title on the splash screen." },
+          { name: "Hurt", src: zoomiesSpriteHurt, frames: 4, ms: 50, note: "Flashes red when a log hits." },
+          { name: "Die", src: zoomiesSpriteDie, frames: 8, ms: 120, hold: 1000, note: "A stumble and a flop, then game over." },
+          { name: "Sit", src: zoomiesSpriteSit, frames: 9, ms: 90, note: "Keeps you company on the credits." },
         ],
       },
       {
-        heading: "The world",
-        // TODO: rewrite in your words
-        body: [
-          "The background is deliberately plain: one flat sky blue, a thick black road line, and nothing else fighting the dog for attention.",
-          "Clouds give the scene depth without clutter. There are three hand-drawn shapes, and the bigger they are, the further back they sit. Each one drifts across in 40 to 60 seconds with a slow 4px bob, so the sky feels alive while the road keeps its speed.",
-        ],
+        eyebrow: "Visual design", nav: "World",
+        heading: "A plain sky so the dog stands out",
+        body: "One flat blue, a black road line, and three clouds. The bigger the cloud, the further back it sits, and each drifts across in 40 to 60 seconds.",
         assets: [
           { src: zArtCloud1, label: "Cloud 1", note: "Front · 1.8x" },
           { src: zArtCloud2, label: "Cloud 2", note: "Middle · 2.3x" },
@@ -1385,29 +1357,44 @@ def read_battery(bus, addr=0x0B):
         ],
       },
       {
-        heading: "Obstacles and pickups",
-        // TODO: rewrite in your words
-        body: [
-          "There is one thing to avoid and one thing to chase. A new log rolls in every 3 to 4 seconds, and each one crosses the screen at its own random speed, so the rhythm never settles into a pattern you can tap along to.",
-          "Bones float at a fixed height above the road, so the only way to grab one is to jump for it. Each bone flashes yellow and gives back a heart, up to a max of five. Lose them all and the health bar turns into a skull.",
-        ],
+        eyebrow: "Visual design",
+        heading: "One thing to dodge, one to chase",
+        body: "A log every 3 to 4 seconds, each at its own speed, so you can't tap along to a rhythm. Bones float just high enough that you have to jump for them.",
         assets: [
-          { src: zArtLog, label: "Log", note: "Obstacle · −1 heart" },
-          { src: zArtBone, label: "Bone", note: "Pickup · +1 heart" },
-          { src: zArtBoneYellow, label: "Bone, collected", note: "2 quick blinks" },
+          { src: zArtLog, label: "Log", note: "−1 heart" },
+          { src: zArtBone, label: "Bone", note: "+1 heart" },
+          { src: zArtBoneYellow, label: "Collected", note: "2 quick blinks" },
           { src: zArtHeart, label: "Heart", note: "Up to 5" },
           { src: zArtSkull, label: "Skull", note: "Out of hearts" },
         ],
       },
       {
-        heading: "Physics",
-        // TODO: rewrite in your words
-        body: "Zoomies doesn't simulate much, on purpose. Nothing actually collides or falls. SpriteKit's physics engine is only there to report contacts, and the dog's movement is choreographed so every jump feels the same.",
+        eyebrow: "Visual design",
+        heading: "Red for health, yellow for rewards",
+        body: "You have a split second to spot a log, so colour does the sorting. Everything else stays out of the way.",
+        brand: {
+          colors: [
+            { name: "Sky", hex: "#87CFFA" },
+            { name: "Road", hex: "#000000" },
+            { name: "Coat", hex: "#875E48" },
+            { name: "Log", hex: "#6B421E" },
+            { name: "Heart", hex: "#CC121C" },
+            { name: "Glow", hex: "#FFD600" },
+          ],
+        },
+      },
+      {
+        eyebrow: "Design decision", nav: "Design decisions",
+        heading: "Contacts, not collisions",
+        decision: {
+          options: [{ label: "Real physics" }, { label: "Contacts only" }],
+          chose: 1,
+          why: "Nothing ever shoves the dog, so every jump feels exactly the same.",
+        },
         steps: [
           {
             label: "Contacts, not collisions",
-            text: "Each body gets a category bit: dog 1, logs 2, bones 4. The dog listens for contact with 2 and 4 but has a collision mask of 0, so nothing ever shoves it around.",
-            file: "GameScene.swift",
+            text: "Each body gets a category bit: dog 1, logs 2, bones 4. The dog listens for 2 and 4 but collides with nothing.",
             code: String.raw`dog.physicsBody?.affectedByGravity = false
 dog.physicsBody?.categoryBitMask = 1
 dog.physicsBody?.contactTestBitMask = 2 | 4   // logs + bones
@@ -1415,66 +1402,18 @@ dog.physicsBody?.collisionBitMask = 0`,
           },
           {
             label: "Forgiving hitboxes",
-            text: "Hitboxes are much smaller than the art: about a third of the dog, and roughly 60% of a log. A near miss that looks like a miss counts as a miss.",
-            file: "GameScene.swift",
+            text: "About a third of the dog and 60% of a log. A near miss that looks like a miss counts as one.",
             code: String.raw`dog.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: dog.size.width / 2.8,
-                                                    height: dog.size.height / 3))
-
-log.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: log.size.width / 1.6,
-                                                    height: log.size.height / 1.8))`,
+                                                    height: dog.size.height / 3))`,
           },
           {
             label: "A scripted jump",
-            text: "Instead of gravity, the jump is an arc: up 110px in half a second, back down in 0.3s, with the 7-frame jump sprite playing on top. Same height, same timing, every tap.",
-            file: "GameScene.swift",
-            code: String.raw`let jumpAnimation = SKAction.animate(with: jumpFrames, timePerFrame: 0.04)
-let moveUp = SKAction.moveBy(x: 0, y: 110, duration: 0.5)
+            text: "Up 110px in half a second, back down in 0.3s. Same height, same timing, every tap.",
+            code: String.raw`let moveUp = SKAction.moveBy(x: 0, y: 110, duration: 0.5)
 let moveDown = SKAction.moveBy(x: 0, y: -105, duration: 0.3)
-
-let jumpMotion = SKAction.sequence([moveUp, moveDown])
-let jumpGroup = SKAction.group([jumpAnimation, jumpMotion])`,
-          },
-          {
-            label: "One place to decide",
-            text: "Every contact lands in didBegin. It finds which body is the dog, then either hurts it and clears the log, or collects the bone.",
-            file: "GameScene.swift",
-            code: String.raw`func didBegin(_ contact: SKPhysicsContact) {
-    let otherBody: SKPhysicsBody
-    if contact.bodyA.categoryBitMask == 1 {
-        otherBody = contact.bodyB
-    } else if contact.bodyB.categoryBitMask == 1 {
-        otherBody = contact.bodyA
-    } else {
-        return
-    }
-
-    if otherBody.categoryBitMask == 2 {          // log
-        startHurt()
-        otherBody.node?.removeFromParent()
-    } else if otherBody.categoryBitMask == 4 {   // bone
-        if let node = otherBody.node { handleBoneCollected(node) }
-    }
-}`,
+let jumpGroup = SKAction.group([jumpAnimation, .sequence([moveUp, moveDown])])`,
           },
         ],
-      },
-      {
-        heading: "Color and restraint",
-        // TODO: rewrite in your words, especially the why
-        body: [
-          "Arcade runners live or die on readability. You have a split second to spot a log, so the palette does the sorting for you: a cool, flat sky; a warm brown dog; darker browns and a hint of green on the logs; red only for health; and yellow only when something good happens.",
-          "Keeping the game small was the point. One tap to jump, one thing to dodge, one thing to collect. Every extra rule would have been one more thing to explain on a phone held sideways.",
-        ],
-        brand: {
-          colors: [
-            { name: "Sky", hex: "#87CFFA", note: "Flat background" },
-            { name: "Road", hex: "#000000", note: "Ground line" },
-            { name: "Coat", hex: "#875E48", note: "The dog" },
-            { name: "Log", hex: "#6B421E", note: "Obstacles" },
-            { name: "Heart", hex: "#CC121C", note: "Health only" },
-            { name: "Glow", hex: "#FFD600", note: "Rewards only" },
-          ],
-        },
       },
     ],
     // tools row at the bottom of the case study
@@ -1545,58 +1484,54 @@ let jumpGroup = SKAction.group([jumpAnimation, jumpMotion])`,
     stack: ["HTML", "CSS", "JavaScript"],
     platform: "Web",
     year: "",
+    layout: "story",
+    accent: "#2B9AB0",
     sections: [
       {
-        heading: "Design inspiration",
-        body: "The show's terminals are mostly empty navy, one cyan, and numbers that feel alive. I studied the boot screen and the file screen frame by frame before writing any CSS.",
+        eyebrow: "Solution", nav: "Solution",
+        heading: "The refinement terminal, in a browser",
+        body: "Numbers drift and swell under your cursor, bins fill, and there's an employee report screen behind it.",
+        clips: [
+          { mp4: lumonDemoMp4, poster: lumonDemoPoster, caption: "The boot screen into the refinement grid, the cursor magnifying numbers above the bins." },
+          { mp4: lumonReportsMp4, poster: lumonReportsPoster, caption: "Employee reports: names, tasks refined and compliance scores." },
+        ],
+      },
+      {
+        eyebrow: "Research", nav: "Inspiration",
+        heading: "Studied frame by frame",
+        body: "The show's terminals are mostly empty navy, one cyan, and numbers that feel alive. I watched the boot screen and the file screen frame by frame before writing any CSS.",
         clips: [
           { mp4: lumonShowScreenMp4, poster: lumonShowScreenPoster, caption: "From Severance (Apple TV+): the Lumon mark on the boot screen." },
           { mp4: lumonShowUiMp4, poster: lumonShowUiPoster, caption: "From Severance (Apple TV+): a file opening on the terminal." },
         ],
       },
       {
-        heading: "What I built",
-        body: "The same two moments, rebuilt for the browser.",
-        clips: [
-          { mp4: lumonDemoMp4, poster: lumonDemoPoster, caption: "The boot screen into the refinement grid, with the cursor magnifying numbers and the bins underneath." },
-          { mp4: lumonReportsMp4, poster: lumonReportsPoster, caption: "Employee reports: names, tasks refined and compliance scores." },
-        ],
-      },
-      {
-        heading: "Making the numbers feel alive",
+        eyebrow: "Engineering", nav: "Engineering",
+        heading: "Numbers that feel alive",
         body: "No framework, about ninety lines of JavaScript.",
-        stepRow: true,
         steps: [
           { label: "Random digits", text: "Every cell gets a random number on load, so no two files look the same." },
           { label: "Drift", text: "Some cells float up or sideways, each with its own delay and speed." },
-          { label: "Swell", text: "Cells within 100px of the cursor scale up to 2.6x, easing back to normal by 200px." },
+          { label: "Swell", text: "Cells within 100px of the cursor scale up to 2.6x, easing back by 200px." },
           { label: "Reports", text: "A second screen renders employee reports from a small data set." },
         ],
       },
       {
-        heading: "Design",
-        body: "Two colors and two typefaces: navy and phosphor cyan, Share Tech Mono for every digit and Russo One for the wordmark.",
+        eyebrow: "Visual design", nav: "Visual design",
+        heading: "Two colors, two typefaces",
+        body: "Navy and phosphor cyan. Share Tech Mono for every digit, Russo One for the wordmark.",
         brand: {
           colors: [
-            { name: "Cyan", hex: "#8EE3F1", note: "Every line, digit and glow" },
-            { name: "Navy", hex: "#08203A", note: "The terminal" },
-            { name: "Deep navy", hex: "#041B2D", note: "Shadows and depth" },
+            { name: "Cyan", hex: "#8EE3F1" },
+            { name: "Navy", hex: "#08203A" },
+            { name: "Deep navy", hex: "#041B2D" },
           ],
         },
       },
       {
-        // live UI components rebuilt in code, in the terminal's colors
-        heading: "Exploring UI components",
-        body: "The pieces of the terminal, rebuilt here in code. Try the grid.",
-        components: "lumon",
-      },
-      {
-        heading: "What's next",
-        list: [
-          "A features dashboard linking the other screens.",
-          "A cryptic message board and interactive tasks.",
-          "Sound effects to match the show.",
-        ],
+        eyebrow: "What's next",
+        heading: "Still to come",
+        list: ["A features dashboard linking the other screens.", "A cryptic message board and interactive tasks.", "Sound effects to match the show."],
       },
     ],
     tools: [

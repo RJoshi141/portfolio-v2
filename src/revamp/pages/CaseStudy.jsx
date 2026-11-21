@@ -357,8 +357,8 @@ const SpriteSheet = ({ name, src, frames, ms, note, hold = 0 }) => {
 };
 
 // Pixel-art pieces on one grey panel, scaled up crisp, each with a label and a short spec line
-export const AssetShelf = ({ items }) => (
-  <motion.figure {...rise()} className="my-12 md:my-20 bg-[#1a1a1a] px-6 md:px-12 py-10 md:py-14">
+export const AssetShelf = ({ items, still, className = "my-12 md:my-20 bg-[#1a1a1a]" }) => (
+  <motion.figure {...(still ? {} : rise())} className={`${className} px-6 md:px-12 py-10 md:py-14`}>
     {/* centered row: fixed-width slots so short sets (like 3 clouds) sit in the middle */}
     <ul className="flex flex-wrap justify-center gap-y-10">
       {items.map((a) => (
@@ -375,8 +375,8 @@ export const AssetShelf = ({ items }) => (
   </motion.figure>
 );
 
-export const Sprites = ({ sheets }) => (
-  <motion.div {...rise()} className="my-12 md:my-20 grid md:grid-cols-2 gap-x-6 md:gap-x-8 gap-y-10 md:gap-y-14">
+export const Sprites = ({ sheets, still }) => (
+  <motion.div {...(still ? {} : rise())} className="my-12 md:my-20 grid md:grid-cols-2 gap-x-6 md:gap-x-8 gap-y-10 md:gap-y-14">
     {sheets.map((s) => <SpriteSheet key={s.name} {...s} />)}
   </motion.div>
 );
