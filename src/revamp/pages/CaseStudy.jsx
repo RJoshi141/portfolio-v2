@@ -198,8 +198,8 @@ export const WatchDemo = ({ frame, mp4, webm, phone }) => (
         <div className="relative h-[84%] aspect-[2025/4139]">
           {/* the iPhone frame's screen is transparent, so the recording sits underneath it */}
           <div
-            className="absolute overflow-hidden bg-black rounded-[18%/8.5%]"
-            style={{ left: "5.2%", top: "2.3%", width: "89.6%", height: "95.4%" }}
+            className="absolute overflow-hidden bg-black rounded-[17.5%/8.4%]"
+            style={{ left: "4.4%", top: "2.1%", width: "91.2%", height: "95.8%" }}
           >
             <Loop mp4={phone.mp4} webm={phone.webm} />
           </div>

@@ -5,7 +5,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ArrowUpRight, Star } from "lucide-react";
 import { featured, selected, findProject } from "../../revamp/data/projects";
-import { Device, DragStrip, CardVisual, Grain, Roll, Walkthrough, go, isVideo, pad, usePageMotion } from "../shared";
+import { Clip, Device, DragStrip, CardVisual, Grain, Roll, Walkthrough, go, isVideo, pad, usePageMotion } from "../shared";
 import { Footer, useLenis } from "../NextApp";
 import { EmpathyMap, ComponentBoard, BoundPieces, TILES } from "../../revamp/components/CaseExtras";
 // pieces reused from the previous site: Utter's watch-to-phone demo, Zoomies' sprite sheets and art shelf
@@ -45,7 +45,7 @@ const all = [...featured, ...selected];
 // ---------------------------------------------------------------- collect a section's media
 const fromSrc = (it, caption) => {
   const o = typeof it === "object" && it?.src ? it : { src: it };
-  return { type: isVideo(o.src) ? "video" : "image", src: o.src, caption: o.caption || caption, tall: o.tall, wide: o.wide, small: o.small, rounded: o.rounded };
+  return { type: isVideo(o.src) ? "video" : "image", src: o.src, caption: o.caption || caption, tall: o.tall, wide: o.wide, small: o.small, rounded: o.rounded, w: o.w, dark: o.dark, label: o.label };
 };
 const media = (s) => {
   const out = [];
@@ -102,7 +102,7 @@ const Gallery = ({ items, lightArt }) => {
 };
 
 // ---------------------------------------------------------------- hero media, centered and modest
-const HERO_WIDTH = { utter: "w-[80%] md:w-[38%]", bound: "w-full md:w-[80%]", joydrop: "w-full md:w-[80%]", layer: "w-[92%] md:w-[48%]" };
+const HERO_WIDTH = { utter: "w-full md:max-w-[52rem]", bound: "w-full md:w-[80%]", joydrop: "w-full md:w-[80%]", layer: "w-[92%] md:w-[48%]" };
 const Hero = ({ p, clip = true }) => {
   let inner;
   if (p.heroVideo) inner = <video autoPlay muted loop playsInline poster={p.heroVideo.poster} src={p.heroVideo.mp4} className="w-full h-auto" />;
@@ -591,8 +591,17 @@ const StoryItems = ({ items, s, p }) => {
       </div>
     );
   }
+  if (items.every((m) => m.dark)) return items.map((m, i) => (
+    <figure key={i} className="mt-8 md:mt-10">
+      <div className="grain grain-dark p-5 md:p-7">
+        {m.label && <p className="mono uppercase text-[0.66rem] md:text-[0.72rem] tracking-[0.14em] text-white/45">{m.label}</p>}
+        <img src={m.src} alt="" loading="lazy" className={`mt-5 md:mt-6 mx-auto h-auto invert mix-blend-screen ${m.w || "w-full"}`} />
+      </div>
+      {m.caption && <figcaption className="mt-3 text-[0.8rem] leading-[1.55] text-[var(--muted)]">{m.caption}</figcaption>}
+    </figure>
+  ));
   return items.map((m, i) => (
-    <figure key={i} data-fade className={`mt-10 md:mt-12 ${m.small ? "w-[75%] md:w-[48%]" : ""}`}>
+    <figure key={i} data-fade className={`mt-10 md:mt-12 ${m.w || (m.small ? "w-[75%] md:w-[48%]" : "")}`}>
       {m.type === "video"
         ? <video autoPlay muted loop playsInline poster={m.poster} src={m.src} className="w-full h-auto" />
         : <img src={m.src} alt="" loading="lazy" className={`w-full h-auto ${m.rounded ? "rounded-2xl md:rounded-[1.75rem]" : ""}`} />}
@@ -601,31 +610,27 @@ const StoryItems = ({ items, s, p }) => {
   ));
 };
 
+// a decision, kept quiet: the options in one line, the pick in full colour with a small mark,
+// and one sentence on why
+// a decision in a small dark card: the options in one line (the pick in white with an accent
+// dot, the rest struck through) and one line on why
+// a decision, kept quiet: the options in one line (the pick in full colour with an accent dot,
+// the rest struck through) and one line on why
 const StoryDecision = ({ d }) => (
-  <div className="mt-8">
-    {d.chips ? (
-      <div className="flex flex-wrap gap-2">
-        {d.options.map((o, i) => (
-          <span key={o.label} data-fade className={`px-3 py-1.5 text-[0.85rem] border ${i === d.chose ? "border-[var(--fg)] text-[var(--fg)]" : "border-[var(--line)] text-[var(--muted)]"}`}>
-            {i === d.chose && <span className="mr-1.5">✓</span>}{o.label}
-          </span>
-        ))}
-      </div>
-    ) : (
-      <div className="grid sm:grid-cols-2 gap-x-10 gap-y-6">
-        {d.options.map((o, i) => {
-          const on = i === d.chose;
-          return (
-            <div key={o.label} data-fade className={`pt-4 border-t ${on ? "border-[var(--fg)]" : "border-[var(--line)]"}`}>
-              <p className="text-[0.8rem] text-[var(--muted)]">{on ? "Chose" : "Considered"}</p>
-              <p className={`mt-1 text-[1.05rem] font-medium ${on ? "" : "text-[var(--muted)]"}`}>{o.label}</p>
-              {o.note && <p className="mt-1.5 text-[0.95rem] leading-[1.6] text-[var(--muted)]">{o.note}</p>}
-            </div>
-          );
-        })}
-      </div>
-    )}
-    {d.why && <blockquote data-fade className="mt-8 pl-4 md:pl-5 border-l-2 text-[1.05rem] md:text-[1.3rem] font-medium leading-[1.45] tracking-[-0.01em]" style={{ borderColor: "var(--fg)" }}>{d.why}</blockquote>}
+  <div className="mt-6 md:mt-7">
+    <ul className="flex flex-wrap items-center gap-x-3 gap-y-2 text-[1rem] md:text-[1.12rem] tracking-[-0.01em]">
+      {d.options.map((o, i) => {
+        const on = i === d.chose;
+        return (
+          <li key={o.label} className="flex items-center gap-3">
+            {i > 0 && <span className="text-[var(--line)]">/</span>}
+            <span className={on ? "font-medium" : "text-[var(--muted)] line-through decoration-1"}>{o.label}</span>
+            {on && <span className="w-1.5 h-1.5 rounded-full" style={{ background: "var(--accent, currentColor)" }} />}
+          </li>
+        );
+      })}
+    </ul>
+    {d.why && <p className="mt-3 max-w-xl text-[0.95rem] md:text-[1rem] leading-[1.6] text-[var(--muted)]">{d.why}</p>}
   </div>
 );
 
@@ -664,7 +669,7 @@ const StoryChapter = ({ s, p, i }) => {
           ))}
         </div>
       )}
-      {s.steps && <TwoCol rows={s.steps.map((st) => ({ title: st.label, text: st.text }))} />}
+      {s.steps && !s.watchDemo && !s.duo && <TwoCol rows={s.steps.map((st) => ({ title: st.label, text: st.text }))} />}
       {s.brand?.colors && (
         <div className="mt-8 flex flex-wrap gap-4">
           {s.brand.colors.map((c) => (
@@ -677,6 +682,67 @@ const StoryChapter = ({ s, p, i }) => {
         </div>
       )}
       {s.walkthrough && <div data-fade className="mt-10 md:mt-12"><Walkthrough {...s.walkthrough} stage={s.grain ? p.grain : undefined} /></div>}
+      {s.board && (
+        <div className="grain grain-neutral mt-10 md:mt-12 p-5 md:p-8">
+          <p className="mono uppercase text-[0.68rem] md:text-[0.75rem] tracking-[0.14em] text-[var(--muted)]">{s.board.label}</p>
+          <div className="mt-6 md:mt-8 space-y-8 md:space-y-0">
+            {s.board.clusters.map((c, i) => (
+              <figure key={c.label} className={`relative ${i % 2 ? "md:ml-auto md:w-[52%] md:-mt-[8%]" : "md:w-[68%]"}`}>
+                <img src={c.src} alt="" loading="lazy" className="w-full h-auto" />
+                <figcaption className={`mt-2 text-[0.8rem] md:text-[0.9rem] text-[var(--muted)] ${i % 2 ? "md:absolute md:left-[6%] md:top-[14%] md:mt-0" : "md:absolute md:left-[3%] md:bottom-[3%] md:mt-0"}`}>{c.label}</figcaption>
+              </figure>
+            ))}
+          </div>
+        </div>
+      )}
+      {s.watchDemo && <div className="cx mt-10 md:mt-12"><WatchDemo {...s.watchDemo} /></div>}
+      {s.duo && (
+        <div className="mt-10 md:mt-12 grid grid-cols-2 gap-4 md:gap-5">
+          <figure>
+            <Square tone={s.duo.watch.tone}>
+              {/* Watch Ultra frame, the recording sits inside its display */}
+              <div className="relative h-[62%] aspect-[1347/2148]">
+                {/* this frame has a solid screen, so the recording goes on top of it */}
+                <img src={s.duo.watch.frame} alt="" className="absolute inset-0 w-full h-full" />
+                <div className="absolute overflow-hidden bg-black rounded-[14%/11.5%]" style={{ left: "9.6%", top: "21.6%", width: "75.2%", height: "56.7%" }}>
+                  <Clip mp4={s.duo.watch.mp4} webm={s.duo.watch.webm} className="w-full h-full object-cover" />
+                </div>
+              </div>
+            </Square>
+            <figcaption className="mt-3 text-[0.8rem] leading-[1.55] text-[var(--muted)]">{s.duo.watch.caption}</figcaption>
+          </figure>
+          <figure>
+            <Square tone={s.duo.phone.tone}><Device kind="phone" frame={s.duo.phone.frame} mp4={s.duo.phone.mp4} webm={s.duo.phone.webm} className="h-[80%]" /></Square>
+            <figcaption className="mt-3 text-[0.8rem] leading-[1.55] text-[var(--muted)]">{s.duo.phone.caption}</figcaption>
+          </figure>
+        </div>
+      )}
+      {(s.watchDemo || s.duo) && s.steps && <TwoCol rows={s.steps.map((st) => ({ title: st.label, text: st.text }))} />}
+      {s.decisions && (
+        <div className="mt-10 md:mt-12 space-y-10 md:space-y-14">
+          {s.decisions.map((d, k) => (
+            <figure key={k}>
+              <div className="flex items-baseline gap-4">
+                <span className="mono text-[0.68rem] text-[var(--muted)]">{String(k + 1).padStart(2, "0")}</span>
+                <p className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-[0.98rem] md:text-[1.05rem] tracking-[-0.01em]">
+                  {d.options.map((o, i) => (
+                    <span key={o} className="flex items-center gap-2.5">
+                      {i > 0 && <span className="text-[var(--line)]">/</span>}
+                      <span className={i === d.chose ? "font-medium" : "text-[var(--muted)] line-through decoration-1"}>{o}</span>
+                      {i === d.chose && <span className="w-1.5 h-1.5 rounded-full" style={{ background: "var(--accent, currentColor)" }} />}
+                    </span>
+                  ))}
+                </p>
+              </div>
+              <div className="grain grain-dark mt-4 p-5 md:p-7">
+                <p className="mono uppercase text-[0.62rem] md:text-[0.68rem] tracking-[0.14em] text-white/40">{d.sketch.label}</p>
+                <img src={d.sketch.src} alt="" loading="lazy" className="mt-4 md:mt-5 mx-auto w-[88%] md:w-[62%] h-auto invert mix-blend-screen" />
+              </div>
+              {d.why && <figcaption className="mt-3 text-[0.8rem] leading-[1.55] text-[var(--muted)]">{d.why}</figcaption>}
+            </figure>
+          ))}
+        </div>
+      )}
       {s.flows && <Rows>{s.flows.map((f) => <Row key={f.label} tone={f.tone} phone={{ kind: "phone", frame: f.frame, mp4: f.mp4, poster: f.poster }} title={f.label} text={f.text} />)}</Rows>}
       {s.chat && <Rows><Row tone={s.chat.tone} text={s.chat.text}><GroupChat chat={s.chat} frame={s.chat.frame} /></Row></Rows>}
       {s.cards && <Rows>{s.cards.map((c) => <Row key={c.title} tone="neutral" phone={{ kind: "phone", ...c.phone }} title={c.title} text={c.text} />)}</Rows>}
@@ -739,8 +805,7 @@ export default function Case({ slug }) {
   if (!p) return <main className="px-5 md:px-10 pt-44"><h1 className="text-6xl">Not found</h1></main>;
   const idx = all.findIndex((x) => x.slug === p.slug);
   const rest = [...all.slice(idx + 1), ...all.slice(0, idx)];
-  const next = rest.find((x) => !x.link);
-  const flow = p.flow ? [{ heading: p.flow.heading, body: p.flow.body, steps: p.flow.steps }] : [];
+    const flow = p.flow ? [{ heading: p.flow.heading, body: p.flow.body, steps: p.flow.steps }] : [];
   const sections = [...flow, ...p.sections];
   const center = p.layout !== "classic";
   const story = p.layout === "story";
@@ -782,7 +847,7 @@ export default function Case({ slug }) {
       {story ? (
         <div className="mt-6 md:grid md:grid-cols-[minmax(0,1fr)_minmax(0,52rem)_minmax(0,1fr)] md:gap-x-10">
           <aside className="hidden md:block pl-4"><Legend sections={sections} accent={p.accent || "var(--fg)"} /></aside>
-          <div data-still className="min-w-0">{sections.map((s, i) => <StoryChapter key={s.heading || s.key || i} s={s} p={p} i={i} />)}</div>
+          <div data-still className="min-w-0" style={{ "--accent": p.accent }}>{sections.map((s, i) => <StoryChapter key={s.heading || s.key || i} s={s} p={p} i={i} />)}</div>
         </div>
       ) : sections.map((s, i) => <Ch key={s.heading || s.key || i} s={s} n={i + 1} p={p} />)}
 
@@ -810,13 +875,13 @@ export default function Case({ slug }) {
           {story && <div className="hidden md:block" />}
           <div className={story ? "" : "contents"}>
           <div className={story ? "" : center ? "" : "md:col-span-4"}>{story ? <p className="text-[0.85rem] md:text-[0.95rem] text-[var(--muted)]">Built with</p> : <Label>Built with</Label>}</div>
-          <ul className={story ? "mt-6 flex flex-wrap gap-x-6 gap-y-6 [&>li]:w-16" : center ? "mx-auto mt-8 max-w-3xl flex flex-wrap justify-center gap-x-6 gap-y-6 [&>li]:w-16 [zoom:0.8]" : "md:col-span-8 grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 gap-x-4 gap-y-8"}>
+          <ul className={story ? "mt-6 flex flex-wrap gap-x-3 gap-y-6 [&>li]:w-[7.5rem]" : center ? "mx-auto mt-8 max-w-3xl flex flex-wrap justify-center gap-x-6 gap-y-6 [&>li]:w-16 [zoom:0.8]" : "md:col-span-8 grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 gap-x-4 gap-y-8"}>
             {p.tools.map((t, i) => {
               const tile = TILES[t.icon];
               const G = tile?.[0];
               return (
-                <li key={t.name} data-fade data-delay={i * 0.04} className="flex flex-col items-center text-center gap-3">
-                  <span className="w-12 h-12 md:w-14 md:h-14 flex items-center justify-center">
+                <li key={t.name} data-fade data-delay={i * 0.04} className={`flex flex-col gap-3 ${story ? "items-start text-left" : "items-center text-center"}`}>
+                  <span className={`w-12 h-12 md:w-14 md:h-14 flex items-center ${story ? "justify-start" : "justify-center"}`}>
                     {t.logo && LOGOS[t.logo] ? (
                       <img src={LOGOS[t.logo]} alt="" className={`max-w-full max-h-full object-contain ${INK.includes(t.logo) ? "icon-ink" : ""}`} />
                     ) : G ? (
@@ -835,22 +900,6 @@ export default function Case({ slug }) {
         </section>
       )}
 
-      {/* next up: one row under a rule. The label sits on the rule, the name on the floor of the row,
-          and the preview fills the right side of the same row, sitting on the same floor line */}
-      {next && (
-        <a href={`#/work/${next.slug}`} onClick={go(`#/work/${next.slug}`)} data-cursor="Next" className="roll-host group mt-32 md:mt-44 pt-6 border-t border-[var(--line)] grid md:grid-cols-12 gap-x-10 gap-y-8">
-          <div className="md:col-span-7 flex flex-col justify-between gap-10">
-            <Label>(Next case study)</Label>
-            <div>
-              <p className="text-[14vw] md:text-[7vw] leading-[0.82] tracking-[-0.055em]"><Roll>{next.name}</Roll></p>
-              <p className="mt-5 flex justify-between gap-4 text-sm text-[var(--muted)]"><span>{next.tags?.join(", ")}</span><span className="text-[var(--fg)]"><Roll>View case study</Roll></span></p>
-            </div>
-          </div>
-          <div className="md:col-span-5 relative h-[16rem] md:h-[22rem] overflow-hidden flex items-end justify-center transition-transform duration-700 group-hover:scale-[0.97] [&_img]:object-contain [&_img]:object-bottom [&_video]:object-contain [&_video]:object-bottom">
-            <CardVisual p={next} />
-          </div>
-        </a>
-      )}
       <Footer />
     </main>
   );

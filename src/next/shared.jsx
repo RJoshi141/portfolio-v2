@@ -18,7 +18,7 @@ export const isVideo = (src) => typeof src === "string" && /\.(mp4|webm|mov)(\?|
 // ---------------------------------------------------------------- devices
 // screen boxes measured off the frame PNGs (same numbers as the current site)
 const BOX = {
-  phone: { aspect: "aspect-[2025/4139]", screen: { left: "5.2%", top: "2.3%", width: "89.6%", height: "95.4%" }, round: "rounded-[13%/6%]", under: true },
+  phone: { aspect: "aspect-[2025/4139]", screen: { left: "4.4%", top: "2.1%", width: "91.2%", height: "95.8%" }, round: "rounded-[17.5%/8.4%]", under: true },
   // iPhone 17 frame (Layer revamp), measured off iphone-17-frame.png (450x920)
   phone17: { aspect: "aspect-[450/920]", screen: { left: "5.2%", top: "2.4%", width: "89.6%", height: "95.2%" }, round: "rounded-[15%/7%]", under: true },
   landscape: { aspect: "aspect-[895/438]", screen: { left: "2.46%", top: "5.48%", width: "94.97%", height: "89.27%" }, round: "rounded-[7%/15%]", under: true },
@@ -26,15 +26,33 @@ const BOX = {
   watch: { aspect: "aspect-[1347/1496]", screen: { left: "9.5%", top: "9.1%", width: "75.3%", height: "81.6%" }, round: "rounded-[14%/11.5%]", under: false },
 };
 
+// a looping muted clip that always starts: React doesn't write the muted attribute, which can
+// leave Safari holding the first frame, so set it and call play() once mounted. mp4 goes first
+// because every browser plays it.
+export const Clip = ({ mp4, webm, poster, className = "" }) => {
+  const ref = useRef(null);
+  useEffect(() => {
+    const v = ref.current;
+    if (!v) return;
+    v.muted = true;
+    v.setAttribute("muted", "");
+    const p = v.play();
+    if (p && p.catch) p.catch(() => {});
+  }, [mp4, webm]);
+  return (
+    <video ref={ref} autoPlay muted loop playsInline preload="auto" poster={poster} className={className}>
+      <source src={mp4} type="video/mp4" />
+      {webm && <source src={webm} type="video/webm" />}
+    </video>
+  );
+};
+
 export const Device = ({ kind = "phone", frame, mp4, webm, poster, className = "", children }) => {
   const b = BOX[kind] || BOX.phone;
   const screen = (
     <div className={`absolute overflow-hidden bg-black ${b.round}`} style={b.screen}>
       {children ? children : mp4 ? (
-        <video autoPlay muted loop playsInline poster={poster} className="w-full h-full object-cover">
-          {webm && <source src={webm} type="video/webm" />}
-          <source src={mp4} type="video/mp4" />
-        </video>
+        <Clip mp4={mp4} webm={webm} poster={poster} className="w-full h-full object-cover" />
       ) : (
         poster && <img src={poster} alt="" className="w-full h-full object-cover object-top" />
       )}

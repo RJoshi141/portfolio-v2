@@ -95,6 +95,7 @@ import evenPickLocationMp4 from "../../assets/case-studies/even/pick-location-2.
 import evenPickLocationPoster from "../../assets/case-studies/even/pick-location-2-poster.jpg";
 import utterHeroMp4 from "../../assets/case-studies/utter/hero-watch-3.mp4";
 import utterHeroPoster from "../../assets/case-studies/utter/hero-watch-3-poster.jpg";
+import utterHeroWrist from "../../assets/case-studies/utter/hero-wrist.jpg"; // the welcome screen on a wrist
 import lumonHeroMp4 from "../../assets/case-studies/lumon/hero-imac.mp4";
 import lumonHeroPoster from "../../assets/case-studies/lumon/hero-imac-poster.jpg";
 import lumonDemoMp4 from "../../assets/case-studies/lumon/demo.mp4";
@@ -118,6 +119,11 @@ import utterPhoneInbox from "../../assets/case-studies/utter/iphone-inbox.png";
 import utterWatchIntro from "../../assets/case-studies/utter/watch-intro-3up.png";
 import utterWatchRecordReview from "../../assets/case-studies/utter/watch-final-record-review.png";
 import utterWatchSyncConfirm from "../../assets/case-studies/utter/watch-final-sync-confirm.png";
+// the two exploration boards: sketches, and the app on real devices
+import utterBoardSketches from "../../assets/case-studies/utter/utter-board-sketches.webp";
+import utterBoardDevice from "../../assets/case-studies/utter/utter-board-device.webp";
+import utterBgTown from "../../assets/case-studies/utter/bg-town.jpg";
+import utterBgButterfly from "../../assets/case-studies/utter/bg-butterfly.jpg";
 import joydropLoginBefore from "../../assets/case-studies/joydrop/login-before-web.png";
 import joydropLoginAfter from "../../assets/case-studies/joydrop/login-after-ios.png";
 import joydropCommunitiesBefore from "../../assets/case-studies/joydrop/communities-before.png";
@@ -397,141 +403,101 @@ export const projects = [
     // still shown first, before the looping demos
     // hero: the watch turning on its band, looping (replaces the three-watch intro still)
     // recording at its own near-square shape, centered, no extra background around it
-    heroVideo: { mp4: utterHeroMp4, poster: utterHeroPoster, fit: true, aspect: 1000 / 984, width: "md:w-[44%]" },
-    demo: {
-      frame: watchUltraFrame, mp4: utterDemoMp4, webm: utterDemoWebm,
-      phone: { frame: iphoneFrame, mp4: utterPhoneMp4, webm: utterPhoneWebm },
-    },
+    heroImage: utterHeroWrist,
     year: "", // TODO
     stack: ["Swift", "SwiftUI", "WatchConnectivity", "AVFoundation", "SFSpeechRecognizer"],
-    // shown right under the demos: how a voice memo gets from the watch into the iPhone inbox
-    // TODO: rewrite the text in your words; code is trimmed from the Utter repo
-    flow: {
-      heading: "From wrist to inbox",
-      body: "Audio on the watch becomes sorted text on the phone in five steps.",
-      steps: [
-        {
-          label: "Record",
-          text: "A small mono AAC file at 12 kHz: plenty for speech, light enough to send.",
-        },
-        {
-          label: "Send",
-          text: "WatchConnectivity queues the file and delivers it in the background, so you can drop your wrist and move on.",
-        },
-        {
-          label: "Receive",
-          text: "The iPhone moves the file into its own folder right away, before the system cleans it up.",
-        },
-        {
-          label: "Transcribe",
-          text: "The Speech framework runs on the file and waits for the final result, not partials.",
-        },
-        {
-          label: "Sort",
-          text: "A keyword pass picks Reminder, Todo, Idea or Note. You can change it before saving.",
-        },
-      ],
-    },
+    layout: "story",
+    accent: "#C99A1E",
     sections: [
       {
-        heading: "The problem",
-        body: "Ideas show up at bad times. Pulling out a phone, unlocking it, and opening a notes app is enough friction to lose the thought.",
+        eyebrow: "Solution", nav: "Solution",
+        heading: "Say it on your wrist, read it on your phone",
+        body: "Hold to talk on the watch. It lands on the iPhone transcribed and sorted.",
+        // the watch and the phone, each in its own square on a blurred photo
+        duo: {
+          watch: { frame: watchUltraFrame, mp4: utterDemoMp4, webm: utterDemoWebm, tone: `center / cover no-repeat url(${utterBgTown})`, caption: "Hold to talk on the watch." },
+          phone: { frame: iphoneFrame, mp4: utterPhoneMp4, webm: utterPhoneWebm, tone: `center / cover no-repeat url(${utterBgButterfly})`, caption: "It lands on the iPhone, transcribed." },
+        },
+        // how a memo gets from the wrist to the inbox
+        steps: [
+          { label: "Record", text: "Mono AAC at 12 kHz: plenty for speech, light enough to send." },
+          { label: "Send", text: "WatchConnectivity delivers it in the background. Drop your wrist and move on." },
+          { label: "Receive", text: "The iPhone moves the file into its own folder before the system cleans it up." },
+          { label: "Transcribe", text: "The Speech framework waits for the final result, not partials." },
+          { label: "Sort", text: "A keyword pass picks Reminder, Todo, Idea or Note. You can change it." },
+        ],
       },
       {
-        // empathy map: who Utter is for
-        heading: "Who it's for",
-        body: "Good ideas show up at bad times. These are the people who lose them.",
-        empathy: {
-          who: "People who think on the move: walking, driving, working out, or mid-conversation, with an Apple Watch already on their wrist.",
-          says: ["I'll remember it later.", "Wait, what was that idea?"],
-          thinks: ["By the time I unlock my phone, it's gone.", "I don't want to stop what I'm doing."],
-          does: ["Texts notes to themselves", "Leaves voice memos they never replay", "Keeps a dozen half-finished lists"],
-          feels: ["scattered", "rushed", "forgetful", "frustrated"],
-          hears: ["\"Just write it down.\"", "Notification pings pulling them away"],
-          needs: ["One tap from the wrist", "Notes that sort themselves"],
+        eyebrow: "Problem", nav: "Problem",
+        heading: "Good ideas show up at bad times",
+        body: "Walking, driving, mid-workout. By the time you unlock your phone and open a notes app, the thought is gone.",
+      },
+      {
+        eyebrow: "Exploration", nav: "Exploration",
+        heading: "From sketch to wrist",
+        body: "Paper and Figma first, then the real thing on a real watch.",
+        // one panel, two loose clusters, like a moodboard (after the Tomo case study)
+        board: {
+          label: "Sketch to device explorations",
+          clusters: [
+            { src: utterBoardSketches, label: "Sketches" },
+            { src: utterBoardDevice, label: "On the device" },
+          ],
         },
       },
       {
-        heading: "Early sketches",
-        // TODO: rewrite these in your words
-        body: "Before writing any code I sketched the three moments that matter on the wrist: before you speak, while you're speaking, and right after.",
-        // compact rows: label + note left, sketch right (optional inset sizes the sketch in its panel)
-        grid: true, // next site: all four sketches shown at once in a grid, not a scroll strip
-        media: [
+        eyebrow: "Design decisions", nav: "Design decisions",
+        heading: "Three small calls on the wrist",
+        // one chapter: each call is its options in a line, then the sketch it came from
+        decisions: [
           {
-            label: "v1 · Idle screen",
-            text: "Three ways to start a memo: tap anywhere, hold a button with the inbox one tap away, or hold a mic with the inbox a scroll below. Hold to record won. Pressing to talk and letting go to finish felt like the most natural gesture on a watch.",
-            src: utterSketchV1,
-            inset: "w-[70%] h-[64%]",
+            options: ["Tap anywhere", "Hold a button", "Hold the mic"], chose: 2,
+            sketch: { src: utterSketchV1, label: "v1 · idle screen" },
+            why: "Press to talk, let go to finish. The most natural gesture on a watch.",
           },
           {
-            label: "v2 · Recording state",
-            text: "Once you're talking, the screen has one job: confirm it's listening and tell you how to stop. I tried waveform bars, a circular timer ring, and a pulsing dot. The waveform shipped because it shows the watch is actually hearing you, with the timer and release hint right underneath.",
-            src: utterSketchV2,
-            inset: "w-[70%] h-[64%]",
+            options: ["Timer ring", "Pulsing dot", "Waveform bars"], chose: 2,
+            sketch: { src: utterSketchV2, label: "v2 · recording state" },
+            why: "The bars move with your voice, so you can see it hears you.",
           },
           {
-            label: "v3 · Review screen",
-            text: "What happens after you let go? I sketched an explicit review step with play, trash, and save; a swipe left or right to keep or discard; and a confirmation that skips review and just shows the memo landed on your iPhone, already tagged with a category.",
-            src: utterSketchV3,
-            inset: "w-[70%] h-[64%]",
-          },
-          {
-            label: "Final direction",
-            text: "Putting it together: a quiet idle screen that just says hold to speak, a waveform and timer while you talk, a quick review to play, trash, or send, and a confirmation that it landed on your iPhone with one tap to record again.",
-            src: utterSketchFinal,
+            options: ["Swipe to decide", "No review", "Play, trash or send"], chose: 2,
+            sketch: { src: utterSketchV3, label: "v3 · review screen" },
+            why: "One glance to catch a bad take before it sends.",
           },
         ],
       },
       {
-        heading: "Design",
-        // TODO: rewrite in your words
-        body: [
-          "Utter lives on a dark canvas so it feels at home next to watchOS, where black is the default and the screen melts into the bezel. One warm amber accent does all the pointing: the mic, the Inbox button, Get Started. If it's yellow, it's the thing to tap.",
-          "Color is saved for meaning. Each category gets its own: green for Todo, orange for Reminder, purple for Idea, blue for Note. The same colors show up as chips during onboarding and as full cards in the inbox, so you learn the system once and read it at a glance.",
-          "Every screen has one job. The record screen is mostly empty space around one big target, because you're usually grabbing it mid-thought. Big bold titles and quiet grey secondary text carry the hierarchy, so nothing needs extra decoration.",
-        ],
-      },
-      {
-        // live UI components rebuilt in code, on Utter's black canvas
-        heading: "Exploring UI components",
-        body: "The pieces that make up Utter, rebuilt here in code.",
-        components: "utter",
-      },
-      {
-        // iPhone screens in one row, each on its own grey panel with a note underneath
-        key: "iphone-screens",
-        row: true, // next site: the three phones centered in one row
-        inset: "w-[92%] h-[92%]",
-        bare: true, // screenshots sit straight on the page, no grey panels
+        eyebrow: "Visual design", nav: "Visual design",
+        heading: "One amber accent on black",
+        body: "If it's yellow, it's the thing to tap. Each category gets its own colour: green Todo, orange Reminder, purple Idea, blue Note.",
         images: [
-          { src: utterPhoneOnboarding, caption: "Onboarding. First launch explains the loop: record on your wrist, transcribe on your phone, and every memo lands in one of four categories." },
-          { src: utterPhoneRecord, caption: "Record. Hold the mic to capture a thought right on the phone, or import your latest Apple Watch recording and transcribe it." },
-          { src: utterPhoneInbox, caption: "Inbox. Memos get sorted into Todo, Reminder, Idea, and Note, with counts and completed items at a glance." },
+          { src: utterPhoneOnboarding, tall: true, caption: "Onboarding: record on your wrist, read on your phone, four categories." },
+          { src: utterPhoneRecord, tall: true, caption: "Record: hold the mic, or import the latest watch recording." },
+          { src: utterPhoneInbox, tall: true, caption: "Inbox: sorted into Todo, Reminder, Idea and Note." },
         ],
       },
       {
-        heading: "Final watch app",
-        // TODO: rewrite in your words
-        body: "Where the sketches ended up. Four states, one gesture: hold to talk, let go to review, tap to send.",
-        // both final frames side by side with a note underneath, straight on the page (no grey panels)
-        bare: true,
+        eyebrow: "Final", nav: "Final app",
+        heading: "Four states, one gesture",
+        body: "Hold to talk, let go to review, tap to send.",
         images: [
-          {
-            src: utterWatchRecordReview,
-            wide: true, small: true, // next site: one per row, kept compact
-            inset: "w-[80%] h-[60%]",
-            caption: "Record and review. The idle screen is just a mic that breathes. Holding it swaps in a live waveform and timer, and letting go lands on a review screen to play it back, trash it, or send it to your iPhone.",
-          },
-          {
-            src: utterWatchSyncConfirm,
-            wide: true, small: true, // next site: one per row, kept compact
-            inset: "w-[62%] h-[58%]",
-            caption: "Sync and confirm. A spinner while WatchConnectivity hands the file off, then a clear Sent to iPhone with one tap to record the next thought.",
-          },
+          { src: utterWatchRecordReview, w: "w-[73%] md:w-[55%]", caption: "Record and review: a mic that breathes, a live waveform, then play, trash or send." },
+          { src: utterWatchSyncConfirm, w: "w-[47%] md:w-[35%]", caption: "Sync and confirm: a spinner during the handoff, then Sent to iPhone." },
+        ],
+        // the watch turning on its band, closing the case study
+        video: { src: utterHeroMp4, w: "w-[70%] md:w-[44%]", caption: "The finished watch app." },
+      },
+      {
+        tag: "Impact",
+        eyebrow: "Impact", nav: "Impact",
+        heading: "A thought saved in one gesture",
+        stats: [
+          { value: "1", label: "Gesture: hold, let go, send" },
+          { value: "4", label: "Categories every memo sorts into" },
+          { value: "12 kHz", label: "Mono audio, light enough to send" },
         ],
       },
-      // TODO: { heading: "How it works", body: "...", image: someImport, caption: "..." },
     ],
     // tools row at the bottom of the case study
     tools: [
@@ -542,11 +508,7 @@ export const projects = [
       { name: "AVFoundation", icon: "audio" },
       { name: "Speech", icon: "mic", note: "SFSpeechRecognizer" },
     ],
-    metrics: [
-      { value: "1", label: "Gesture to capture: hold, let go, send" },
-      { value: "4", label: "Categories every memo sorts into" },
-      { value: "12 kHz", label: "Mono audio, light enough to send from the wrist" },
-    ],
+    metrics: [], // shown as the Impact chapter instead
     gallery: [], // extra full-width screenshots, shown numbered
   },
   {

@@ -1,0 +1,142 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2600" height="1340" viewBox="0 0 2600 1340" xmlns:c2pa="http://c2pa.org/manifest">
+<defs><style>
+.l{fill:none;stroke:#EDEDED;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.t{fill:none;stroke:#EDEDED;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;opacity:.7}
+.d{fill:none;stroke:#8C8C8C;stroke-width:1.6;stroke-dasharray:6 7;stroke-linecap:round}
+.y{fill:none;stroke:#F2C94C;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.ui{font-family:'SF Pro Text',-apple-system,Inter,sans-serif;fill:#EDEDED}
+.ph{font-family:'SF Mono',ui-monospace,Menlo,monospace;font-size:15px;fill:#8C8C8C;letter-spacing:2px}
+.h{font-family:'SF Pro Text',-apple-system,Inter,sans-serif;font-size:22px;font-weight:600;fill:#EDEDED}
+.n{font-family:'SF Pro Text',-apple-system,Inter,sans-serif;font-size:17px;fill:#8C8C8C}
+.nb{font-family:'SF Pro Text',-apple-system,Inter,sans-serif;font-size:17px;fill:#EDEDED;font-weight:600}
+</style>
+<marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M1 1 L9 5 L1 9" fill="none" stroke="#EDEDED" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker>
+<marker id="am" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M1 1 L9 5 L1 9" fill="none" stroke="#8C8C8C" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker>
+<pattern id="g" width="26" height="26" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1.1" fill="#2C2C2C"/></pattern>
+</defs>
+<rect width="2600" height="1340" fill="#1C1C1C"/><rect width="2600" height="1340" fill="url(#g)"/>
+<text x="300" y="110" class="ph" text-anchor="middle">01  BEFORE YOU SPEAK</text>
+<line x1="240" y1="132" x2="360" y2="132" stroke="#4A4A4A" stroke-width="1.4"/>
+<text x="790" y="110" class="ph" text-anchor="middle">02  WHILE YOU SPEAK</text>
+<line x1="730" y1="132" x2="850" y2="132" stroke="#4A4A4A" stroke-width="1.4"/>
+<text x="1280" y="110" class="ph" text-anchor="middle">03  RIGHT AFTER</text>
+<line x1="1220" y1="132" x2="1340" y2="132" stroke="#4A4A4A" stroke-width="1.4"/>
+<text x="1770" y="110" class="ph" text-anchor="middle">04  HANDOFF</text>
+<line x1="1710" y1="132" x2="1830" y2="132" stroke="#4A4A4A" stroke-width="1.4"/>
+<text x="2290" y="110" class="ph" text-anchor="middle">05  ON THE IPHONE</text>
+<line x1="2230" y1="132" x2="2350" y2="132" stroke="#4A4A4A" stroke-width="1.4"/>
+<rect x="175.0" y="350.0" width="250" height="300" rx="64" class="l"/>
+<rect x="185.0" y="360.0" width="230" height="280" rx="56" class="t"/>
+<rect x="197.0" y="372.0" width="206" height="256" rx="46" class="t" opacity=".45"/>
+<path d="M425.0 420.0 h10 v12 h8 q6 0 6 6 v40 q0 6 -6 6 h-8 v12 h-10" class="l"/>
+<path d="M425.0 525.0 h8 v70 h-8" class="l"/>
+<text x="300" y="410" class="ui" text-anchor="middle" font-size="17" font-weight="600">Utter</text>
+<rect x="286" y="450" width="28" height="46" rx="14" class="y"/><path d="M272 482 a28 28 0 0 0 56 0 M300 510 v12 M286 524 h28" class="y"/>
+<text x="300" y="562" class="ui" text-anchor="middle" font-size="16" font-weight="600">Hold to speak</text>
+<line x1="230" y1="580" x2="370" y2="580" class="t"/>
+<text x="300" y="604" class="ui" text-anchor="middle" font-size="14">Scroll for inbox ↓</text>
+<circle cx="300" cy="476" r="46" class="d"/>
+<rect x="665.0" y="350.0" width="250" height="300" rx="64" class="l"/>
+<rect x="675.0" y="360.0" width="230" height="280" rx="56" class="t"/>
+<rect x="687.0" y="372.0" width="206" height="256" rx="46" class="t" opacity=".45"/>
+<path d="M915.0 420.0 h10 v12 h8 q6 0 6 6 v40 q0 6 -6 6 h-8 v12 h-10" class="l"/>
+<path d="M915.0 525.0 h8 v70 h-8" class="l"/>
+<text x="790" y="418" class="ui" text-anchor="middle" font-size="19" font-weight="600">Recording…</text>
+<line x1="708" y1="479.0" x2="708" y2="501.0" stroke="#EDEDED" stroke-width="8" stroke-linecap="round" opacity="0.55"/>
+<line x1="726" y1="470.0" x2="726" y2="510.0" stroke="#EDEDED" stroke-width="8" stroke-linecap="round" opacity="0.55"/>
+<line x1="744" y1="475.0" x2="744" y2="505.0" stroke="#EDEDED" stroke-width="8" stroke-linecap="round" opacity="0.55"/>
+<line x1="762" y1="461.0" x2="762" y2="519.0" stroke="#F2C94C" stroke-width="8" stroke-linecap="round" opacity="1"/>
+<line x1="780" y1="454.0" x2="780" y2="526.0" stroke="#F2C94C" stroke-width="8" stroke-linecap="round" opacity="1"/>
+<line x1="798" y1="464.0" x2="798" y2="516.0" stroke="#F2C94C" stroke-width="8" stroke-linecap="round" opacity="1"/>
+<line x1="816" y1="458.0" x2="816" y2="522.0" stroke="#F2C94C" stroke-width="8" stroke-linecap="round" opacity="1"/>
+<line x1="834" y1="472.0" x2="834" y2="508.0" stroke="#EDEDED" stroke-width="8" stroke-linecap="round" opacity="0.55"/>
+<line x1="852" y1="468.0" x2="852" y2="512.0" stroke="#EDEDED" stroke-width="8" stroke-linecap="round" opacity="0.55"/>
+<line x1="870" y1="477.0" x2="870" y2="503.0" stroke="#EDEDED" stroke-width="8" stroke-linecap="round" opacity="0.55"/>
+<text x="790" y="562" class="ui" text-anchor="middle" font-size="24" font-weight="700">00:05</text>
+<text x="790" y="594" class="ui" text-anchor="middle" font-size="15" fill="#8C8C8C">Release to save</text>
+<rect x="1155.0" y="350.0" width="250" height="300" rx="64" class="l"/>
+<rect x="1165.0" y="360.0" width="230" height="280" rx="56" class="t"/>
+<rect x="1177.0" y="372.0" width="206" height="256" rx="46" class="t" opacity=".45"/>
+<path d="M1405.0 420.0 h10 v12 h8 q6 0 6 6 v40 q0 6 -6 6 h-8 v12 h-10" class="l"/>
+<path d="M1405.0 525.0 h8 v70 h-8" class="l"/>
+<text x="1280" y="418" class="ui" text-anchor="middle" font-size="19" font-weight="600">Review</text>
+<rect x="1200" y="442" width="160" height="36" rx="18" class="t"/>
+<text x="1280" y="466" class="ui" text-anchor="middle" font-size="13" fill="#8C8C8C">utter-abc123.m4a</text>
+<circle cx="1218" cy="520" r="22" class="l"/>
+<path d="M1212 510 L1227 520 L1212 530 Z" class="l"/>
+<text x="1218" y="566" class="ui" text-anchor="middle" font-size="13" fill="#8C8C8C">Play</text>
+<circle cx="1280" cy="520" r="22" class="l"/>
+<path d="M1271 512 h18 M1274 512 v16 h12 v-16 M1277 508 h6" class="l"/>
+<text x="1280" y="566" class="ui" text-anchor="middle" font-size="13" fill="#8C8C8C">Trash</text>
+<circle cx="1342" cy="520" r="22" class="y"/>
+<path d="M1333 520 h16 M1344 513 l7 7 l-7 7" class="y"/>
+<text x="1342" y="566" class="ui" text-anchor="middle" font-size="13" fill="#8C8C8C">Send</text>
+<rect x="1645.0" y="350.0" width="250" height="300" rx="64" class="l"/>
+<rect x="1655.0" y="360.0" width="230" height="280" rx="56" class="t"/>
+<rect x="1667.0" y="372.0" width="206" height="256" rx="46" class="t" opacity=".45"/>
+<path d="M1895.0 420.0 h10 v12 h8 q6 0 6 6 v40 q0 6 -6 6 h-8 v12 h-10" class="l"/>
+<path d="M1895.0 525.0 h8 v70 h-8" class="l"/>
+<circle cx="1770" cy="470" r="38" fill="#F2C94C"/><path d="M1755 470 l10 11 l20 -24" fill="none" stroke="#1C1C1C" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="1770" y="542" class="ui" text-anchor="middle" font-size="19" font-weight="600">Sent to iPhone</text>
+<text x="1770" y="572" class="ui" text-anchor="middle" font-size="14" fill="#8C8C8C">Tap to record again</text>
+<rect x="2180" y="290" width="220" height="430" rx="38" class="l"/><rect x="2189" y="299" width="202" height="412" rx="30" class="t"/>
+<rect x="2256" y="312" width="68" height="20" rx="10" class="l"/>
+<text x="2206" y="370" class="ui" text-anchor="start" font-size="19" font-weight="700">Inbox</text>
+<rect x="2202" y="394" width="176" height="54" rx="12" class="y"/>
+<line x1="2218" y1="414" x2="2330" y2="414" class="l"/><line x1="2218" y1="430" x2="2300" y2="430" class="t"/>
+<rect x="2202" y="460" width="176" height="54" rx="12" class="t"/>
+<line x1="2218" y1="480" x2="2330" y2="480" class="l"/><line x1="2218" y1="496" x2="2300" y2="496" class="t"/>
+<rect x="2202" y="526" width="176" height="54" rx="12" class="t"/>
+<line x1="2218" y1="546" x2="2330" y2="546" class="l"/><line x1="2218" y1="562" x2="2300" y2="562" class="t"/>
+<rect x="2202" y="592" width="176" height="54" rx="12" class="t"/>
+<line x1="2218" y1="612" x2="2330" y2="612" class="l"/><line x1="2218" y1="628" x2="2300" y2="628" class="t"/>
+<text x="2364" y="418" class="ui" text-anchor="end" font-size="11" fill="#F2C94C">new</text>
+<line x1="450" y1="500" x2="640" y2="500" class="l" marker-end="url(#ar)"/>
+<line x1="940" y1="500" x2="1130" y2="500" class="l" marker-end="url(#ar)"/>
+<line x1="1430" y1="500" x2="1620" y2="500" class="l" marker-end="url(#ar)"/>
+<line x1="1920" y1="500" x2="2160" y2="500" class="d" marker-end="url(#am)"/>
+<text x="545" y="486" class="ui" text-anchor="middle" font-size="14" fill="#8C8C8C">press + hold</text>
+<text x="1035" y="486" class="ui" text-anchor="middle" font-size="14" fill="#8C8C8C">release</text>
+<text x="1525" y="486" class="ui" text-anchor="middle" font-size="14" fill="#8C8C8C">send</text>
+<text x="2040.0" y="486" class="ui" text-anchor="middle" font-size="14" fill="#8C8C8C">syncs in the background</text>
+<path d="M1280 675 C 1280 790, 300 790, 300 680" class="d" marker-end="url(#am)"/>
+<rect x="530.0" y="732" width="520" height="30" fill="#1C1C1C"/>
+<text x="790.0" y="753" class="ui" text-anchor="middle" font-size="15" fill="#8C8C8C">trash: gone, back to start. No confirm, it's a 5 second memo.</text>
+<path d="M1770 325 C 1770 220, 300 220, 300 320" class="d" marker-end="url(#am)"/>
+<rect x="795.0" y="220" width="480" height="30" fill="#1C1C1C"/>
+<text x="1035.0" y="241" class="ui" text-anchor="middle" font-size="15" fill="#8C8C8C">tap to record again: the next thought is one tap away</text>
+<line x1="150" y1="872" x2="150" y2="984" stroke="#F2C94C" stroke-width="2.4"/>
+<text x="168" y="894" class="nb" text-anchor="start">Why hold, not tap</text>
+<text x="168" y="924" class="n" text-anchor="start">A tap fires by accident in a pocket</text>
+<text x="168" y="950" class="n" text-anchor="start">or a sleeve. Holding means you</text>
+<text x="168" y="976" class="n" text-anchor="start">meant it, and letting go saves.</text>
+<line x1="640" y1="872" x2="640" y2="984" stroke="#F2C94C" stroke-width="2.4"/>
+<text x="658" y="894" class="nb" text-anchor="start">Proof it's listening</text>
+<text x="658" y="924" class="n" text-anchor="start">Live bars and a timer, nothing else.</text>
+<text x="658" y="950" class="n" text-anchor="start">You glance once and keep talking.</text>
+<text x="658" y="976" class="n" text-anchor="start">No stop button to hunt for.</text>
+<line x1="1130" y1="872" x2="1130" y2="984" stroke="#F2C94C" stroke-width="2.4"/>
+<text x="1148" y="894" class="nb" text-anchor="start">Three actions, one row</text>
+<text x="1148" y="924" class="n" text-anchor="start">Play, Trash, Send, big enough to hit</text>
+<text x="1148" y="950" class="n" text-anchor="start">on a 45mm screen. Send is the only</text>
+<text x="1148" y="976" class="n" text-anchor="start">thing in yellow, so it's the default.</text>
+<line x1="1620" y1="872" x2="1620" y2="984" stroke="#F2C94C" stroke-width="2.4"/>
+<text x="1638" y="894" class="nb" text-anchor="start">Done means done</text>
+<text x="1638" y="924" class="n" text-anchor="start">A yellow check, then it gets out of</text>
+<text x="1638" y="950" class="n" text-anchor="start">the way. The watch never shows a</text>
+<text x="1638" y="976" class="n" text-anchor="start">transcript you'd have to read.</text>
+<line x1="2140" y1="872" x2="2140" y2="984" stroke="#F2C94C" stroke-width="2.4"/>
+<text x="2158" y="894" class="nb" text-anchor="start">The reading happens here</text>
+<text x="2158" y="924" class="n" text-anchor="start">Transcribed on device, waiting in the</text>
+<text x="2158" y="950" class="n" text-anchor="start">inbox. The wrist captures, the phone</text>
+<text x="2158" y="976" class="n" text-anchor="start">is where you sort and reread.</text>
+<line x1="150" y1="1170" x2="2450" y2="1170" stroke="#4A4A4A" stroke-width="1.4"/>
+<text x="150" y="1232" class="ui" text-anchor="start" font-size="30" font-weight="700">1 gesture</text>
+<text x="150" y="1264" class="n" text-anchor="start">press and hold to start, let go to save</text>
+<text x="730" y="1232" class="ui" text-anchor="start" font-size="30" font-weight="700">3 actions</text>
+<text x="730" y="1264" class="n" text-anchor="start">play, trash, send</text>
+<text x="1310" y="1232" class="ui" text-anchor="start" font-size="30" font-weight="700">0 typing</text>
+<text x="1310" y="1264" class="n" text-anchor="start">on the watch</text>
+<text x="1890" y="1232" class="ui" text-anchor="start" font-size="30" font-weight="700">1 colour</text>
+<text x="1890" y="1264" class="n" text-anchor="start">yellow means go</text>
+<metadata><c2pa:manifest>AAAWgmp1bWIAAAAeanVtZGMycGEAEQAQgAAAqgA4m3EDYzJwYQAAABZcanVtYgAAAEdqdW1kYzJtYQARABCAAACqADibcQN1cm46YzJwYTpjMTFjMGY1ZC04MDQyLTRkM2EtYTgxYi04M2JmN2UzYjExODEAAAADl2p1bWIAAAApanVtZGMyYXMAEQAQgAAAqgA4m3EDYzJwYS5hc3NlcnRpb25zAAAAALxqdW1iAAAARGp1bWRjYm9yABEAEIAAAKoAOJtxE2MycGEuaW5ncmVkaWVudC52MwAAAAAYYzJzaJBHKJExyFw4KSjkuxsBXysAAABwY2JvcqNpZGM6Zm9ybWF0bWltYWdlL3N2Zyt4bWxqaW5zdGFuY2VJRHgseG1wOmlpZDpjMjBlYjIxOC0zMDM0LTRmZDctODE3YS0wOWJkMzcxMDkzYzZscmVsYXRpb25zaGlwaHBhcmVudE9mAAAB4mp1bWIAAABBanVtZGNib3IAEQAQgAAAqgA4m3ETYzJwYS5hY3Rpb25zLnYyAAAAABhjMnNoEVIIHDDul393hTs4TTwgNQAAAZljYm9yomdhY3Rpb25zgqJmYWN0aW9ua2MycGEub3BlbmVkanBhcmFtZXRlcnOha2luZ3JlZGllbnRzgaJjdXJseC1zZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmluZ3JlZGllbnQudjNkaGFzaFggQ/IKZbOBoMxQjPhcxNtwx5+af4/xNhfIzHo9gMVlGR+kZmFjdGlvbngdY29tLmFudGhyb3BpYy5jbGF1ZGUucHJvdmlkZWRqcGFyYW1ldGVyc6F4H2NvbS5hbnRocm9waWMub3JpZ2luLWNvbmZpZGVuY2VndW5rbm93bmtkZXNjcmlwdGlvbnhmQ2xhdWRlIHByb3ZpZGVkIHRoaXMgZmlsZSBhdCB0aGUgcmVxdWVzdCBvZiBhIHVzZXIgYW5kIG1heSBoYXZlIGNyZWF0ZWQgb3IgbW9kaWZpZWQgdGhlIGZpbGUgY29udGVudHMubXNvZnR3YXJlQWdlbnShZG5hbWVmQ2xhdWRlcmFsbEFjdGlvbnNJbmNsdWRlZPUAAADIanVtYgAAAEBqdW1kY2JvcgARABCAAACqADibcRNjMnBhLmhhc2guZGF0YQAAAAAYYzJzaGqUcSv5Fn8Vgpg4obg+nD0AAACAY2JvcqVjYWxnZnNoYTI1NmNwYWRMAAAAAAAAAAAAAAAAZGhhc2hYIBOQr2xglWcYb6yl7077HhHxfp5/W7/nywJ7du8foc5jZG5hbWVuanVtYmYgbWFuaWZlc3RqZXhjbHVzaW9uc4GiZXN0YXJ0GTH8Zmxlbmd0aBkeBAAAAj5qdW1iAAAAJ2p1bWRjMmNsABEAEIAAAKoAOJtxA2MycGEuY2xhaW0udjIAAAACD2Nib3KlY2FsZ2ZzaGEyNTZpc2lnbmF0dXJleE1zZWxmI2p1bWJmPS9jMnBhL3VybjpjMnBhOmMxMWMwZjVkLTgwNDItNGQzYS1hODFiLTgzYmY3ZTNiMTE4MS9jMnBhLnNpZ25hdHVyZWppbnN0YW5jZUlEeCx4bXA6aWlkOmI4OTY0NzFkLTZhZmEtNDBlOC05NjdmLTUxZDc4YjU0MTM2ZnJjcmVhdGVkX2Fzc2VydGlvbnODomN1cmx4LXNlbGYjanVtYmY9YzJwYS5hc3NlcnRpb25zL2MycGEuaW5ncmVkaWVudC52M2RoYXNoWCBD8gpls4GgzFCM+FzE23DHn5p/j/E2F8jMej2AxWUZH6JjdXJseCpzZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmFjdGlvbnMudjJkaGFzaFggNkQukhWd85ehWRffdTezEHdw0WvyNLyL9FjrI1oZsKKiY3VybHgpc2VsZiNqdW1iZj1jMnBhLmFzc2VydGlvbnMvYzJwYS5oYXNoLmRhdGFkaGFzaFggLKgS+5u7LCq6e5cFiEDnAbecWwSUvITmYE3g6w9QxX90Y2xhaW1fZ2VuZXJhdG9yX2luZm+jZG5hbWVvQW50aHJvcGljIEZpbGVzZ3ZlcnNpb25lMS4wLjBrc3BlY1ZlcnNpb25lMi40LjAAABA4anVtYgAAAChqdW1kYzJjcwARABCAAACqADibcQNjMnBhLnNpZ25hdHVyZQAAABAIY2JvctKEWQISogEmGCFZAgowggIGMIIBjaADAgECAhRA5aAK7sI50L64g/oGQgU9Z1UTADAKBggqhkjOPQQDAzBJMRcwFQYDVQQKEw5BbnRocm9waWMsIFBCQzEuMCwGA1UEAxMlQW50aHJvcGljIENvbnRlbnQgQ3JlZGVudGlhbHMgUm9vdCBDQTAeFw0yNjA4MDcxODQzNTZaFw0yODA4MDYxOTQzNTZaMEQxFzAVBgNVBAoTDkFudGhyb3BpYywgUEJDMSkwJwYDVQQDEyBBbnRocm9waWMgQ2xhdWRlIENvbnRlbnQgU2lnbmluZzBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABJh6CmvLUBgFFNU0vUKlOVtE6djd17L5SuwX0LemFisBM3dkd/3cyjxFA3Qo5S46fX0/ihY0VZ7mfb9KF703t5OjWDBWMA4GA1UdDwEB/wQEAwIHgDAVBgNVHSUEDjAMBgorBgEEAYPoXgIBMAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUzlHiBIFOZFsj+OPEz5o+nMHXXMIwCgYIKoZIzj0EAwMDZwAwZAIwMXMdFJ4BetLLVY7ORuE9noqbbAZOZn/aArXyTwFAZfKrPzxF2vPoJNf1+UCdg1XGAjBwX1zd9WGqYkqmL5SFqw1QySjr1zJfpJM9+1rdDwSPLMOPOjKuiXjoU/pUUeG9RwmhY3BhZFkNngAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPZYQAyRhYLB53+4HvDlJyOcYqbMbv7uk4683H1E9FdS/rsVr6AhWgHVDD8lJRxH39Y+OFZDnMLJKNJuLTaR1u1cpyw=</c2pa:manifest></metadata></svg>

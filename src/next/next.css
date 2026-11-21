@@ -105,6 +105,10 @@ img.logo-ink { transition: transform .4s; }
 [data-theme="dark"] .grain-neutral { background: radial-gradient(120% 100% at 20% 0%, #2a2a28 0%, #1b1b1a 55%, #121211 100%); }
 [data-theme="dark"] .grain-neutral::before { opacity: .35; mix-blend-mode: soft-light; }
 
+/* dark panel behind the Utter sketches */
+.grain-dark { background: radial-gradient(120% 100% at 20% 0%, #2a2a28 0%, #1f1f1e 55%, #171716 100%); border-color: rgba(255,255,255,.06) !important; }
+.grain-dark::before { opacity: .35; mix-blend-mode: soft-light; }
+
 /* story layout headings (after rachelchen.tech): a book serif */
 .news { font-family: "Newsreader", "Instrument Serif", Georgia, serif; font-weight: 400; font-optical-sizing: auto; }
 
