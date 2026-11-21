@@ -91,8 +91,8 @@ const Tile = ({ p, t }) => (
 );
 
 const GridCard = ({ p, i }) => (
-  <a {...open(p)} data-cursor="View" data-item className="group block">
-    <div className="relative overflow-hidden aspect-[4/5] bg-[var(--fg)]">
+  <a {...open(p)} data-cursor="View project" data-item className="group block">
+    <div className="relative overflow-hidden aspect-square bg-[var(--fg)]">
       <div className={`absolute ${FULL.includes(p.slug) ? "inset-0" : "inset-[17%]"} flex items-center justify-center transition-transform duration-[1.1s] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.05] [&_img]:object-contain [&_video]:object-contain`}>
         <CardVisual p={p} />
       </div>
@@ -153,30 +153,25 @@ export default function Work() {
   }, [view]);
 
   return (
-    <main ref={root} className="px-5 md:px-10 pt-36 md:pt-44">
-      <div className="flex items-end justify-between gap-6 border-b border-[var(--line)] pb-6">
-        <div className="flex items-start gap-3 md:gap-5">
-          <h1 data-split="morph" data-now className="text-[21vw] md:text-[16vw] leading-[0.78] tracking-[-0.065em] whitespace-nowrap">works</h1>
-          <span data-fade data-now data-delay="0.5" className="mono text-sm md:text-lg text-[var(--muted)] mt-2 md:mt-5">[ {all.length} ]</span>
+    <main ref={root} className="px-5 md:px-10 pt-28 md:pt-[calc(30vh-1.3rem)]">
+      {/* after rachelchen.tech: one line about me in a big serif, where I am now and where I've been,
+          then the work */}
+      <h1 className="serif font-normal max-w-[56rem] text-[2.6rem] md:text-[4.6rem] leading-[1.02] tracking-[-0.02em]">Ritika Joshi is an engineer with a designer's eye.</h1>
+      <div className="mt-10 md:mt-14 grid grid-cols-1 sm:grid-cols-[minmax(0,15rem)_minmax(0,28rem)] gap-x-12 gap-y-6 text-[0.92rem] md:text-[0.98rem] leading-[1.55]">
+        <div>
+          <p className="text-[var(--muted)]">Currently</p>
+          <p className="mt-1.5">Founding product engineer @ Joydrop in San Francisco</p>
         </div>
-        <div data-fade data-now data-delay="0.4" className="flex items-center gap-1 pb-2">
-          {[["grid", GridIcon, "Grid view"], ["list", ListIcon, "List view"]].map(([v, Icon, label]) => (
-            <button key={v} type="button" onClick={() => setView(v)} aria-label={label} aria-pressed={view === v}
-              className={`p-2 rounded-full transition-colors ${view === v ? "text-[var(--fg)]" : "text-[var(--muted)] opacity-50 hover:opacity-100"}`}>
-              <Icon />
-            </button>
-          ))}
+        <div>
+          <p className="text-[var(--muted)]">Previously</p>
+          <p className="mt-1.5">Built @ Bright Mind Enrichment, Toyota, BECO Ventures in Singapore, P&amp;G and Kroger.</p>
         </div>
       </div>
-
-      <div ref={items} className="mt-8 md:mt-10">
-        {view === "grid" ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 md:gap-x-5 gap-y-10 md:gap-y-14">
-            {all.map((p, i) => <GridCard key={p.slug} p={p} i={i} />)}
-          </div>
-        ) : (
-          <div>{all.map((p) => <ListRow key={p.slug} p={p} />)}</div>
-        )}
+      {/* the work, as a grid only */}
+      <div ref={items} className="mt-14 md:mt-20">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 md:gap-x-5 gap-y-10 md:gap-y-12 md:max-w-[56rem]">
+          {all.map((p, i) => <GridCard key={p.slug} p={p} i={i} />)}
+        </div>
       </div>
       <Footer />
     </main>

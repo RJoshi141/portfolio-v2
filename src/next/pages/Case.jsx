@@ -801,7 +801,7 @@ const Legend = ({ sections, accent }) => {
     lenis ? lenis.scrollTo(el, { offset: -110 }) : el.scrollIntoView({ behavior: "smooth" });
   };
   return (
-    <nav className="sticky top-[34vh] space-y-2.5">
+    <nav className="fixed left-10 top-[30vh] z-[90] space-y-2.5 w-[8rem]">
       {entries.map((e) => {
         const active = e.i === on;
         return (

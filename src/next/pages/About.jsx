@@ -19,6 +19,42 @@ const PAST = [
   { label: "Kroger", bg: "#21409A" },
 ];
 
+// gallery: one row of photos, all the same width (each keeps its own shape)
+import galMe from "../../assets/gallery/me.jpg";
+import galZip from "../../assets/gallery/zipline.jpg";
+import galGame from "../../assets/gallery/game-night.jpg";
+import galBridge from "../../assets/gallery/golden-gate.jpg";
+import galBook from "../../assets/gallery/book-club.jpg";
+import galRun from "../../assets/gallery/run.jpg";
+import galCamera from "../../assets/gallery/camera.jpg";
+import galZumba from "../../assets/gallery/zumba.jpg";
+import galSpeech from "../../assets/gallery/commencement.jpg";
+import galGov from "../../assets/gallery/student-gov.jpg";
+import galBadminton from "../../assets/gallery/badminton.jpg";
+import galGreek from "../../assets/gallery/greek-life.jpg";
+const GALLERY = [
+  [
+    { src: galMe, caption: "Me", label: "Hi :)" },
+    { src: galZip, caption: "Ziplining with the Joydrop team", label: "Joydrop team" },
+    { src: galGame, caption: "Game night with the team" },
+    { src: galBridge, caption: "The Golden Gate and Karl the Fog", label: "San Francisco" },
+  ],
+  [
+    { src: galBook, caption: "Book club at the park", label: "Slow weekends" },
+    { src: galRun, caption: "Running the length of the park" },
+    { src: galCamera, caption: "Amateur photographer", label: "Hobbies" },
+    { src: galZumba, caption: "Community Zumba on campus" },
+  ],
+  [
+    { src: galSpeech, caption: "Commencement speech", label: "University of Cincinnati" },
+    { src: galGov, caption: "Student government election" },
+    { src: galBadminton, caption: "Badminton nights", label: "Singapore" },
+    { src: galGreek, caption: "Greek life", label: "Phi Sigma Rho" },
+  ],
+];
+
+{ let n = 0; GALLERY.flat().forEach((g) => { if (g.label) g.n = String(++n).padStart(2, "0"); }); }
+
 const ICONS = { sf: sfIcon, singapore: singaporeIcon, cincinnati: cincinnatiIcon, kentucky: georgetownIcon };
 
 // the 3D badge from the original site, loaded only here
@@ -36,30 +72,19 @@ const useTheme = () => {
   return t;
 };
 
-// the badge hangs from the section's top rule, swinging in the gap between my first and last name
-const Pass = () => {
+// the badge, swinging on its own in the right column (no name around it)
+const Pass = ({ className = "" }) => {
   const theme = useTheme();
   const [grabbed, setGrabbed] = useState(false);
-  const fine = "mono text-[0.65rem] md:text-[0.7rem] uppercase tracking-[0.18em] leading-[1.7] text-[var(--muted)]";
   return (
-    <section className="relative border-t border-[var(--line)] h-[40rem] md:h-[calc(100vh-7rem)] md:min-h-[44rem] overflow-hidden">
-      <div data-fade data-delay="0.3" className="absolute right-0 bottom-5"><div className={`text-right ${fine} transition-opacity duration-700 ${grabbed ? "opacity-0" : "opacity-100"}`}>Grab the badge<br />and give it a swing</div></div>
-
-      {/* the name, split around the badge */}
-      <div aria-hidden className="pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2 flex flex-col md:flex-row md:justify-between md:items-center gap-[22rem] md:gap-0 px-0 md:px-[2%]">
-        <span data-split="morph" data-now data-delay="0.1" className="text-[22vw] md:text-[13vw] leading-[0.8] tracking-[-0.065em]">Ritika</span>
-        <span data-split="morph" data-now data-delay="0.25" className="serif italic text-right text-[22vw] md:text-[13vw] leading-[0.8] tracking-[-0.03em]">Joshi</span>
+    <div className={`relative ${className}`}>
+      <div className="absolute inset-0" onPointerDown={() => setGrabbed(true)}>
+        <Suspense fallback={null}>
+          <Lanyard key={theme} position={[0, 0, 25]} gravity={[0, -40, 0]} cardImage="/portfolio-v2/assets/comic-self.png" theme={theme} bandColor={theme === "dark" ? "#3a3a3a" : "#1f1f1e"} variant="clear" currently="Founding engineer @ Joydrop" previously={PAST} still />
+        </Suspense>
       </div>
-
-      {/* the badge drops in once the name has inked; its canvas spans the whole section so it can swing over the name */}
-      <div data-fade className="absolute inset-0 z-10 pointer-events-none">
-        <div className="absolute inset-0 pointer-events-auto" onPointerDown={() => setGrabbed(true)}>
-          <Suspense fallback={null}>
-            <Lanyard key={theme} position={[0, 0, 25]} gravity={[0, -40, 0]} cardImage="/portfolio-v2/assets/comic-self.png" theme={theme} bandColor={theme === "dark" ? "#3a3a3a" : "#1f1f1e"} variant="clear" currently="Founding engineer @ Joydrop" previously={PAST} />
-          </Suspense>
-        </div>
-      </div>
-    </section>
+      <p className={`pointer-events-none absolute right-0 bottom-2 text-[0.8rem] text-[var(--muted)] transition-opacity duration-700 ${grabbed ? "opacity-0" : "opacity-100"}`}>Grab the badge</p>
+    </div>
   );
 };
 
@@ -67,15 +92,15 @@ const Pass = () => {
 // so it reads as a staggered wall; title underneath with the source and date in grey.
 const SHAPES = ["aspect-[16/10]", "aspect-[4/5]", "aspect-square"];
 const WritingList = () => (
-  <ul className="max-w-4xl grid grid-cols-2 lg:grid-cols-3 gap-x-5 gap-y-10 items-start">
+  <ul className="grid grid-cols-2 lg:grid-cols-3 gap-x-5 gap-y-10 items-start">
     {writing.map((w, i) => (
       <li key={w.link}>
-        <a href={w.link} target="_blank" rel="noopener noreferrer" className="group block">
+        <a href={w.link} target="_blank" rel="noopener noreferrer" data-cursor="View article" className="group block">
           <div className="overflow-hidden border border-[var(--line)]">
             <img src={w.image} alt="" loading="lazy" className={`w-full ${SHAPES[i % SHAPES.length]} object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.03]`} />
           </div>
-          <h3 className="mt-3 text-[0.95rem] md:text-base font-medium leading-[1.55]">{w.title}</h3>
-          <p className="text-[0.95rem] md:text-base font-medium leading-[1.55] text-[var(--muted)]">{w.where} · {w.when}</p>
+          <h3 className="mt-3 text-[0.88rem] md:text-[0.92rem] font-medium leading-[1.55]">{w.title}</h3>
+          <p className="text-[0.88rem] md:text-[0.92rem] leading-[1.55] text-[var(--muted)]">{w.where} · {w.when}</p>
         </a>
       </li>
     ))}
@@ -86,68 +111,69 @@ export default function About() {
   const root = useRef(null);
   usePageMotion(root);
   return (
-    <main ref={root} className="px-5 md:px-10 pt-24 md:pt-28">
+    <main ref={root} className="soft-ink px-5 md:px-10 pt-24 md:pt-28">
       <h1 className="sr-only">About Ritika Joshi</h1>
-      <Pass />
 
-      <section className="mt-24 md:mt-36 max-w-3xl mx-auto text-left">
-        <div className="space-y-8">
-          <p data-split="lines" className="text-xl md:text-[1.75rem] font-medium leading-[1.25] tracking-[-0.025em]">
-            I'm a software engineer who loves products and loves owning them, from the first idea to the version people use every day. I care how things <span className="serif italic">feel</span>, not just whether they work.
-          </p>
-          <p data-split="lines" className="text-base md:text-[1.1rem] font-medium leading-[1.55] text-[var(--muted)]">
-            Right now that means building Joydrop as its founding product engineer, owning the app end to end across web and iOS. I studied Computer Science at the University of Cincinnati, where co-ops had me building at Kroger, P&G, BECO Ventures in Singapore and Toyota.
-          </p>
-        </div>
-      </section>
-
-      {/* previous experiences, after soliciabrown.com/about: an italic label, a big intro with linked
-          companies, then entries that zigzag down the page over soft floating shapes */}
-      <section className="relative mt-32 md:mt-48">
-        <p data-fade className="serif italic text-2xl md:text-3xl text-[var(--muted)] md:ml-[12%]">previous experiences</p>
-
-        {/* soft shapes drifting behind the copy */}
-        <div aria-hidden className="pointer-events-none absolute inset-0 -z-0 overflow-visible">
-          <div data-speed="0.25" className="absolute left-[18%] top-[8rem] w-[18rem] h-[22rem] md:w-[22rem] md:h-[26rem] rounded-[48%_52%_55%_45%/50%_42%_58%_50%] rotate-[-25deg] bg-[radial-gradient(circle_at_70%_75%,var(--bg)_0%,var(--blob)_45%,transparent_72%)] opacity-90" />
-          <div data-speed="-0.2" className="absolute left-[55%] top-[3rem] w-[13rem] h-[13rem] md:w-[16rem] md:h-[16rem] rounded-full bg-[radial-gradient(circle_at_60%_40%,var(--bg)_0%,var(--blob)_50%,transparent_72%)] opacity-90" />
-          <div data-speed="0.3" className="absolute right-[8%] top-[60%] w-[15rem] h-[15rem] rounded-full bg-[radial-gradient(circle_at_40%_60%,var(--bg)_0%,var(--blob)_50%,transparent_72%)] opacity-80" />
+      {/* after rachelchen.tech/about: a few quiet paragraphs, then a plain list of where I've been.
+          The badge swings beside them. */}
+      <div className="md:grid md:grid-cols-[minmax(0,32rem)_minmax(0,1fr)] md:gap-x-16 pt-8 md:pt-0">
+        <div className="md:order-2 md:sticky md:top-28 md:self-start">
+          <Pass className="h-[26rem] md:h-[40rem]" />
         </div>
 
-        <div className="relative md:ml-[25%] md:mr-[8%] mt-16 md:mt-24 space-y-8">
-          <p data-split="lines" className="text-xl md:text-[1.75rem] font-medium leading-[1.25] tracking-[-0.02em]">
-            I started building at <a href="https://apps.apple.com/us/app/kroger/id403901186" target="_blank" rel="noopener noreferrer" className="serif italic underline decoration-1 underline-offset-4 text-[var(--muted)] hover:text-[var(--fg)]">Kroger</a> and{" "}
-            <a href="https://us.pg.com/" target="_blank" rel="noopener noreferrer" className="serif italic underline decoration-1 underline-offset-4 text-[var(--muted)] hover:text-[var(--fg)]">P&amp;G</a> as a co-op, then took that to Singapore with{" "}
-            <a href="https://beco-ventures.com/" target="_blank" rel="noopener noreferrer" className="serif italic underline decoration-1 underline-offset-4 text-[var(--muted)] hover:text-[var(--fg)]">BECO Ventures</a> and to the factory floor at{" "}
-            <a href="https://pressroom.toyota.com/facility/toyota-motor-manufacturing-kentucky/" target="_blank" rel="noopener noreferrer" className="serif italic underline decoration-1 underline-offset-4 text-[var(--muted)] hover:text-[var(--fg)]">Toyota</a>.
-          </p>
-          <p data-split="lines" className="text-xl md:text-[1.75rem] font-medium leading-[1.25] tracking-[-0.02em]">
-            Now I'm in San Francisco, building <a href="https://app.joydrop.me/" target="_blank" rel="noopener noreferrer" className="serif italic underline decoration-1 underline-offset-4 text-[var(--muted)] hover:text-[var(--fg)]">Joydrop</a> from zero as its founding product engineer.
-          </p>
-        </div>
+        <div className="md:order-1 mt-6 md:mt-0 md:pt-[calc(30vh-7rem+0.35rem)]">
+          <section className="space-y-3.5 text-[0.92rem] md:text-[0.98rem] leading-[1.55] text-[var(--muted)]">
+            <p>I'm a software engineer who loves products, and loves owning them from the first idea to the version people use every day.</p>
+            <p>I started at <a href="https://app.joydrop.me/" target="_blank" rel="noopener noreferrer" className="text-[var(--fg)] underline decoration-[var(--line)] underline-offset-4 hover:decoration-[var(--fg)]">Joydrop</a> as a frontend engineer and grew into its founding product engineer. Today I own the app end to end, across web and iOS. I care how things feel, not just whether they work.</p>
+            <p>Before that I studied Computer Science at the University of Cincinnati, where co-ops took me to Kroger, P&amp;G, BECO Ventures in Singapore and the factory floor at Toyota.</p>
+            <p>Outside of work, I paint with acrylics, cook for friends and go looking for good techno.</p>
+          </section>
 
-        <ol className="relative mt-24 md:mt-32 space-y-20 md:space-y-28">
-          {experience.map((e, i) => {
-            const year = (e.when.match(/\d{4}/g) || []).pop();
-            // zigzag: left, right, a little further left, right again...
-            const pos = ["md:ml-[16%]", "md:ml-[50%]", "md:ml-[20%]", "md:ml-[56%]", "md:ml-[12%]", "md:ml-[46%]"][i % 6];
-            return (
-              <li key={e.company} data-fade className={`max-w-md ${pos}`}>
-                {/* the city's landmark line icon sits on top of the place and year */}
-                {ICONS[e.whereIcon] && (
-                  <span aria-hidden className="block h-10 md:h-12 mb-3 text-[var(--fg)] [&>svg]:h-full [&>svg]:w-auto" dangerouslySetInnerHTML={{ __html: ICONS[e.whereIcon] }} />
-                )}
-                <p className="serif italic text-xl md:text-2xl text-[var(--muted)]">{e.where}, {e.when.includes("Now") ? "now" : year}</p>
-                <p className="mt-4 text-[0.95rem] md:text-base font-medium leading-[1.55]">
-                  <a href={e.link} target="_blank" rel="noopener noreferrer" className="underline decoration-[var(--line)] underline-offset-4 hover:decoration-[var(--fg)]">{e.company}</a>, {e.title.toLowerCase()}. {e.bullets[0]}
+          <section className="mt-12 md:mt-16">
+            <ol className="space-y-4">
+              {experience.map((e) => {
+                const now = e.when.includes("Now");
+                const year = (e.when.match(/\d{4}/g) || []).pop();
+                return (
+                  <li key={e.company} className="grid grid-cols-[4.5rem_minmax(0,1fr)] md:grid-cols-[6rem_minmax(0,1fr)_auto] gap-x-4 items-start">
+                    <span className="text-[0.88rem] md:text-[0.92rem]" style={{ color: now ? "var(--fg)" : "var(--muted)" }}>{now ? "Now" : year}</span>
+                    <div className="min-w-0">
+                      <a href={e.link} target="_blank" rel="noopener noreferrer" className="block text-[0.88rem] md:text-[0.92rem] leading-snug hover:underline underline-offset-4">{e.company}</a>
+                      <p className="text-[0.88rem] md:text-[0.92rem] leading-snug text-[var(--muted)]">{e.title}</p>
+                    </div>
+                    {/* the city's landmark, small, with the place */}
+                    <span className="col-start-2 md:col-start-auto mt-1 md:mt-0.5 flex items-center gap-2 text-[0.8rem] text-[var(--muted)]">
+                      {ICONS[e.whereIcon] && <span aria-hidden className="block h-4 text-[var(--muted)] [&>svg]:h-full [&>svg]:w-auto" dangerouslySetInnerHTML={{ __html: ICONS[e.whereIcon] }} />}
+                      {e.where}
+                    </span>
+                  </li>
+                );
+              })}
+            </ol>
+            <a href="#/resume" onClick={go("#/resume")} className="inline-block mt-10 text-[0.88rem] md:text-[0.92rem]"><Roll>Full resume</Roll></a>
+          </section>
+        </div>
+      </div>
+
+      {/* photos, after rachelchen.tech: rows of equal-width pictures, captions on hover */}
+      <section className="mt-24 md:mt-32 md:max-w-[46rem]">
+        {GALLERY.map((row, r) => (
+          <div key={r} className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 items-start mt-8 md:mt-12 first:mt-0">
+            {row.map((g) => (
+              // the caption rides on the cursor while you hover the photo
+              <figure key={g.caption}>
+                {/* a numbered label where a group starts; the others keep the same space so photos line up */}
+                <p className="h-6 md:h-7 text-[0.85rem] md:text-[0.92rem] text-[var(--muted)] whitespace-nowrap">
+                  {g.label && <><span className="mr-2">{g.n}</span>{g.label}</>}
                 </p>
-              </li>
-            );
-          })}
-        </ol>
-        <a href="#/resume" onClick={go("#/resume")} data-fade className="relative inline-block mt-20 md:ml-[16%] text-lg"><Roll>⁑ Full resume</Roll></a>
+                <img src={g.src} alt={g.caption} data-cursor={g.caption} loading="lazy" className="w-full h-auto" />
+              </figure>
+            ))}
+          </div>
+        ))}
       </section>
 
-      <section className="mt-32 md:mt-48">
+      <section className="mt-32 md:mt-48 md:max-w-[46rem]">
         <h2 data-fade className="serif italic font-normal text-2xl md:text-3xl text-[var(--muted)] mb-8 md:mb-12">writing</h2>
         <WritingList />
       </section>

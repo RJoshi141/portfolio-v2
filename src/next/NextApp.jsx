@@ -7,7 +7,6 @@ import { gsap, ScrollTrigger, SplitText, makeInk } from "./motion";
 import { findProject, featured, selected } from "../revamp/data/projects";
 import { socials } from "../revamp/data/content";
 import { Roll, go, useClock, setSettled, GridLines } from "./shared";
-import Home from "./pages/Home";
 import Work from "./pages/Work";
 import About from "./pages/About";
 import Resume from "./pages/Resume";
@@ -17,7 +16,8 @@ import Case from "./pages/Case";
 
 const parse = () => {
   const [, page = "", slug = ""] = window.location.hash.replace(/^#/, "").split("/");
-  return { page, slug };
+  // no home page any more: the site opens on the works
+  return { page: page || "work", slug };
 };
 export const LenisCtx = createContext(null);
 export const useLenis = () => useContext(LenisCtx);
@@ -62,9 +62,12 @@ const Cursor = () => {
     return () => { window.removeEventListener("pointermove", move); document.documentElement.classList.remove("has-cursor"); };
   }, []);
   return (
-    <div ref={dot} className="pointer-events-none fixed left-0 top-0 z-[300] hidden md:block mix-blend-difference">
-      <div className={`-translate-x-1/2 -translate-y-1/2 rounded-full bg-white text-black flex items-center justify-center transition-[width,height] duration-300 ease-out ${label ? "w-24 h-24" : "w-3 h-3"}`}>
-        <span className={`mono text-[0.65rem] uppercase tracking-[0.15em] transition-opacity duration-200 ${label ? "opacity-100" : "opacity-0"}`}>{label}</span>
+    <div ref={dot} className="pointer-events-none fixed left-0 top-0 z-[300] hidden md:block">
+      {/* the cursor: a small black dot (white on the dark theme), always */}
+      <div className="absolute -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-[var(--fg)] ring-1 ring-[var(--bg)]/70" />
+      {/* over something with a label: white words on a black tag, wiping in from left to right */}
+      <div className="absolute left-3 -translate-y-1/2 whitespace-nowrap transition-[clip-path] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]" style={{ clipPath: label ? "inset(0 0% 0 0)" : "inset(0 100% 0 0)" }}>
+        <span className="block px-2.5 py-1 text-[0.85rem] bg-[var(--fg)] text-[var(--bg)]">{label || "\u00a0"}</span>
       </div>
     </div>
   );
@@ -74,9 +77,8 @@ const Cursor = () => {
 const WORK_COUNT = featured.length + selected.length;
 // two short columns of links, after titarvl.framer.website
 const COLS = [
-  [["Home", "#/", ""], ["Works", "#/work", "work"]],
-  [["About", "#/about", "about"], ["Resume", "#/resume", "resume"]],
-  [["Contact", "#/contact", "contact"]],
+  [["Works", "#/work", "work"], ["About", "#/about", "about"]],
+  [["Resume", "#/resume", "resume"], ["Contact", "#/contact", "contact"]],
 ];
 // Hovering a link pours a pill of ink under it. Moving to the next link, the pill springs across
 // while a trailing drop lags behind; a goo filter melts the two together so the ink stretches
@@ -155,14 +157,33 @@ const Nav = ({ route, theme, setTheme }) => {
 
   const item = "relative z-10 mix-blend-difference rounded-full px-2 py-[0.1rem] -mx-2";
   return (
+    <>
+    {/* desktop: the pages as a quiet list down the left, after rachelchen.tech. The current one
+        gets a short line in front, like the case study legend */}
+    {/* inside a story case study the section legend takes this spot instead */}
+    {!(route.page === "work" && route.slug && findProject(route.slug)?.layout === "story") && <nav aria-label="Site" className="hidden md:block fixed left-10 top-[30vh] z-[100]">
+      <ul className="space-y-2.5">
+        {COLS.flat().map(([l, h, page]) => {
+          const on = route.page === page;
+          return (
+            <li key={l}>
+              <a href={h} onClick={go(h)} className="inline-flex items-center gap-2.5 text-[0.95rem] transition-colors hover:text-[var(--fg)]" style={{ color: on ? "var(--fg)" : "var(--muted)" }}>
+                <span className="h-px bg-current transition-all duration-300" style={{ width: on ? 14 : 0 }} />
+                <span className={`transition-transform duration-300 ${on ? "" : "-translate-x-2.5"}`}>{l}{l === "Works" && <span className="ml-1 text-[var(--muted)]">{WORK_COUNT}</span>}</span>
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+    </nav>}
     <header ref={bar} className="fixed top-0 inset-x-0 z-[100] px-5 md:px-10 py-5 md:py-6 flex items-start justify-between gap-6 mix-blend-difference text-white">
       {/* full name as the wordmark: a heavier sans, and Joshi in the italic serif from About */}
-      <a ref={nameEl} href="#/" onClick={go("#/")} aria-label="Ritika Joshi, home" className="block text-[1.05rem] md:text-[1.3rem] leading-[0.9] font-semibold tracking-[-0.045em] whitespace-nowrap">
+      <a ref={nameEl} href="#/work" onClick={go("#/work")} aria-label="Ritika Joshi, works" className="block text-[1.05rem] md:text-[1.3rem] leading-[0.9] font-semibold tracking-[-0.045em] whitespace-nowrap">
         <span className="nm block">Ritika</span>
         {/* last name tucked in under the first, like a stacked wordmark */}
         <span className="nm block pl-[1.1em] serif italic font-normal tracking-[-0.01em]">Joshi</span>
       </a>
-      <nav ref={navEl} onPointerLeave={out} className="relative flex items-start gap-6 md:gap-0 md:w-1/2 md:justify-between mono uppercase text-[0.68rem] md:text-[0.8rem] tracking-[0.04em] leading-[1.6]">
+      <nav ref={navEl} onPointerLeave={out} className="relative flex items-start gap-6 md:gap-0 md:justify-end mono uppercase text-[0.68rem] md:text-[0.8rem] tracking-[0.04em] leading-[1.6]">
         {/* the pill and its drop are SVG shapes with the goo filter applied inside the SVG: Safari
             repaints that correctly (a CSS filter: url() on HTML left streaks behind it) */}
         <svg aria-hidden className="pointer-events-none absolute inset-0 w-full h-full overflow-visible">
@@ -176,7 +197,7 @@ const Nav = ({ route, theme, setTheme }) => {
           </g>
         </svg>
         {COLS.map((col, c) => (
-          <div key={c} className="flex flex-col items-start">
+          <div key={c} className="flex flex-col items-start md:hidden">
             {col.map(([l, h, page]) => (
               <a key={l} href={h} onClick={go(h)} onPointerEnter={over} className={`${item} ${route.page === page ? "text-white" : "text-white/65"}`}>
                 {l}{l === "Works" && <span className="ml-1">[{WORK_COUNT}]</span>}
@@ -208,44 +229,20 @@ const Nav = ({ route, theme, setTheme }) => {
         </div>
       </nav>
     </header>
+    </>
   );
 };
 
 // ---------------------------------------------------------------- footer
-export const Footer = () => {
-  // one click copies the address; the label flips to "Copied" for a moment
-  const [copied, setCopied] = useState(false);
-  const copy = async () => {
-    const email = "ritikajoshi141@gmail.com";
-    try { await navigator.clipboard.writeText(email); }
-    catch {
-      // older browsers / blocked clipboard: fall back to a hidden textarea
-      const t = Object.assign(document.createElement("textarea"), { value: email });
-      document.body.appendChild(t); t.select();
-      try { document.execCommand("copy"); } catch {}
-      t.remove();
-    }
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1800);
-  };
-  return (
-    // just the bottom row, always visible (no reveal on scroll): ©, the email to copy, socials
-    <footer className="mt-32 md:mt-48 pt-6 pb-8 border-t border-[var(--line)] grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 text-sm items-baseline">
-      <p className="text-[var(--muted)]">© 2026 Ritika Joshi</p>
-      <button type="button" onClick={copy} data-cursor={copied ? "Copied" : "Copy"} className="group flex items-baseline gap-3 text-left text-[var(--muted)] hover:text-[var(--fg)] transition-colors md:justify-self-center">
-        <span>ritikajoshi141@gmail.com</span>
-        <span className={`mono text-[0.65rem] uppercase tracking-[0.15em] transition-opacity ${copied ? "opacity-100 text-[var(--fg)]" : "opacity-60 group-hover:opacity-100"}`} aria-live="polite">
-          [ {copied ? "Copied" : "Copy"} ]
-        </span>
-      </button>
-      <div className="flex flex-wrap gap-x-5 gap-y-1 md:justify-end">
-        {socials.filter((s) => s.label !== "Email").map((s) => (
-          <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer"><Roll>{s.label}</Roll></a>
-        ))}
-      </div>
-    </footer>
-  );
-};
+export const Footer = () => (
+  // just the links, no rule, no copyright
+  <footer className="mt-32 md:mt-48 pb-8 flex flex-wrap gap-x-5 gap-y-1 md:justify-end text-sm">
+    {socials.filter((s) => s.label !== "Email").map((s) => (
+      <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer"><Roll>{s.label}</Roll></a>
+    ))}
+  </footer>
+);
+
 
 // ---------------------------------------------------------------- app
 export default function NextApp() {
@@ -315,7 +312,7 @@ export default function NextApp() {
     return () => window.removeEventListener("hashchange", onHash);
   }, [lenis]);
 
-  const pageFor = ({ page, slug }) => (page === "work" && slug ? Case : page === "work" ? Work : page === "about" ? About : page === "resume" ? Resume : page === "contact" ? Contact : Home);
+  const pageFor = ({ page, slug }) => (page === "work" && slug ? Case : page === "work" ? Work : page === "about" ? About : page === "resume" ? Resume : page === "contact" ? Contact : Work);
   const current = pages[pages.length - 1].route;
 
   return (
@@ -333,8 +330,8 @@ export default function NextApp() {
             style={entering ? { visibility: "hidden" } : undefined}
           >
             {/* drafting lines behind every page except works, resume and contact */}
-            {!((route.page === "work" && (!route.slug || findProject(route.slug)?.layout === "story")) || ["contact", "resume"].includes(route.page)) && <GridLines />}
-            <div className="relative z-10"><Page slug={route.slug} /></div>
+            {!((route.page === "work" && (!route.slug || findProject(route.slug)?.layout === "story")) || ["contact", "resume", "about"].includes(route.page)) && <GridLines />}
+            <div className="relative z-10 md:pl-[14rem]"><Page slug={route.slug} /></div>
           </div>
         );
       })}

@@ -55,7 +55,8 @@ a:hover > .roll > span + span, button:hover > .roll > span + span, .roll-host:ho
 .strip { scrollbar-width: none; }
 .strip::-webkit-scrollbar { display: none; }
 
-::selection { background: var(--fg); color: var(--bg); }
+/* selected text: soft orange on a pale orange wash */
+::selection { background: rgba(214, 98, 58, 0.14); color: #D0623A; }
 
 /* company logos in the marquee: shown in their own colors, as on the original site */
 img.logo-ink { transition: transform .4s; }
@@ -124,3 +125,7 @@ body::after {
   opacity: .14; mix-blend-mode: multiply;
 }
 [data-theme="dark"] body::after { opacity: .1; mix-blend-mode: screen; }
+
+/* About: nothing in pure black or white; the darkest text is a soft grey */
+.soft-ink { --fg: #5a5a57; color: var(--fg); }
+[data-theme="dark"] .soft-ink { --fg: #bdbdb8; }

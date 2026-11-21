@@ -38,6 +38,7 @@ export default function Lanyard({
   variant = "solid",
   currently = "",
   previously = [], // [{ label, bg, fg }]
+  still = false, // start already hanging at rest, instead of dropping in from the side
 }) {
   const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768);
   // WebGL can be missing (no GPU / acceleration off) or the context can get dropped by Chrome
@@ -76,7 +77,7 @@ export default function Lanyard({
       >
         <ambientLight intensity={Math.PI} />
         <Physics gravity={gravity} timeStep={isMobile ? 1 / 30 : 1 / 60}>
-          <Band isMobile={isMobile} cardImage={cardImage} theme={theme} bandColor={bandColor} name={name} role={role} variant={variant} currently={currently} previously={previously} />
+          <Band isMobile={isMobile} cardImage={cardImage} theme={theme} bandColor={bandColor} name={name} role={role} variant={variant} currently={currently} previously={previously} still={still} />
         </Physics>
         <Environment blur={0.75}>
           <Lightformer
@@ -113,7 +114,7 @@ export default function Lanyard({
   );
 }
 
-function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, cardImage = null, theme = 'dark', bandColor = RED, name, role, variant = 'solid', currently = '', previously = [] }) {
+function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, cardImage = null, theme = 'dark', bandColor = RED, name, role, variant = 'solid', currently = '', previously = [], still = false }) {
   const band = useRef(),
     fixed = useRef(),
     j1 = useRef(),
@@ -291,16 +292,16 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, cardImage = null,
       {/* Anchor point - positioned near header */}
       <group position={[0, 5, 0]}>
         <RigidBody ref={fixed} {...segmentProps} type="fixed" />
-        <RigidBody position={[0.5, 0, 0]} ref={j1} {...segmentProps}>
+        <RigidBody position={still ? [0, -1, 0] : [0.5, 0, 0]} ref={j1} {...segmentProps}>
           <BallCollider args={[0.1]} />
         </RigidBody>
-        <RigidBody position={[1, 0, 0]} ref={j2} {...segmentProps}>
+        <RigidBody position={still ? [0, -2, 0] : [1, 0, 0]} ref={j2} {...segmentProps}>
           <BallCollider args={[0.1]} />
         </RigidBody>
-        <RigidBody position={[1.5, 0, 0]} ref={j3} {...segmentProps}>
+        <RigidBody position={still ? [0, -3, 0] : [1.5, 0, 0]} ref={j3} {...segmentProps}>
           <BallCollider args={[0.1]} />
         </RigidBody>
-        <RigidBody position={[2, 0, 0]} ref={card} {...segmentProps} type={dragged ? 'kinematicPosition' : 'dynamic'}>
+        <RigidBody position={still ? [0, -4.45, 0] : [2, 0, 0]} ref={card} {...segmentProps} type={dragged ? 'kinematicPosition' : 'dynamic'}>
           {/* the clear badge is drawn ~13% bigger; its hook point stays where the strap meets it */}
           <CuboidCollider args={clear ? [0.9, 1.27, 0.01] : [0.8, 1.125, 0.01]} />
           <group
