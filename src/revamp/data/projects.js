@@ -13,6 +13,11 @@ import duoCardPoster from "../../assets/case-studies/duo/duo-fold-card-poster.jp
 import layerCard from "../../assets/case-studies/layer/card-3d.png";
 // Layer revamp (Oct 2026): new recordings, screens and the iPhone 17 frame
 import iphone17Frame from "../../assets/case-studies/iphone-17-frame.png";
+// blurred photo backdrops for the Layer phones (Pexels)
+import layerBgWater from "../../assets/case-studies/layer-bg/bg-water.jpg";
+import layerBgTrees from "../../assets/case-studies/layer-bg/bg-trees.jpg";
+import layerBgBeach from "../../assets/case-studies/layer-bg/bg-beach.jpg";
+import layerBgHills from "../../assets/case-studies/layer-bg/bg-hills.jpg";
 import l2StartMp4 from "../../assets/case-studies/layer2/start.mp4";
 import l2StartPoster from "../../assets/case-studies/layer2/start-poster.jpg";
 import l2TourMp4 from "../../assets/case-studies/layer2/tour.mp4";
@@ -531,95 +536,87 @@ export const projects = [
     platform: "iOS 26, widgets",
     year: "2026",
     stack: ["Swift", "SwiftUI", "SwiftData", "Vision", "Foundation Models", "SpeechAnalyzer", "WidgetKit"],
+    layout: "story",
+    accent: "#764823",
+    grain: "radial-gradient(130% 110% at 15% 5%, #F4F2EC 0%, #E8E6DE 40%, #D6C7B2 75%, #B99877 100%)",
     sections: [
       {
-        heading: "Why I built it",
-        body: "Nobody knows which products clash, what order to use them in, or if last spring's serum is still good. The answers are on the bottle, just not in a form anyone can use.",
-      },
-      {
-        heading: "Who it's for",
-        body: "The answers are printed on every bottle. Most people just can't read them.",
-        empathy: {
-          who: "People building a skincare routine, from first-timers to anyone juggling actives like retinol and acids.",
-          says: ["Can I use this with my vitamin C?", "Wait, does serum go before moisturizer?"],
-          thinks: ["Is last spring's serum still good?", "Am I paying for products that cancel each other out?"],
-          does: ["Googles every ingredient", "Copies routines from social media", "Buys products that do the same thing"],
-          feels: ["overwhelmed", "unsure", "skeptical", "curious"],
-          hears: ["Ten-step routines from influencers", "Conflicting advice on what clashes"],
-          needs: ["A plain read of what's in each bottle", "A routine in the right order, without clashes"],
-        },
-      },
-      {
-        // one phone plays the three flows in turn, chapters beside it
-        heading: "Made for your skin",
-        body: "Pick a chapter or let it play through.",
-        walkthrough: {
-          kind: "phone17",
-          frame: iphone17Frame,
-          chapters: [
-            {
-              label: "Built around your skin",
-              text: "A short tour, an empty shelf that shows what's coming, then a few questions: skin type, how easily it reacts, your history with actives. The same ingredient list becomes advice for you.",
-              mp4: l2TourMp4,
-              poster: l2TourPoster,
-            },
-            {
-              label: "Scan any label",
-              text: "Snap the front and back. Vision reads the label, Layer finds the real product photo, cuts it out on device, and drafts every ingredient for you to review before it lands on your shelf.",
-              mp4: l2ScanMp4,
-              poster: l2ScanPoster,
-            },
-            {
-              label: "Voice check-ins",
-              text: "Say how your skin feels. It's transcribed on device and fills in which routine, what you used and how your skin reacted.",
-              mp4: l2VoiceMp4,
-              poster: l2VoicePoster,
-            },
-          ],
-        },
-      },
-      {
-        // the first run, three stills in a centered row
-        key: "first-run",
-        row: true,
-        phones: [
-          { kind: "phone17", frame: iphone17Frame, mp4: l2StartMp4, poster: l2StartPoster, caption: "Skin, in order. The start screen, set in gold light." },
-          { kind: "phone17", frame: iphone17Frame, poster: l2Questionnaire, caption: "Five questions, one per card, over a close-up of real skin." },
-          { kind: "phone17", frame: iphone17Frame, poster: l2TourVoice, caption: "The tour ends on voice check-ins, and that everything stays on the phone." },
+        eyebrow: "Solution", nav: "Solution",
+        heading: "Skin, in order",
+        body: "Scan a bottle, understand what's inside, get a routine in the right order. All on the phone.",
+        flows: [
+          {
+            label: "Built around your skin",
+            text: "The same bottle means different things on different skin. So before anything else, a short tour and five questions: your skin type, how easily it reacts, and how it has handled actives like retinol before. Every read after that is written for you, not for skin in general.",
+            kind: "phone17", frame: iphone17Frame, mp4: l2TourMp4, poster: l2TourPoster,
+            tone: `center / cover no-repeat url(${layerBgHills})`,
+          },
+          {
+            label: "Scan any label",
+            text: "Photograph the front and the back. Vision reads the tiny type, Layer finds the real product photo and cuts it out on the phone, then drafts the name, brand and every ingredient. You check the draft before anything lands on your shelf, because a wrong ingredient is worse than a slow one.",
+            kind: "phone17", frame: iphone17Frame, mp4: l2ScanMp4, poster: l2ScanPoster,
+            tone: `center / cover no-repeat url(${layerBgWater})`,
+          },
+          {
+            label: "Voice check-ins",
+            text: "Logging should take less effort than the routine itself. Say how your skin feels and it is transcribed on the phone, then sorted into which routine you did, what you used and how your skin reacted. Over time that becomes a record of what is actually working.",
+            kind: "phone17", frame: iphone17Frame, mp4: l2VoiceMp4, poster: l2VoicePoster,
+            tone: `center / cover no-repeat url(${layerBgTrees})`,
+          },
         ],
       },
       {
+        eyebrow: "Problem", nav: "Problem",
+        heading: "The answers are on the bottle",
+        body: "Which products clash, what order they go in, whether last spring's serum is still good. It's all printed there, in tiny type nobody can use.",
+      },
+      {
+        eyebrow: "Onboarding", nav: "Onboarding",
+        heading: "Five questions before the first scan",
+        phones: [
+          { kind: "phone17", frame: iphone17Frame, mp4: l2StartMp4, poster: l2StartPoster, caption: "The first screen sets the tone: skin, in order, in warm gold light. It promises calm before it asks for anything.", tone: "radial-gradient(120% 100% at 20% 0%, #FBF6EC 0%, #F0DFC2 45%, #DDBF94 80%, #CBA97A 100%)" },
+          { kind: "phone17", frame: iphone17Frame, poster: l2Questionnaire, caption: "Five questions, one per card, over a close-up of real skin. One at a time keeps it from feeling like a medical form.", tone: "radial-gradient(120% 100% at 80% 0%, #F8F1EC 0%, #EBD9CF 45%, #D7B9A8 80%, #C6A08C 100%)" },
+          { kind: "phone17", frame: iphone17Frame, poster: l2TourVoice, caption: "The tour ends on two promises: you can just talk to it, and nothing you say or scan leaves the phone.", tone: "radial-gradient(120% 100% at 50% 100%, #F4F3EE 0%, #E2E0D8 45%, #C9C6BC 80%, #B8B6AF 100%)" },
+        ],
+      },
+      {
+        eyebrow: "Design decision", nav: "Design decisions",
         heading: "Ingredients never touch the LLM",
-        body: "A model can invent an ingredient that isn't on the bottle. A parser can't.",
+        decision: {
+          options: [{ label: "Let the model read the list" }, { label: "A parser and a database" }],
+          chose: 1,
+          why: "A model can invent an ingredient that isn't on the bottle. A parser can't.",
+        },
         steps: [
-          { label: "Parse", text: "A deterministic parser rejoins words OCR split across lines and merges lists from several photos." },
-          { label: "Match", text: "Each name is looked up in a 242-entry ingredient database. Unknown ones are classified from INCI naming rules." },
-          { label: "Fill the fuzzy parts", text: "Name, brand and type come from guided generation, typed Swift instead of JSON. Rules cover phones without Apple Intelligence." },
+          { label: "Parse", text: "Rejoins words OCR split across lines and merges lists from several photos." },
+          { label: "Match", text: "Each name is looked up in a 242-entry ingredient database. Unknown ones follow INCI naming rules." },
+          { label: "Fill the fuzzy parts", text: "Name, brand and type come from guided generation, typed Swift instead of JSON." },
           { label: "Review", text: "Nothing is saved until you've checked the draft." },
         ],
       },
       {
-        heading: "Photograph the ingredients",
-        body: "Three tips up front, so the first scan reads well: bright light, get close, and take two or three photos if the list wraps around the bottle.",
-        phones: [{ kind: "phone17", frame: iphone17Frame, poster: l2AddProduct, caption: "Add product: take a photo, scan a box, or pick from your library." }],
+        eyebrow: "Core flows", nav: "Core flows",
+        heading: "A good photo first",
+        body: "Bright light, get close, and two or three photos if the list wraps around the bottle.",
+        phones: [{ kind: "phone17", frame: iphone17Frame, poster: l2AddProduct, caption: "Three ways in: take a photo, scan the box, or pick from your library. The tips sit right above the button, so the first scan is a good one.", tone: `center / cover no-repeat url(${layerBgBeach})` }],
       },
       {
+        eyebrow: "Core flows",
         heading: "Routines that put themselves in order",
-        body: "Pick what goes in. Layer handles the rest.",
         list: [
-          "Every product slots into layering order, thinnest to thickest.",
+          "Every product slots in thinnest to thickest.",
           "Eleven conflict rules flag clashes, like retinol with acids.",
-          "Routine review looks the whole routine over and suggests what to add or watch. Rules decide; a model only explains.",
-          "The widget flips between morning and night and turns rust when something clashes.",
+          "The widget flips between morning and night, and turns rust on a clash.",
         ],
         phones: [
-          { kind: "phone17", frame: iphone17Frame, poster: l2NightRoutine, caption: "Night routine: tap to add, Layer puts it in order." },
-          { kind: "phone17", frame: iphone17Frame, poster: l2RoutineReview, caption: "Routine review: one step looked over, with a reason for each tip." },
+          { kind: "phone17", frame: iphone17Frame, poster: l2NightRoutine, caption: "Tap to add. Layer puts each product in layering order, thinnest to thickest, so you never have to think about it." },
+          { kind: "phone17", frame: iphone17Frame, poster: l2RoutineReview, caption: "Routine review looks the whole routine over. Rules decide what clashes; the model only explains why, in plain words." },
         ],
       },
       {
-        heading: "Design",
-        body: "A quiet revamp: warm paper, near-black ink and one bronze accent. Spaced capitals for labels and buttons, and a handwritten script for the second word of every heading, like skin, in order.",
+        eyebrow: "Visual design", nav: "Visual design",
+        heading: "Warm paper, one bronze accent",
+        body: "Spaced capitals for labels, and a handwritten script for the second word of every heading.",
         brand: {
           colors: [
             { name: "Paper", hex: "#E8E6DE" },
@@ -629,27 +626,21 @@ export const projects = [
             { name: "Ivory", hex: "#ECE9E0" },
           ],
         },
-        phones: [{ kind: "phone17", frame: iphone17Frame, poster: l2ShelfRemove, caption: "Your shelf, with a line icon per product type and sheets that explain what happens next." }],
+        phones: [{ kind: "phone17", frame: iphone17Frame, poster: l2ShelfRemove, caption: "Your shelf: a line icon per product type, warm paper behind it, and one bronze accent for the thing to tap." }],
       },
       {
-        heading: "Exploring UI components",
-        body: "The pieces that make up the new Layer, rebuilt here in code. Tap them.",
-        components: "layer",
-      },
-      {
-        heading: "Privacy and cost",
+        eyebrow: "Privacy", nav: "Privacy",
+        heading: "Nothing leaves the phone",
         list: [
-          "Everything lives on the phone. No account, no backend.",
+          "No account, no backend.",
           "OCR, extraction, speech, cutouts and the assistant all run on device.",
           "The only network calls find product photos, from free sources.",
         ],
       },
       {
-        heading: "What's next",
-        list: [
-          "Siri: \"what's my routine tonight?\"",
-          "Trends from check-ins over time.",
-        ],
+        eyebrow: "What's next",
+        heading: "Still to come",
+        list: ["Siri: \"what's my routine tonight?\"", "Trends from check-ins over time."],
       },
     ],
     tools: [

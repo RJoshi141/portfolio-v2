@@ -102,7 +102,7 @@ const Gallery = ({ items, lightArt }) => {
 };
 
 // ---------------------------------------------------------------- hero media, centered and modest
-const HERO_WIDTH = { utter: "w-full md:max-w-[52rem]", bound: "w-full md:w-[80%]", joydrop: "w-full md:w-[80%]", layer: "w-[92%] md:w-[48%]" };
+const HERO_WIDTH = { utter: "w-full md:max-w-[52rem]", bound: "w-full md:w-[80%]", joydrop: "w-full md:w-[80%]", layer: "w-full md:max-w-[52rem]" };
 const Hero = ({ p, clip = true }) => {
   let inner;
   if (p.heroVideo) inner = <video autoPlay muted loop playsInline poster={p.heroVideo.poster} src={p.heroVideo.mp4} className="w-full h-auto" />;
@@ -113,7 +113,7 @@ const Hero = ({ p, clip = true }) => {
     inner = isVideo(src) ? <video autoPlay muted loop playsInline src={src} className="w-full h-auto" /> : <img src={src} alt="" className="w-full h-auto" />;
   } else inner = <div className="relative aspect-[4/3] flex items-center justify-center"><CardVisual p={p} /></div>;
   // most heroes sit at about two thirds width; tall ones (Utter's watch) get less
-  const width = HERO_WIDTH[p.slug] || "w-full md:w-[52%]";
+  const width = p.layout === "story" ? "w-full md:max-w-[52rem]" : HERO_WIDTH[p.slug] || "w-full md:w-[52%]";
   // grainy gradient cover when the project has one
   if (p.grain) inner = <Grain tone={p.grain} className="px-[20%] py-12 md:py-16">{inner}</Grain>;
   return <div data-fade data-delay="0.2"><div data-clip={clip ? "" : undefined} className={`mt-16 md:mt-24 mx-auto ${width}`}>{inner}</div></div>;
@@ -432,17 +432,17 @@ const CenterChapter = ({ s, n, p }) => {
 // eyebrow over a serif heading, grey body copy, and visuals that always sit under their text.
 // every phone sits in its own square grainy panel; a lone phone always gets the same box (SOLO),
 // so all the single phones on the page match
-const SOLO = "w-full md:w-[62%]";
+const SOLO = "w-full md:w-[52%]";
 const Square = ({ tone, className = "", children }) => (
   <Grain tone={tone} className={`aspect-square flex items-center justify-center ${className}`}>{children}</Grain>
 );
 const Row = ({ tone, phone, title, text, children }) => (
-  <div data-fade className="grid md:grid-cols-[62%_minmax(0,1fr)] gap-4 md:gap-10 md:items-end">
+  <div data-fade className="grid md:grid-cols-[52%_minmax(0,1fr)] gap-4 md:gap-10 md:items-end">
     <Square tone={tone}>{children || <PhoneIn m={phone} />}</Square>
     {(title || text) && (
       <div className="md:pb-2">
-        {title && <p className="text-[1.02rem] md:text-[1.1rem] font-medium">{title}</p>}
-        {text && <p className={`${title ? "mt-2" : ""} text-[0.93rem] md:text-[0.98rem] leading-[1.6] text-[var(--muted)]`}>{text}</p>}
+        {title && <p className="text-[0.92rem] md:text-[0.98rem] font-medium">{title}</p>}
+        {text && <p className={`${title ? "mt-1.5" : ""} max-w-sm text-[0.82rem] md:text-[0.86rem] leading-[1.6] text-[var(--muted)]`}>{text}</p>}
       </div>
     )}
   </div>
@@ -552,7 +552,7 @@ const GroupChat = ({ chat, frame }) => {
 const Rows = ({ children }) => <div className="mt-10 md:mt-12 space-y-10 md:space-y-14">{children}</div>;
 const PhoneIn = ({ m }) => m.type === "image"
   ? <img src={m.src} alt="" loading="lazy" className="h-[82%] w-auto object-contain" />
-  : <Device {...m} caption={undefined} className="h-[80%]" />;
+  : <Device {...m} caption={undefined} className="h-[76%]" />;
 
 // a section can mix a wide "before" image with phones: the images go first, the phones after
 const StoryVisuals = ({ s, p }) => {
@@ -645,12 +645,16 @@ const TwoCol = ({ rows }) => (
   </div>
 );
 
-const StoryChapter = ({ s, p, i }) => {
+const StoryChapter = ({ s, p, i, prev }) => {
+  // same eyebrow as the chapter before: no repeated label, and the heading drops to a subheading
+  const cont = !!s.eyebrow && prev === s.eyebrow;
   const paras = s.body ? (Array.isArray(s.body) ? s.body : [s.body]) : [];
   return (
-    <section data-nav={s.nav || undefined} id={`s-${i}`} className="pt-20 md:pt-40">
-      {s.eyebrow && <p className="text-[0.85rem] md:text-[0.95rem] text-[var(--muted)]">{s.eyebrow}</p>}
-      {s.heading && <h2 data-split="lines" className="mt-2 md:mt-3 text-[1.45rem] md:text-[2.3rem] font-medium leading-[1.15] tracking-[-0.025em]">{s.heading}</h2>}
+    <section data-nav={s.nav || undefined} id={`s-${i}`} className={cont ? "pt-16 md:pt-24" : "pt-20 md:pt-40"}>
+      {s.eyebrow && !cont && <p className="text-[0.85rem] md:text-[0.95rem] text-[var(--muted)]">{s.eyebrow}</p>}
+      {s.heading && (cont
+        ? <h3 className="text-[1.05rem] md:text-[1.2rem] font-medium leading-[1.3] tracking-[-0.01em]">{s.heading}</h3>
+        : <h2 data-split="lines" className="mt-2 md:mt-3 text-[1.45rem] md:text-[2.3rem] font-medium leading-[1.15] tracking-[-0.025em]">{s.heading}</h2>)}
       {paras.map((t) => <p key={t} data-split="lines" className="mt-4 md:mt-5 max-w-2xl text-[0.95rem] md:text-[1.08rem] leading-[1.65] text-[var(--muted)]">{t}</p>)}
       {s.list && (
         <ul className="mt-6 max-w-2xl">
@@ -743,7 +747,7 @@ const StoryChapter = ({ s, p, i }) => {
           ))}
         </div>
       )}
-      {s.flows && <Rows>{s.flows.map((f) => <Row key={f.label} tone={f.tone} phone={{ kind: "phone", frame: f.frame, mp4: f.mp4, poster: f.poster }} title={f.label} text={f.text} />)}</Rows>}
+      {s.flows && <Rows>{s.flows.map((f) => <Row key={f.label} tone={f.tone} phone={{ kind: f.kind || "phone", frame: f.frame, mp4: f.mp4, poster: f.poster }} title={f.label} text={f.text} />)}</Rows>}
       {s.chat && <Rows><Row tone={s.chat.tone} text={s.chat.text}><GroupChat chat={s.chat} frame={s.chat.frame} /></Row></Rows>}
       {s.cards && <Rows>{s.cards.map((c) => <Row key={c.title} tone="neutral" phone={{ kind: "phone", ...c.phone }} title={c.title} text={c.text} />)}</Rows>}
       <StoryVisuals s={s} p={p} />
@@ -847,7 +851,7 @@ export default function Case({ slug }) {
       {story ? (
         <div className="mt-6 md:grid md:grid-cols-[minmax(0,1fr)_minmax(0,52rem)_minmax(0,1fr)] md:gap-x-10">
           <aside className="hidden md:block pl-4"><Legend sections={sections} accent={p.accent || "var(--fg)"} /></aside>
-          <div data-still className="min-w-0" style={{ "--accent": p.accent }}>{sections.map((s, i) => <StoryChapter key={s.heading || s.key || i} s={s} p={p} i={i} />)}</div>
+          <div data-still className="min-w-0" style={{ "--accent": p.accent }}>{sections.map((s, i) => <StoryChapter key={s.heading || s.key || i} s={s} p={p} i={i} prev={sections[i - 1]?.eyebrow} />)}</div>
         </div>
       ) : sections.map((s, i) => <Ch key={s.heading || s.key || i} s={s} n={i + 1} p={p} />)}
 
@@ -869,7 +873,40 @@ export default function Case({ slug }) {
         </section>
       )}
 
-      {p.tools?.length > 0 && (
+      {/* story layout: a quiet list in the content column, small icon + name + what it did */}
+      {story && p.tools?.length > 0 && (
+        <section className="pt-20 md:pt-40 md:grid md:grid-cols-[minmax(0,1fr)_minmax(0,52rem)_minmax(0,1fr)] md:gap-x-10">
+          <div className="hidden md:block" />
+          <div>
+            <p className="text-[0.85rem] md:text-[0.95rem] text-[var(--muted)]">Built with</p>
+            <ul className="mt-6 grid grid-cols-2 sm:grid-cols-3 gap-x-8 gap-y-4 border-t border-[var(--line)] pt-6">
+              {p.tools.map((t) => {
+                const tile = TILES[t.icon];
+                const G = tile?.[0];
+                return (
+                  <li key={t.name} className="flex items-center gap-3 min-w-0">
+                    <span className="w-6 h-6 shrink-0 flex items-center justify-center">
+                      {t.logo && LOGOS[t.logo] ? (
+                        <img src={LOGOS[t.logo]} alt="" className={`max-w-full max-h-full object-contain ${INK.includes(t.logo) ? "icon-ink" : ""}`} />
+                      ) : G ? (
+                        <span className="w-full h-full rounded-[24%] flex items-center justify-center" style={{ background: tile[1] }}>
+                          <G className="w-3.5 h-3.5 text-white" strokeWidth={2} />
+                        </span>
+                      ) : null}
+                    </span>
+                    <span className="min-w-0 leading-tight">
+                      <span className="block text-[0.9rem] font-medium truncate">{t.name}</span>
+                      {t.note && <span className="block text-[0.75rem] text-[var(--muted)] truncate">{t.note}</span>}
+                    </span>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        </section>
+      )}
+
+      {!story && p.tools?.length > 0 && (
         // the tools as their real icons, name underneath (story: left aligned in the content column)
         <section data-still={story || undefined} className={story ? "pt-20 md:pt-40 md:grid md:grid-cols-[minmax(0,1fr)_minmax(0,52rem)_minmax(0,1fr)] md:gap-x-10" : center ? "pt-28 md:pt-44 text-center" : "pt-24 md:pt-36 grid md:grid-cols-12 gap-x-10 gap-y-8"}>
           {story && <div className="hidden md:block" />}
