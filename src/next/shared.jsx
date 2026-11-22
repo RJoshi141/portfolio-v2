@@ -5,6 +5,9 @@ import { gsap } from "./motion";
 export const go = (hash) => (e) => {
   e?.preventDefault();
   if (window.location.hash !== hash) window.location.hash = hash;
+  // already on that page: jump back to the top instantly
+  else if (window.__lenis) window.__lenis.scrollTo(0, { immediate: true, force: true });
+  else window.scrollTo(0, 0);
 };
 
 // hover roll: the label slides up and an identical copy slides in from below

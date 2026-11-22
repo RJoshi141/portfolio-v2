@@ -140,24 +140,14 @@ export default function Work() {
   // for the slide and the inked title, so the heading is the first thing you see.
   // (tracked by "has the intro actually played", so React's double-run of effects in dev
   // can't skip the wait)
-  const introPlayed = useRef(false);
-  useLayoutEffect(() => {
-    const els = items.current?.querySelectorAll("[data-item]");
-    if (!els?.length) return;
-    const tw = gsap.fromTo(els, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.9, ease: "expo.out", stagger: 0.045, paused: true });
-    let dc, dead = false;
-    const play = () => { introPlayed.current = true; tw.play(); };
-    if (!introPlayed.current) getSettled().then(() => { if (!dead) dc = gsap.delayedCall(1, play); });
-    else play();
-    return () => { dead = true; tw.kill(); dc?.kill(); };
-  }, [view]);
+  // the cards are simply there with the page (no staggered rise)
 
   return (
     <main ref={root} className="px-5 md:px-10 pt-28 md:pt-[calc(30vh-1.3rem)]">
       {/* after rachelchen.tech: one line about me in a big serif, where I am now and where I've been,
           then the work */}
-      <h1 className="serif font-normal max-w-[56rem] text-[2.6rem] md:text-[4.6rem] leading-[1.02] tracking-[-0.02em]">Ritika Joshi is an engineer with a designer's eye.</h1>
-      <div className="mt-10 md:mt-14 grid grid-cols-1 sm:grid-cols-[minmax(0,15rem)_minmax(0,28rem)] gap-x-12 gap-y-6 text-[0.92rem] md:text-[0.98rem] leading-[1.55]">
+      <h1 className="serif font-normal max-w-[56rem] text-[2.3rem] md:text-[3.9rem] leading-[1.02] tracking-[-0.02em]">Ritika Joshi is an engineer with a designer's eye.</h1>
+      <div className="mt-10 md:mt-14 grid grid-cols-1 sm:grid-cols-[minmax(0,15rem)_minmax(0,28rem)] gap-x-12 gap-y-6 text-[0.85rem] md:text-[0.9rem] leading-[1.55]">
         <div>
           <p className="text-[var(--muted)]">Currently</p>
           <p className="mt-1.5">Founding product engineer @ Joydrop in San Francisco</p>

@@ -67,7 +67,7 @@ const Cursor = () => {
       <div className="absolute -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-[var(--fg)] ring-1 ring-[var(--bg)]/70" />
       {/* over something with a label: white words on a black tag, wiping in from left to right */}
       <div className="absolute left-3 -translate-y-1/2 whitespace-nowrap transition-[clip-path] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]" style={{ clipPath: label ? "inset(0 0% 0 0)" : "inset(0 100% 0 0)" }}>
-        <span className="block px-2.5 py-1 text-[0.85rem] bg-[var(--fg)] text-[var(--bg)]">{label || "\u00a0"}</span>
+        <span className="block px-2.5 py-1 text-[0.85rem] text-white" style={{ background: "var(--red)" }}>{label || "\u00a0"}</span>
       </div>
     </div>
   );
@@ -77,7 +77,7 @@ const Cursor = () => {
 const WORK_COUNT = featured.length + selected.length;
 // two short columns of links, after titarvl.framer.website
 const COLS = [
-  [["Works", "#/work", "work"], ["About", "#/about", "about"]],
+  [["Work", "#/work", "work"], ["About", "#/about", "about"]],
   [["Resume", "#/resume", "resume"], ["Contact", "#/contact", "contact"]],
 ];
 // Hovering a link pours a pill of ink under it. Moving to the next link, the pill springs across
@@ -92,26 +92,9 @@ const Nav = ({ route, theme, setTheme }) => {
   const shown = useRef(false);
   const bar = useRef(null);
   const nameEl = useRef(null);
+  const mbar = useRef(null); // the phone header, hidden and shown with the desktop one
 
-  // the name melts back into ink and re-forms every few seconds, in the same goo as the headings
-  useEffect(() => {
-    let split, tl, ink, dead = false;
-    document.fonts.ready.then(() => {
-      if (dead || !nameEl.current) return;
-      split = SplitText.create(nameEl.current.querySelectorAll(".nm"), { type: "chars" });
-      ink = makeInk(nameEl.current);
-      ink.setChars(split.chars);
-      const paint = ink.paint;
-      tl = gsap.timeline({ repeat: -1, repeatDelay: 6, delay: 4 })
-        .call(ink.on)
-        .to(ink.state, { blur: ink.blur * 0.7, wobble: ink.wobble * 0.7, duration: 0.6, ease: "power2.in", onUpdate: paint }, 0)
-        .to(split.chars, { scale: 0.25, opacity: 0, duration: 0.5, ease: "power2.in", stagger: { each: 0.035, from: "random" } }, 0.1)
-        .to(split.chars, { scale: 1, opacity: 1, duration: 0.9, ease: "power3.out", stagger: { each: 0.035, from: "random" } }, 0.85)
-        .to(ink.state, { blur: 0, wobble: 0, duration: 1.2, ease: "power2.out", onUpdate: paint }, 0.85)
-        .call(ink.off);
-    });
-    return () => { dead = true; tl?.kill(); split?.revert(); ink?.off(); ink?.svg.remove(); };
-  }, []);
+  // the name is plain text now (no ink loop)
 
   // tuck the header away while scrolling down, bring it back on the way up (always shown near the top)
   useEffect(() => {
@@ -120,10 +103,12 @@ const Nav = ({ route, theme, setTheme }) => {
       const y = window.scrollY, d = y - last;
       last = y;
       if (Math.abs(d) < 2) return;
-      const hide = y > 140 && d > 0;
+      // case studies keep the "← Work / Bound" bar in place the whole time
+      const onCase = /^#\/work\/[^/]+/.test(window.location.hash);
+      const hide = !onCase && y > 140 && d > 0;
       if (hide === hidden) return;
       hidden = hide;
-      gsap.to(bar.current, { yPercent: hide ? -110 : 0, duration: hide ? 0.5 : 0.7, ease: hide ? "power3.in" : "expo.out", overwrite: true });
+      gsap.to([bar.current, mbar.current], { yPercent: hide ? -110 : 0, duration: hide ? 0.5 : 0.7, ease: hide ? "power3.in" : "expo.out", overwrite: true });
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -161,29 +146,42 @@ const Nav = ({ route, theme, setTheme }) => {
     {/* desktop: the pages as a quiet list down the left, after rachelchen.tech. The current one
         gets a short line in front, like the case study legend */}
     {/* inside a story case study the section legend takes this spot instead */}
-    {!(route.page === "work" && route.slug && findProject(route.slug)?.layout === "story") && <nav aria-label="Site" className="hidden md:block fixed left-10 top-[30vh] z-[100]">
-      <ul className="space-y-2.5">
+    {!(route.page === "work" && route.slug && findProject(route.slug)?.layout === "story") && <nav aria-label="Site" className="hidden md:block fixed left-6 top-[30vh] z-[100]">
+      <ul className="space-y-1.5">
         {COLS.flat().map(([l, h, page]) => {
           const on = route.page === page;
           return (
             <li key={l}>
-              <a href={h} onClick={go(h)} className="inline-flex items-center gap-2.5 text-[0.95rem] transition-colors hover:text-[var(--fg)]" style={{ color: on ? "var(--fg)" : "var(--muted)" }}>
-                <span className="h-px bg-current transition-all duration-300" style={{ width: on ? 14 : 0 }} />
-                <span className={`transition-transform duration-300 ${on ? "" : "-translate-x-2.5"}`}>{l}{l === "Works" && <span className="ml-1 text-[var(--muted)]">{WORK_COUNT}</span>}</span>
-              </a>
+              <a href={h} onClick={go(h)} className={`block text-[0.85rem] leading-snug transition-colors ${on ? "" : "text-[var(--muted)] hover:text-[var(--red)]"}`} style={on ? { color: "var(--red)" } : undefined}>{l}</a>
             </li>
           );
         })}
       </ul>
     </nav>}
-    <header ref={bar} className="fixed top-0 inset-x-0 z-[100] px-5 md:px-10 py-5 md:py-6 flex items-start justify-between gap-6 mix-blend-difference text-white">
-      {/* full name as the wordmark: a heavier sans, and Joshi in the italic serif from About */}
-      <a ref={nameEl} href="#/work" onClick={go("#/work")} aria-label="Ritika Joshi, works" className="block text-[1.05rem] md:text-[1.3rem] leading-[0.9] font-semibold tracking-[-0.045em] whitespace-nowrap">
-        <span className="nm block">Ritika</span>
-        {/* last name tucked in under the first, like a stacked wordmark */}
-        <span className="nm block pl-[1.1em] serif italic font-normal tracking-[-0.01em]">Joshi</span>
-      </a>
-      <nav ref={navEl} onPointerLeave={out} className="relative flex items-start gap-6 md:gap-0 md:justify-end mono uppercase text-[0.68rem] md:text-[0.8rem] tracking-[0.04em] leading-[1.6]">
+    {/* phones: one row of pages, the current one in red, a faint rule underneath (after rachelchen.tech) */}
+    <div ref={mbar} className="md:hidden fixed top-0 inset-x-0 z-[100] bg-[var(--bg)]">
+      <nav aria-label="Site" className="mx-4 py-4 flex items-center gap-5 border-b border-[var(--line)] text-[0.9rem]">
+        {COLS.flat().map(([l, h, page]) => {
+          const on = route.page === page;
+          return <a key={l} href={h} onClick={go(h)} className={on ? "" : "text-[var(--muted)] hover:text-[var(--red)] transition-colors"} style={on ? { color: "var(--red)" } : undefined}>{l}</a>;
+        })}
+      </nav>
+    </div>
+    <header ref={bar} className="hidden md:flex fixed top-0 inset-x-0 z-[100] px-6 py-5 md:py-6 items-start justify-between gap-6 text-[var(--muted)]">
+      {/* plain name, or on a case study a way back: ← Work / Bound */}
+      {route.page === "work" && route.slug && findProject(route.slug) ? (
+        <p className="flex items-center gap-2 text-[0.85rem] whitespace-nowrap">
+          <a href="#/work" onClick={go("#/work")} className="flex items-center gap-1.5 hover:text-[var(--red)] transition-colors">
+            <svg aria-hidden width="14" height="14" viewBox="0 0 14 14"><path d="M12 7H2M6 3L2 7l4 4" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" /></svg>
+            Work
+          </a>
+          <span className="opacity-50">/</span>
+          <span className="text-[var(--fg)]">{findProject(route.slug).name}</span>
+        </p>
+      ) : (
+        <a href="#/work" onClick={go("#/work")} className="block text-[0.85rem] hover:text-[var(--red)] transition-colors whitespace-nowrap">Ritika Joshi</a>
+      )}
+      <nav ref={navEl} onPointerLeave={out} className="relative flex items-start gap-6 md:gap-0 md:justify-end text-[0.85rem] leading-[1.5]">
         {/* the pill and its drop are SVG shapes with the goo filter applied inside the SVG: Safari
             repaints that correctly (a CSS filter: url() on HTML left streaks behind it) */}
         <svg aria-hidden className="pointer-events-none absolute inset-0 w-full h-full overflow-visible">
@@ -200,32 +198,16 @@ const Nav = ({ route, theme, setTheme }) => {
           <div key={c} className="flex flex-col items-start md:hidden">
             {col.map(([l, h, page]) => (
               <a key={l} href={h} onClick={go(h)} onPointerEnter={over} className={`${item} ${route.page === page ? "text-white" : "text-white/65"}`}>
-                {l}{l === "Works" && <span className="ml-1">[{WORK_COUNT}]</span>}
+                {l}
               </a>
             ))}
           </div>
         ))}
         {/* the only clock on the site */}
         <div className="hidden md:flex items-start gap-4">
-          <p className="text-right text-white/65">
+          <p className="text-right text-[0.72rem] leading-[1.4]">
             <span ref={clock} className="tabular-nums" /> PT<br />San Francisco, CA
           </p>
-        {/* the sun/moon toggle from the original site: the moon's bite slides in, rays fold away */}
-        <button type="button" onPointerEnter={out} onClick={() => setTheme(theme === "dark" ? "light" : "dark")} aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"} className="theme-toggle relative z-10 -mt-0.5 text-white/70 hover:text-white transition-colors">
-          <svg className="sun-and-moon block translate-y-[1px]" aria-hidden="true" width="18" height="18" viewBox="0 0 24 24">
-            <mask className="moon" id="next-moon-mask">
-              <rect x="0" y="0" width="100%" height="100%" fill="white" />
-              <circle cx="24" cy="10" r="6" fill="black" />
-            </mask>
-            <circle className="sun" cx="12" cy="12" r="5.5" mask="url(#next-moon-mask)" fill="currentColor" />
-            <g className="sun-beams" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round">
-              <line x1="12" y1="1.8" x2="12" y2="4" /><line x1="12" y1="20" x2="12" y2="22.2" />
-              <line x1="1.8" y1="12" x2="4" y2="12" /><line x1="20" y1="12" x2="22.2" y2="12" />
-              <line x1="4.5" y1="4.5" x2="6.1" y2="6.1" /><line x1="17.9" y1="17.9" x2="19.5" y2="19.5" />
-              <line x1="4.5" y1="19.5" x2="6.1" y2="17.9" /><line x1="17.9" y1="6.1" x2="19.5" y2="4.5" />
-            </g>
-          </svg>
-        </button>
         </div>
       </nav>
     </header>
@@ -236,9 +218,9 @@ const Nav = ({ route, theme, setTheme }) => {
 // ---------------------------------------------------------------- footer
 export const Footer = () => (
   // just the links, no rule, no copyright
-  <footer className="mt-32 md:mt-48 pb-8 flex flex-wrap gap-x-5 gap-y-1 md:justify-end text-sm">
+  <footer className="mt-32 md:mt-48 pb-8 flex flex-wrap gap-x-5 gap-y-1 md:justify-end text-[0.85rem]">
     {socials.filter((s) => s.label !== "Email").map((s) => (
-      <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer"><Roll>{s.label}</Roll></a>
+      <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer" className="text-[var(--muted)] hover:text-[var(--red)] transition-colors">{s.label}</a>
     ))}
   </footer>
 );
@@ -249,7 +231,7 @@ export default function NextApp() {
   // no loading screen: the site opens straight onto the page
   const loaded = true;
   // light by default like most of the references; remembers the visitor's pick
-  const [theme, setTheme] = useState(() => { try { return localStorage.getItem("next-theme") || "light"; } catch { return "light"; } });
+  const [theme, setTheme] = useState("light"); // light only, no dark mode
   const [lenis, setLenis] = useState(null);
   // pages on screen: normally one; during a transition the old one plus the one sliding in
   const [pages, setPages] = useState(() => [{ id: 0, route: parse(), entering: false }]);
@@ -268,6 +250,7 @@ export default function NextApp() {
     gsap.ticker.add(raf);
     gsap.ticker.lagSmoothing(0);
     setLenis(l);
+    window.__lenis = l;
     return () => { gsap.ticker.remove(raf); l.destroy(); };
   }, []);
 
@@ -289,7 +272,7 @@ export default function NextApp() {
         const outEl = layers.current[outId];
         const tl = gsap.timeline({
           onComplete: () => {
-            gsap.set(inEl, { clearProps: "transform,visibility" });
+            gsap.set(inEl, { clearProps: "transform,visibility,opacity" });
             // the new page drops into normal flow at the top; the old one goes away
             setPages([{ id, route: parse(), entering: false }]);
             requestAnimationFrame(() => {
@@ -303,9 +286,10 @@ export default function NextApp() {
             });
           },
         });
-        gsap.set(inEl, { xPercent: 100, visibility: "visible" });
-        tl.to(inEl, { xPercent: 0, duration: 1.1, ease: "expo.inOut" }, 0);
-        if (outEl) tl.to(outEl, { xPercent: -25, opacity: 0.6, duration: 1.1, ease: "expo.inOut" }, 0);
+        // a quiet cross-fade, after rachelchen.tech: the old page fades out, the new one fades in
+        gsap.set(inEl, { opacity: 0, visibility: "visible" });
+        if (outEl) tl.to(outEl, { opacity: 0, duration: 0.25, ease: "power1.out" }, 0);
+        tl.to(inEl, { opacity: 1, duration: 0.45, ease: "power1.out" }, 0.15);
       }));
     };
     window.addEventListener("hashchange", onHash);
@@ -326,7 +310,7 @@ export default function NextApp() {
             key={id}
             ref={(el) => { if (el) layers.current[id] = el; else delete layers.current[id]; }}
             // the incoming page is a fixed, clipped layer while it slides; afterwards it's a normal page
-            className={entering ? "fixed inset-0 z-[60] overflow-hidden bg-[var(--bg)] shadow-[-30px_0_60px_rgba(0,0,0,0.12)]" : "relative bg-[var(--bg)]"}
+            className={entering ? "fixed inset-0 z-[60] overflow-hidden bg-[var(--bg)]" : "relative bg-[var(--bg)]"}
             style={entering ? { visibility: "hidden" } : undefined}
           >
             {/* drafting lines behind every page except works, resume and contact */}

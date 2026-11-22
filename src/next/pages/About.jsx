@@ -83,7 +83,7 @@ const Pass = ({ className = "" }) => {
           <Lanyard key={theme} position={[0, 0, 25]} gravity={[0, -40, 0]} cardImage="/portfolio-v2/assets/comic-self.png" theme={theme} bandColor={theme === "dark" ? "#3a3a3a" : "#1f1f1e"} variant="clear" currently="Founding engineer @ Joydrop" previously={PAST} still />
         </Suspense>
       </div>
-      <p className={`pointer-events-none absolute right-0 bottom-2 text-[0.8rem] text-[var(--muted)] transition-opacity duration-700 ${grabbed ? "opacity-0" : "opacity-100"}`}>Grab the badge</p>
+      <p className={`pointer-events-none absolute right-0 bottom-2 text-[0.78rem] text-[var(--muted)] transition-opacity duration-700 ${grabbed ? "opacity-0" : "opacity-100"}`}>Grab the badge</p>
     </div>
   );
 };
@@ -99,8 +99,8 @@ const WritingList = () => (
           <div className="overflow-hidden border border-[var(--line)]">
             <img src={w.image} alt="" loading="lazy" className={`w-full ${SHAPES[i % SHAPES.length]} object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.03]`} />
           </div>
-          <h3 className="mt-3 text-[0.88rem] md:text-[0.92rem] font-medium leading-[1.55]">{w.title}</h3>
-          <p className="text-[0.88rem] md:text-[0.92rem] leading-[1.55] text-[var(--muted)]">{w.where} · {w.when}</p>
+          <h3 className="mt-3 text-[0.82rem] md:text-[0.86rem] font-medium leading-[1.55]">{w.title}</h3>
+          <p className="text-[0.82rem] md:text-[0.86rem] leading-[1.55] text-[var(--muted)]">{w.where} · {w.when}</p>
         </a>
       </li>
     ))}
@@ -121,8 +121,8 @@ export default function About() {
           <Pass className="h-[26rem] md:h-[40rem]" />
         </div>
 
-        <div className="md:order-1 mt-6 md:mt-0 md:pt-[calc(30vh-7rem+0.35rem)]">
-          <section className="space-y-3.5 text-[0.92rem] md:text-[0.98rem] leading-[1.55] text-[var(--muted)]">
+        <div className="md:order-1 mt-6 md:mt-0 md:pt-[calc(30vh-7rem-0.15rem)]">
+          <section className="space-y-3.5 text-[0.85rem] md:text-[0.9rem] leading-[1.55] text-[var(--muted)]">
             <p>I'm a software engineer who loves products, and loves owning them from the first idea to the version people use every day.</p>
             <p>I started at <a href="https://app.joydrop.me/" target="_blank" rel="noopener noreferrer" className="text-[var(--fg)] underline decoration-[var(--line)] underline-offset-4 hover:decoration-[var(--fg)]">Joydrop</a> as a frontend engineer and grew into its founding product engineer. Today I own the app end to end, across web and iOS. I care how things feel, not just whether they work.</p>
             <p>Before that I studied Computer Science at the University of Cincinnati, where co-ops took me to Kroger, P&amp;G, BECO Ventures in Singapore and the factory floor at Toyota.</p>
@@ -136,10 +136,10 @@ export default function About() {
                 const year = (e.when.match(/\d{4}/g) || []).pop();
                 return (
                   <li key={e.company} className="grid grid-cols-[4.5rem_minmax(0,1fr)] md:grid-cols-[6rem_minmax(0,1fr)_auto] gap-x-4 items-start">
-                    <span className="text-[0.88rem] md:text-[0.92rem]" style={{ color: now ? "var(--fg)" : "var(--muted)" }}>{now ? "Now" : year}</span>
+                    <span className="text-[0.82rem] md:text-[0.86rem]" style={{ color: now ? "var(--fg)" : "var(--muted)" }}>{now ? "Now" : year}</span>
                     <div className="min-w-0">
-                      <a href={e.link} target="_blank" rel="noopener noreferrer" className="block text-[0.88rem] md:text-[0.92rem] leading-snug hover:underline underline-offset-4">{e.company}</a>
-                      <p className="text-[0.88rem] md:text-[0.92rem] leading-snug text-[var(--muted)]">{e.title}</p>
+                      <a href={e.link} target="_blank" rel="noopener noreferrer" className="block text-[0.82rem] md:text-[0.86rem] leading-snug hover:underline underline-offset-4">{e.company}</a>
+                      <p className="text-[0.82rem] md:text-[0.86rem] leading-snug text-[var(--muted)]">{e.title}</p>
                     </div>
                     {/* the city's landmark, small, with the place */}
                     <span className="col-start-2 md:col-start-auto mt-1 md:mt-0.5 flex items-center gap-2 text-[0.8rem] text-[var(--muted)]">
@@ -150,7 +150,7 @@ export default function About() {
                 );
               })}
             </ol>
-            <a href="#/resume" onClick={go("#/resume")} className="inline-block mt-10 text-[0.88rem] md:text-[0.92rem]"><Roll>Full resume</Roll></a>
+            <a href="#/resume" onClick={go("#/resume")} className="inline-block mt-10 text-[0.82rem] md:text-[0.86rem]"><Roll>Full resume</Roll></a>
           </section>
         </div>
       </div>
@@ -163,7 +163,7 @@ export default function About() {
               // the caption rides on the cursor while you hover the photo
               <figure key={g.caption}>
                 {/* a numbered label where a group starts; the others keep the same space so photos line up */}
-                <p className="h-6 md:h-7 text-[0.85rem] md:text-[0.92rem] text-[var(--muted)] whitespace-nowrap">
+                <p className="h-6 md:h-7 text-[0.8rem] md:text-[0.85rem] text-[var(--muted)] whitespace-nowrap">
                   {g.label && <><span className="mr-2">{g.n}</span>{g.label}</>}
                 </p>
                 <img src={g.src} alt={g.caption} data-cursor={g.caption} loading="lazy" className="w-full h-auto" />
@@ -174,7 +174,7 @@ export default function About() {
       </section>
 
       <section className="mt-32 md:mt-48 md:max-w-[46rem]">
-        <h2 data-fade className="serif italic font-normal text-2xl md:text-3xl text-[var(--muted)] mb-8 md:mb-12">writing</h2>
+        <h2 className="font-normal text-[0.85rem] md:text-[0.9rem] text-[var(--muted)] mb-4">Writing</h2>
         <WritingList />
       </section>
       <Footer />

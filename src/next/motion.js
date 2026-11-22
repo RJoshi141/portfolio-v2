@@ -148,7 +148,8 @@ export function wire(root, { delay = 0, phase = "all", ready } = {}) {
   const vh = window.innerHeight;
   const intro = (el) => el.dataset.now != null || el.getBoundingClientRect().top < vh * 0.95;
   const want = (el) => {
-    if (el.closest("[data-still]")) return false; // story case studies: everything is just there
+    // no reveal animations anywhere any more: every page is fully there once it has faded in
+    return false;
     if (phase === "all") return true;
     if (phase === "now") { if (!intro(el)) return false; el.dataset.intro = "1"; return true; }
     return el.dataset.intro == null; // scroll phase: whatever the intro didn't take
