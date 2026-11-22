@@ -38,7 +38,7 @@ html.lenis, html.lenis body { height: auto; }
 
 /* hide the native cursor where the custom one is active */
 @media (hover: hover) and (pointer: fine) {
-  .has-cursor, .has-cursor a, .has-cursor button { cursor: none; }
+  .has-cursor, .has-cursor *, .has-cursor *:active { cursor: none !important; }
 }
 
 /* SplitText line masks */
@@ -130,3 +130,22 @@ body::after {
 /* About: nothing in pure black or white; the darkest text is a soft grey */
 .soft-ink { --fg: #5a5a57; color: var(--fg); }
 [data-theme="dark"] .soft-ink { --fg: #bdbdb8; }
+
+/* menus and the header name/breadcrumb fade in when they swap, same pace as the page fade */
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+.fade-in { animation: fade-in 0.45s ease-out 0.15s both; }
+
+/* the About badge: hidden for its first frames while WebGL and physics start, then fades in */
+@keyframes badge-in { from { opacity: 0; } to { opacity: 1; } }
+.badge-in { animation: badge-in 0.5s ease-out 0.45s both; }
+
+/* every text link turns red on hover */
+.has-cursor a:hover, .has-cursor button:hover { color: var(--red); }
+
+/* only words can be selected: pictures, videos, phone frames and their panels never pick up the
+   selection highlight when you drag across text next to them */
+img, video, canvas, svg, .grain, [class*="aspect-"] { -webkit-user-select: none; user-select: none; }
+img, video { -webkit-user-drag: none; }
+
+/* case studies: headings in a darker grey than the rest of the site's soft ink */
+.soft-ink.case-ink { --fg: #3b3b38; }

@@ -103,7 +103,7 @@ const Gallery = ({ items, lightArt }) => {
 
 // ---------------------------------------------------------------- hero media, centered and modest
 const HERO_WIDTH = { utter: "w-full md:max-w-[52rem]", bound: "w-full md:w-[80%]", joydrop: "w-full md:w-[80%]", layer: "w-full md:max-w-[52rem]" };
-const Hero = ({ p, clip = true }) => {
+const Hero = ({ p, clip = true, top = false }) => {
   let inner;
   if (p.heroVideo) inner = <video autoPlay muted loop playsInline poster={p.heroVideo.poster} src={p.heroVideo.mp4} className="w-full h-auto" />;
   else if (p.landscapeDemo) inner = <Device kind="landscape" {...p.landscapeDemo} className="w-full" />;
@@ -116,7 +116,7 @@ const Hero = ({ p, clip = true }) => {
   const width = p.layout === "story" ? "w-full md:max-w-[52rem]" : HERO_WIDTH[p.slug] || "w-full md:w-[52%]";
   // grainy gradient cover when the project has one
   if (p.grain) inner = <Grain tone={p.grain} className="px-[20%] py-12 md:py-16">{inner}</Grain>;
-  return <div><div data-clip={clip ? "" : undefined} className={`mt-16 md:mt-24 mx-auto ${width}`}>{inner}</div></div>;
+  return <div><div data-clip={clip ? "" : undefined} className={`${top ? "" : "mt-16 md:mt-24"} mx-auto ${width}`}>{inner}</div></div>;
 };
 
 // GitHub star count: starts from the number saved in projects.js, then refreshes from the
@@ -662,7 +662,7 @@ const StoryChapter = ({ s, p, i, prev }) => {
       {s.eyebrow && !cont && <p className="text-[0.8rem] md:text-[0.85rem] text-[var(--muted)]">{s.eyebrow}</p>}
       {s.heading && (cont
         ? <h3 className="text-[1.05rem] md:text-[1.2rem] font-medium leading-[1.3] tracking-[-0.01em]">{s.heading}</h3>
-        : <h2 data-split="lines" className="mt-2 md:mt-3 text-[1.35rem] md:text-[2rem] font-medium leading-[1.15] tracking-[-0.025em]">{s.heading}</h2>)}
+        : <h2 className="mt-2 md:mt-3 text-[1.35rem] md:text-[2rem] font-normal leading-[1.2] tracking-[-0.01em]" style={{ fontFamily: '"Playfair Display", Georgia, serif' }}>{s.heading}</h2>)}
       {paras.map((t) => <p key={t} data-split="lines" className="mt-4 md:mt-5 max-w-2xl text-[0.88rem] md:text-[0.95rem] leading-[1.65] text-[var(--muted)]">{t}</p>)}
       {s.list && (
         <ul className="mt-6 max-w-2xl">
@@ -802,11 +802,11 @@ const Legend = ({ sections, accent }) => {
     lenis ? lenis.scrollTo(el, { offset: -110, immediate: true }) : el.scrollIntoView();
   };
   return (
-    <nav className="fixed left-6 top-[30vh] z-[90] space-y-1.5 w-[8rem]">
+    <nav className="fade-in fixed left-6 top-[30vh] z-[90] space-y-2.5 w-[8rem]">
       {entries.map((e) => {
         const active = e.i === on;
         return (
-          <button key={e.i} type="button" onClick={() => jump(e.i)} className={`block text-left text-[0.85rem] leading-snug transition-colors ${active ? "" : "text-[var(--muted)] hover:text-[var(--red)]"}`}
+          <button key={e.i} type="button" onClick={() => jump(e.i)} className={`block text-left text-[0.9rem] leading-snug transition-colors ${active ? "" : "text-[var(--muted)] hover:text-[var(--red)]"}`}
             style={active ? { color: "var(--red)" } : undefined}>
             {e.label}
           </button>
@@ -831,30 +831,33 @@ export default function Case({ slug }) {
   const Ch = center ? CenterChapter : Chapter;
 
   return (
-    <main ref={root} className="px-5 md:px-10 pt-36 md:pt-44">
-      <h1 className={centerHead ? "mt-20 md:mt-24 text-center text-[13vw] md:text-[5.5vw] leading-[0.95] tracking-[-0.05em]" : "text-[16vw] md:text-[8.5vw] leading-[0.9] tracking-[-0.055em]"}>{p.name}</h1>
+    <main ref={root} className="soft-ink case-ink px-5 md:px-10 pt-24 md:pt-[30vh]">
+      {/* the work first: the hero sits at the top, level with the menu */}
+      <Hero p={p} clip={false} top />
 
-      <div className={centerHead ? "mt-6 md:mt-8" : "mt-10 md:mt-14 grid md:grid-cols-12 gap-x-10 gap-y-8"}>
-        <p className={centerHead ? "mx-auto max-w-xl text-base md:text-[1.05rem] font-medium leading-[1.6] text-[var(--muted)]" : "md:col-span-6 text-[0.9rem] md:text-[0.98rem] font-medium leading-[1.55] tracking-[-0.01em]"}>{p.summary}</p>
-        <dl className={centerHead ? "mx-auto mt-12 max-w-4xl grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-6 border-t border-[var(--line)] pt-6" : "md:col-span-4 md:col-start-9 grid grid-cols-2 gap-x-6 gap-y-5 content-start"}>
+      {/* then the name and the facts, quiet and left aligned in the content column */}
+      <header className="mx-auto md:max-w-[52rem] mt-12 md:mt-16">
+        <h1 className="text-[2rem] md:text-[2.8rem] font-normal leading-[1.1] tracking-[-0.01em]" style={{ fontFamily: '"Playfair Display", Georgia, serif' }}>{p.name}</h1>
+        <p className="mt-4 max-w-2xl text-[0.88rem] md:text-[0.95rem] leading-[1.65] text-[var(--muted)]">{p.summary}</p>
+        <dl className="mt-8 max-w-2xl space-y-2 text-[0.85rem] md:text-[0.9rem]">
           {[["Role", p.role], ["Platform", p.platform], ["Stack", p.stackLabel || p.stack.slice(0, 3).join(", ")]].map(([l, v]) => (
-            <div key={l}><dt><Label>{l}</Label></dt><dd className="mt-1.5 text-sm md:text-[0.95rem] leading-snug">{v}</dd></div>
+            <div key={l} className="grid grid-cols-[6rem_minmax(0,1fr)] gap-x-4">
+              <dt className="text-[var(--muted)]">{l}</dt><dd>{v}</dd>
+            </div>
           ))}
           {/* Code: the repo (with its live star count) and the live site, if there is one */}
           {(p.github || p.site) && (
-            <div>
-              <dt><Label>Code</Label></dt>
-              <dd className="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm md:text-[0.95rem]">
-                {p.github && <a href={p.github} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 hover:opacity-60 transition-opacity">GitHub <ArrowUpRight className="w-4 h-4" /></a>}
+            <div className="grid grid-cols-[6rem_minmax(0,1fr)] gap-x-4">
+              <dt className="text-[var(--muted)]">Code</dt>
+              <dd className="flex flex-wrap items-center gap-x-4 gap-y-1">
+                {p.github && <a href={p.github} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1">GitHub <ArrowUpRight className="w-3.5 h-3.5" /></a>}
                 {p.github && p.stars != null && <Stars repo={p.github} count={p.stars} />}
-                {p.site && <a href={p.site} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 hover:opacity-60 transition-opacity">{p.siteLabel || "Live"} <ArrowUpRight className="w-4 h-4" /></a>}
+                {p.site && <a href={p.site} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1">{p.siteLabel || "Live"} <ArrowUpRight className="w-3.5 h-3.5" /></a>}
               </dd>
             </div>
           )}
         </dl>
-      </div>
-
-      <Hero p={p} clip={!story} />
+      </header>
       {/* Utter: the watch recording handing its memo to the iPhone inbox */}
       {p.demo?.phone && <div data-fade className="cx mx-auto mt-16 md:mt-24 max-w-5xl"><WatchDemo {...p.demo} /></div>}
 

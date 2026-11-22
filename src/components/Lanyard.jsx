@@ -236,8 +236,8 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false, cardImage = null,
 
   useEffect(() => {
     if (hovered) {
-      document.body.style.cursor = dragged ? 'grabbing' : 'grab';
-      return () => void (document.body.style.cursor = 'auto');
+      // the site draws its own cursor; leave it alone while grabbing (no grab/grabbing hand)
+      return undefined;
     }
   }, [hovered, dragged]);
 

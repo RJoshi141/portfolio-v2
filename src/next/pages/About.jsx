@@ -78,9 +78,9 @@ const Pass = ({ className = "" }) => {
   const [grabbed, setGrabbed] = useState(false);
   return (
     <div className={`relative ${className}`}>
-      <div className="absolute inset-0" onPointerDown={() => setGrabbed(true)}>
+      <div className="absolute inset-0 badge-in" onPointerDown={() => setGrabbed(true)}>
         <Suspense fallback={null}>
-          <Lanyard key={theme} position={[0, 0, 25]} gravity={[0, -40, 0]} cardImage="/portfolio-v2/assets/comic-self.png" theme={theme} bandColor={theme === "dark" ? "#3a3a3a" : "#1f1f1e"} variant="clear" currently="Founding engineer @ Joydrop" previously={PAST} still />
+          <Lanyard key={theme} position={[0, 0, 25]} gravity={[0, -40, 0]} cardImage="/portfolio-v2/assets/comic-self.png" theme={theme} bandColor="#1f1f1e" variant="clear" currently="Founding engineer @ Joydrop" previously={PAST} still />
         </Suspense>
       </div>
       <p className={`pointer-events-none absolute right-0 bottom-2 text-[0.78rem] text-[var(--muted)] transition-opacity duration-700 ${grabbed ? "opacity-0" : "opacity-100"}`}>Grab the badge</p>

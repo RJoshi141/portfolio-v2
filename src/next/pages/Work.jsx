@@ -18,6 +18,19 @@ import uInbox from "../../assets/case-studies/utter/iphone-inbox.png";
 import iphone from "../../assets/case-studies/iphone-frame.png";
 import bShelves from "../../assets/case-studies/bound/shelves.jpg";
 import bWire from "../../assets/case-studies/bound/wireframes.jpg";
+import logoBme from "../../assets/bme.png";
+import logoToyota from "../../assets/toyota-logo.png";
+import logoBeco from "../../assets/beco-ventures.png";
+import logoPg from "../../assets/pg-logo.png";
+import logoKroger from "../../assets/kroger-logo.png";
+// where I've worked before, as logos (heights tuned so they read the same size)
+const PAST_LOGOS = [
+  { name: "Bright Mind Enrichment", src: logoBme, h: 28, href: "https://brightmindenrichment.org/" },
+  { name: "Toyota", src: logoToyota, h: 14, href: "https://pressroom.toyota.com/facility/toyota-motor-manufacturing-kentucky/" },
+  { name: "BECO Ventures", src: logoBeco, h: 24, href: "https://beco-ventures.com/" },
+  { name: "P&G", src: logoPg, h: 26, href: "https://us.pg.com/" },
+  { name: "Kroger", src: logoKroger, h: 20, href: "https://apps.apple.com/us/app/kroger/id403901186" },
+];
 import bLedger from "../../assets/case-studies/bound/club-ledger.jpg";
 
 // hand-picked strips where the automatic pick isn't the best look
@@ -146,7 +159,7 @@ export default function Work() {
     <main ref={root} className="px-5 md:px-10 pt-28 md:pt-[calc(30vh-1.3rem)]">
       {/* after rachelchen.tech: one line about me in a big serif, where I am now and where I've been,
           then the work */}
-      <h1 className="serif font-normal max-w-[56rem] text-[2.3rem] md:text-[3.9rem] leading-[1.02] tracking-[-0.02em]">Ritika Joshi is an engineer with a designer's eye.</h1>
+      <h1 className="font-normal max-w-[56rem] text-[2.1rem] md:text-[3.5rem] leading-[1.1] tracking-[-0.01em]" style={{ fontFamily: '"Playfair Display", Georgia, serif' }}>Ritika Joshi is an engineer with a designer's eye.</h1>
       <div className="mt-10 md:mt-14 grid grid-cols-1 sm:grid-cols-[minmax(0,15rem)_minmax(0,28rem)] gap-x-12 gap-y-6 text-[0.85rem] md:text-[0.9rem] leading-[1.55]">
         <div>
           <p className="text-[var(--muted)]">Currently</p>
@@ -154,7 +167,16 @@ export default function Work() {
         </div>
         <div>
           <p className="text-[var(--muted)]">Previously</p>
-          <p className="mt-1.5">Built @ Bright Mind Enrichment, Toyota, BECO Ventures in Singapore, P&amp;G and Kroger.</p>
+          {/* the companies as their logos, all set to the same height */}
+          <ul className="mt-2.5 flex flex-wrap items-center gap-x-5 gap-y-3">
+            {PAST_LOGOS.map((c) => (
+              <li key={c.name}>
+                <a href={c.href} target="_blank" rel="noopener noreferrer" aria-label={c.name} className="block transition-opacity hover:opacity-70">
+                  <img src={c.src} alt={c.name} className="w-auto object-contain" style={{ height: c.h }} />
+                </a>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
       {/* the work, as a grid only */}

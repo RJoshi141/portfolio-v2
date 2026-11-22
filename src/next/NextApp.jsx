@@ -47,25 +47,29 @@ const Loader = ({ onDone }) => {
 const Cursor = () => {
   const dot = useRef(null);
   const [label, setLabel] = useState("");
+  // "link": a smaller dot over anything clickable; "text": a thin red caret over words
+  const [mode, setMode] = useState("");
   useEffect(() => {
     if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
     document.documentElement.classList.add("has-cursor");
-    const x = gsap.quickTo(dot.current, "x", { duration: 0.35, ease: "power3" });
-    const y = gsap.quickTo(dot.current, "y", { duration: 0.35, ease: "power3" });
+    const TEXT = "h1,h2,h3,h4,p,li,dd,dt,figcaption,blockquote,label";
+    // follows the pointer exactly, no easing lag
     const move = (e) => {
-      x(e.clientX); y(e.clientY);
+      dot.current.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
       const t = e.target.closest?.("[data-cursor]");
       setLabel(t ? t.dataset.cursor : "");
-      dot.current.dataset.link = e.target.closest?.("a,button") ? "1" : "";
+      const link = e.target.closest?.("a,button,select,[role=button]");
+      setMode(link ? "link" : e.target.closest?.(TEXT) && !e.target.closest("img,video,canvas") ? "text" : "");
     };
     window.addEventListener("pointermove", move);
     return () => { window.removeEventListener("pointermove", move); document.documentElement.classList.remove("has-cursor"); };
   }, []);
+  const size = mode === "text" && !label ? { width: 2, height: 20, borderRadius: 1 } : mode === "link" || label ? { width: 7, height: 7, borderRadius: 99 } : { width: 12, height: 12, borderRadius: 99 };
   return (
     <div ref={dot} className="pointer-events-none fixed left-0 top-0 z-[300] hidden md:block">
-      {/* the cursor: a small black dot (white on the dark theme), always */}
-      <div className="absolute -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-[var(--fg)] ring-1 ring-[var(--bg)]/70" />
-      {/* over something with a label: white words on a black tag, wiping in from left to right */}
+      {/* the cursor: a red dot that shrinks over links and narrows into a caret over text */}
+      <div className="absolute -translate-x-1/2 -translate-y-1/2 transition-[width,height,border-radius] duration-200 ease-out" style={{ background: "var(--red)", ...size }} />
+      {/* over something with a label: white words on a red tag, wiping in from left to right */}
       <div className="absolute left-3 -translate-y-1/2 whitespace-nowrap transition-[clip-path] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]" style={{ clipPath: label ? "inset(0 0% 0 0)" : "inset(0 100% 0 0)" }}>
         <span className="block px-2.5 py-1 text-[0.85rem] text-white" style={{ background: "var(--red)" }}>{label || "\u00a0"}</span>
       </div>
@@ -146,13 +150,13 @@ const Nav = ({ route, theme, setTheme }) => {
     {/* desktop: the pages as a quiet list down the left, after rachelchen.tech. The current one
         gets a short line in front, like the case study legend */}
     {/* inside a story case study the section legend takes this spot instead */}
-    {!(route.page === "work" && route.slug && findProject(route.slug)?.layout === "story") && <nav aria-label="Site" className="hidden md:block fixed left-6 top-[30vh] z-[100]">
-      <ul className="space-y-1.5">
+    {!(route.page === "work" && route.slug && findProject(route.slug)?.layout === "story") && <nav aria-label="Site" className="fade-in hidden md:block fixed left-6 top-[30vh] z-[100]">
+      <ul className="space-y-2.5">
         {COLS.flat().map(([l, h, page]) => {
           const on = route.page === page;
           return (
             <li key={l}>
-              <a href={h} onClick={go(h)} className={`block text-[0.85rem] leading-snug transition-colors ${on ? "" : "text-[var(--muted)] hover:text-[var(--red)]"}`} style={on ? { color: "var(--red)" } : undefined}>{l}</a>
+              <a href={h} onClick={go(h)} className={`block text-[0.9rem] leading-snug transition-colors ${on ? "" : "text-[var(--muted)] hover:text-[var(--red)]"}`} style={on ? { color: "var(--red)" } : undefined}>{l}</a>
             </li>
           );
         })}
@@ -170,7 +174,7 @@ const Nav = ({ route, theme, setTheme }) => {
     <header ref={bar} className="hidden md:flex fixed top-0 inset-x-0 z-[100] px-6 py-5 md:py-6 items-start justify-between gap-6 text-[var(--muted)]">
       {/* plain name, or on a case study a way back: ← Work / Bound */}
       {route.page === "work" && route.slug && findProject(route.slug) ? (
-        <p className="flex items-center gap-2 text-[0.85rem] whitespace-nowrap">
+        <p key="crumb" className="fade-in flex items-center gap-2 text-[0.92rem] whitespace-nowrap">
           <a href="#/work" onClick={go("#/work")} className="flex items-center gap-1.5 hover:text-[var(--red)] transition-colors">
             <svg aria-hidden width="14" height="14" viewBox="0 0 14 14"><path d="M12 7H2M6 3L2 7l4 4" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" /></svg>
             Work
@@ -179,7 +183,7 @@ const Nav = ({ route, theme, setTheme }) => {
           <span className="text-[var(--fg)]">{findProject(route.slug).name}</span>
         </p>
       ) : (
-        <a href="#/work" onClick={go("#/work")} className="block text-[0.85rem] hover:text-[var(--red)] transition-colors whitespace-nowrap">Ritika Joshi</a>
+        <a key="name" href="#/work" onClick={go("#/work")} className="fade-in block text-[0.92rem] hover:text-[var(--red)] transition-colors whitespace-nowrap">Ritika Joshi</a>
       )}
       <nav ref={navEl} onPointerLeave={out} className="relative flex items-start gap-6 md:gap-0 md:justify-end text-[0.85rem] leading-[1.5]">
         {/* the pill and its drop are SVG shapes with the goo filter applied inside the SVG: Safari
@@ -227,6 +231,9 @@ export const Footer = () => (
 
 
 // ---------------------------------------------------------------- app
+// warm the About badge (three.js + physics) in the background so opening About doesn't stutter
+if (typeof window !== "undefined") (window.requestIdleCallback || setTimeout)(() => import("../components/Lanyard"));
+
 export default function NextApp() {
   // no loading screen: the site opens straight onto the page
   const loaded = true;
