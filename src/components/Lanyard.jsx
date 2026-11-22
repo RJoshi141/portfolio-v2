@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unknown-property */
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { Canvas, extend, useFrame } from '@react-three/fiber';
+import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
+import { Canvas, extend, useFrame, useThree } from '@react-three/fiber';
 import { useGLTF, useTexture, Environment, Lightformer, Text } from '@react-three/drei';
 import { BallCollider, CuboidCollider, Physics, RigidBody, useRopeJoint, useSphericalJoint } from '@react-three/rapier';
 import { MeshLineGeometry, MeshLineMaterial } from 'meshline';
@@ -22,6 +22,18 @@ const CLIP_BLUR = [[0, 0, 0.03],
 
 // Site colors
 const RED = '#f87171';
+// tells the page the scene has drawn its first frame (after everything inside Suspense loaded)
+const Ready = ({ onReady }) => {
+  const { invalidate } = useThree();
+  useEffect(() => { const id = requestAnimationFrame(onReady); invalidate(); return () => cancelAnimationFrame(id); }, []);
+  return null;
+};
+// fetch the card model and its pictures as soon as this file loads, so the badge is ready
+// by the time the About page asks for it
+useGLTF.preload(cardGLB);
+useTexture.preload('/portfolio-v2/assets/comic-self.png');
+useTexture.preload('/portfolio-v2/logo-white.png');
+useTexture.preload('/portfolio-v2/logo-black.png');
 
 export default function Lanyard({ 
   position = [0, 0, 30], 
@@ -51,6 +63,7 @@ export default function Lanyard({
     } catch { return false; }
   });
   const [canvasKey, setCanvasKey] = useState(0);
+  const [ready, setReady] = useState(false); // fades in only once the whole scene is ready
   const [failed, setFailed] = useState(false);
 
   useEffect(() => {
@@ -60,7 +73,7 @@ export default function Lanyard({
   }, []);
 
   return (
-    <div className="lanyard-wrapper">
+    <div className="lanyard-wrapper" style={{ opacity: ready ? 1 : 0, transition: "opacity 0.25s ease-out" }}>
       {glOk && !failed && <Canvas
         key={canvasKey}
         camera={{ position: position, fov: fov }}
@@ -75,6 +88,10 @@ export default function Lanyard({
           }, { once: true });
         }}
       >
+        {/* everything waits behind one Suspense (physics engine, model, textures, lighting), so the
+            badge appears once, all at once, instead of popping in piece by piece */}
+        <Suspense fallback={null}>
+        <Ready onReady={() => setReady(true)} />
         <ambientLight intensity={Math.PI} />
         <Physics gravity={gravity} timeStep={isMobile ? 1 / 30 : 1 / 60}>
           <Band isMobile={isMobile} cardImage={cardImage} theme={theme} bandColor={bandColor} name={name} role={role} variant={variant} currently={currently} previously={previously} still={still} />
@@ -109,6 +126,7 @@ export default function Lanyard({
             scale={[100, 10, 1]}
           />
         </Environment>
+        </Suspense>
       </Canvas>}
     </div>
   );

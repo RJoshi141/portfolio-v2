@@ -12,7 +12,7 @@ import { Footer } from "../NextApp";
 import duoCardMp4 from "../../assets/case-studies/duo/duo-card.mp4";
 import duoCardPoster from "../../assets/case-studies/duo/duo-card-poster.jpg";
 import evenHand from "../../assets/case-studies/even-hand.png";
-import bHome from "../../assets/case-studies/bound/icon-homescreen.png";
+import bHome from "../../assets/case-studies/bound/bound-card.jpg";
 import jCard from "../../assets/case-studies/joydrop/joydrop-card.jpg";
 import landscapeFrame from "../../assets/case-studies/iphone-landscape-frame.png";
 import zMenu from "../../assets/case-studies/zoomies/menu-poster.jpg";
@@ -144,7 +144,7 @@ const CardArt = ({ p }) => {
 
   // Bound: the ink start screen (blackletter over the oil painting), in its frame
   // Bound: the wax seal icon on a real home screen, filling the card
-  if (p.slug === "bound") return <img src={bHome} alt="" loading="lazy" className="absolute inset-0 w-full h-full object-cover object-left-top" />;
+  if (p.slug === "bound") return <img src={bHome} alt="" loading="lazy" className="absolute inset-0 w-full h-full object-cover object-center" />;
   // Zoomies: the pixel dog's run cycle, on the game's own flat sky
   if (p.slug === "zoomies") return (
     <div className="absolute inset-0 flex items-center justify-center" style={{ background: "#87CFFA" }}>
@@ -168,7 +168,7 @@ const CardArt = ({ p }) => {
 };
 const GridCard = ({ p, i }) => (
   <a {...open(p)} data-cursor="View project" data-item className="group block">
-    <Grain tone={FULLBLEED.includes(p.slug) ? undefined : (CARD_BG[p.slug] || appClip(p)?.tone) || p.grain || CARD_TONE[p.slug] || "neutral"} className={`relative overflow-hidden ${SHAPE[p.slug] || "aspect-square"}`}>
+    <Grain tone={FULLBLEED.includes(p.slug) ? undefined : (CARD_BG[p.slug] || appClip(p)?.tone) || p.grain || CARD_TONE[p.slug] || "neutral"} className={`relative overflow-hidden transition-opacity duration-300 group-hover:opacity-70 ${SHAPE[p.slug] || "aspect-square"}`}>
       <div className="absolute inset-0">
         <CardArt p={p} />
       </div>

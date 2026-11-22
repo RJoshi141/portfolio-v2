@@ -3,15 +3,8 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --bg: #0c0c0b;
-  --fg: #efede8;
-  --muted: #8b8a85;
-  --line: rgba(239, 237, 232, 0.14);
-  --panel: #161614;
-  --blob: #262623;
-}
-:root[data-theme="light"] {
+/* light only: these are the defaults, so the page colour is right from the very first frame */
+:root, :root[data-theme="light"] {
   --bg: #fcfcfa;
   --fg: #141413;
   --muted: #7a7975;
@@ -26,7 +19,6 @@ body {
   color: var(--fg);
   font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
-  transition: background-color 0.6s ease, color 0.6s ease;
 }
 .serif { font-family: "Instrument Serif", Georgia, serif; font-weight: 400; }
 .mono { font-family: "JetBrains Mono", ui-monospace, monospace; }
@@ -133,11 +125,12 @@ body::after {
 
 /* menus and the header name/breadcrumb fade in when they swap, same pace as the page fade */
 @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
-.fade-in { animation: fade-in 0.45s ease-out 0.15s both; }
+/* only when moving between pages; on a refresh everything fades in together with #root */
+html.navigated .fade-in { animation: fade-in 0.45s ease-out 0.15s both; }
 
 /* the About badge: hidden for its first frames while WebGL and physics start, then fades in */
 @keyframes badge-in { from { opacity: 0; } to { opacity: 1; } }
-.badge-in { animation: badge-in 0.5s ease-out 0.45s both; }
+.badge-in { }  /* the badge fades itself in once its scene is ready (see Lanyard) */
 
 /* every text link turns red on hover */
 .has-cursor a:hover, .has-cursor button:hover { color: var(--red); }
@@ -149,3 +142,8 @@ img, video { -webkit-user-drag: none; }
 
 /* case studies: headings in a darker grey than the rest of the site's soft ink */
 .soft-ink.case-ink { --fg: #3b3b38; }
+
+/* on load / refresh the whole site fades in together (text, images, menus, header);
+   the page colour itself is on <body>, so it's there from the first frame */
+@keyframes page-in { from { opacity: 0; } to { opacity: 1; } }
+#root { animation: page-in 0.6s ease-out both; }

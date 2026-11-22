@@ -54,19 +54,27 @@ const Cursor = () => {
     document.documentElement.classList.add("has-cursor");
     const TEXT = "h1,h2,h3,h4,p,li,dd,dt,figcaption,blockquote,label";
     // follows the pointer exactly, no easing lag
+    // move the dot on every raw pointer event, straight on the element; only touch React state when
+    // the label or mode actually changes (re-rendering on every move is what made it feel slow)
+    let lastLabel = "", lastMode = "", lastTarget = null;
     const move = (e) => {
       dot.current.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
+      if (e.target === lastTarget) return;
+      lastTarget = e.target;
       const t = e.target.closest?.("[data-cursor]");
-      setLabel(t ? t.dataset.cursor : "");
+      const label = t ? t.dataset.cursor : "";
       const link = e.target.closest?.("a,button,select,[role=button]");
-      setMode(link ? "link" : e.target.closest?.(TEXT) && !e.target.closest("img,video,canvas") ? "text" : "");
+      const mode = link ? "link" : e.target.closest?.(TEXT) && !e.target.closest("img,video,canvas") ? "text" : "";
+      if (label !== lastLabel) { lastLabel = label; setLabel(label); }
+      if (mode !== lastMode) { lastMode = mode; setMode(mode); }
     };
-    window.addEventListener("pointermove", move);
-    return () => { window.removeEventListener("pointermove", move); document.documentElement.classList.remove("has-cursor"); };
+    const ev = "onpointerrawupdate" in window ? "pointerrawupdate" : "pointermove";
+    window.addEventListener(ev, move, { passive: true });
+    return () => { window.removeEventListener(ev, move); document.documentElement.classList.remove("has-cursor"); };
   }, []);
   const size = mode === "text" && !label ? { width: 2, height: 20, borderRadius: 1 } : mode === "link" || label ? { width: 7, height: 7, borderRadius: 99 } : { width: 12, height: 12, borderRadius: 99 };
   return (
-    <div ref={dot} className="pointer-events-none fixed left-0 top-0 z-[300] hidden md:block">
+    <div ref={dot} className="pointer-events-none fixed left-0 top-0 z-[300] hidden md:block will-change-transform">
       {/* the cursor: a red dot that shrinks over links and narrows into a caret over text */}
       <div className="absolute -translate-x-1/2 -translate-y-1/2 transition-[width,height,border-radius] duration-200 ease-out" style={{ background: "var(--red)", ...size }} />
       {/* over something with a label: white words on a red tag, wiping in from left to right */}
@@ -112,7 +120,8 @@ const Nav = ({ route, theme, setTheme }) => {
       const hide = !onCase && y > 140 && d > 0;
       if (hide === hidden) return;
       hidden = hide;
-      gsap.to([bar.current, mbar.current], { yPercent: hide ? -110 : 0, duration: hide ? 0.5 : 0.7, ease: hide ? "power3.in" : "expo.out", overwrite: true });
+      // desktop header always stays; only the phone header tucks away
+      gsap.to(mbar.current, { yPercent: hide ? -110 : 0, duration: hide ? 0.5 : 0.7, ease: hide ? "power3.in" : "expo.out", overwrite: true });
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -220,9 +229,9 @@ const Nav = ({ route, theme, setTheme }) => {
 };
 
 // ---------------------------------------------------------------- footer
-export const Footer = () => (
+export const Footer = ({ tight }) => (
   // just the links, no rule, no copyright
-  <footer className="mt-32 md:mt-48 pb-8 flex flex-wrap gap-x-5 gap-y-1 md:justify-end text-[0.85rem]">
+  <footer className={`${tight ? "mt-10 md:mt-12" : "mt-32 md:mt-48"} pb-8 flex flex-wrap gap-x-5 gap-y-1 md:justify-end text-[0.85rem]`}>
     {socials.filter((s) => s.label !== "Email").map((s) => (
       <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer" className="text-[var(--muted)] hover:text-[var(--red)] transition-colors">{s.label}</a>
     ))}
@@ -232,7 +241,12 @@ export const Footer = () => (
 
 // ---------------------------------------------------------------- app
 // warm the About badge (three.js + physics) in the background so opening About doesn't stutter
-if (typeof window !== "undefined") (window.requestIdleCallback || setTimeout)(() => import("../components/Lanyard"));
+if (typeof window !== "undefined") import("../components/Lanyard"); // start right away, alongside the page
+// a refresh always starts at the top of the page, not wherever the browser last was
+if (typeof window !== "undefined") {
+  if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+  window.scrollTo(0, 0);
+}
 
 export default function NextApp() {
   // no loading screen: the site opens straight onto the page
@@ -258,6 +272,10 @@ export default function NextApp() {
     gsap.ticker.lagSmoothing(0);
     setLenis(l);
     window.__lenis = l;
+    l.scrollTo(0, { immediate: true, force: true });
+    // once more after the first paint, in case the browser restored an old position
+    requestAnimationFrame(() => { window.scrollTo(0, 0); l.scrollTo(0, { immediate: true, force: true }); });
+    setTimeout(() => { window.scrollTo(0, 0); l.scrollTo(0, { immediate: true, force: true }); }, 120);
     return () => { gsap.ticker.remove(raf); l.destroy(); };
   }, []);
 
@@ -265,6 +283,7 @@ export default function NextApp() {
   // which drifts left and dims underneath. No title card in between.
   useEffect(() => {
     const onHash = () => {
+      document.documentElement.classList.add("navigated");
       if (busy.current) { queued.current = parse(); return; }
       busy.current = true;
       let done;

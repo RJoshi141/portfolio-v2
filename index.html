@@ -13,6 +13,8 @@
   </head>
   <body>
     <div id="root"></div>
+    <!-- a refresh always starts at the top -->
+    <script>if ("scrollRestoration" in history) history.scrollRestoration = "manual"; window.scrollTo(0, 0); addEventListener("load", () => window.scrollTo(0, 0));</script>
     <script type="module" src="/src/next/main.jsx"></script>
   </body>
 </html>

@@ -35,21 +35,22 @@ import galGreek from "../../assets/gallery/greek-life.jpg";
 const GALLERY = [
   [
     { src: galMe, caption: "Me", label: "Hi :)" },
-    { src: galZip, caption: "Ziplining with the Joydrop team", label: "Joydrop team" },
-    { src: galGame, caption: "Game night with the team" },
-    { src: galBridge, caption: "The Golden Gate and Karl the Fog", label: "San Francisco" },
+    { src: galZip, caption: "Ziplining with the team", label: "Joydrop" },
+    { src: galGame, caption: "Game night" },
+    { src: galBridge, caption: "Say hi to Karl", label: "SF" },
   ],
   [
-    { src: galBook, caption: "Book club at the park", label: "Slow weekends" },
-    { src: galRun, caption: "Running the length of the park" },
     { src: galCamera, caption: "Amateur photographer", label: "Hobbies" },
-    { src: galZumba, caption: "Community Zumba on campus" },
+        { src: galRun, caption: "Firs 5K in the park" },
+
+    { src: galBook, caption: "Book club at the park" },
+    { src: galZumba, caption: "Community Zumba" },
   ],
   [
-    { src: galSpeech, caption: "Commencement speech", label: "University of Cincinnati" },
-    { src: galGov, caption: "Student government election" },
+    { src: galSpeech, caption: "Public speaking", label: "University of Cincinnati" },
+    { src: galGov, caption: "Student gov election" },
     { src: galBadminton, caption: "Badminton nights", label: "Singapore" },
-    { src: galGreek, caption: "Greek life", label: "Phi Sigma Rho" },
+    { src: galGreek, caption: "Phi Rho House", label: "Greek life" },
   ],
 ];
 
@@ -156,7 +157,7 @@ export default function About() {
       </div>
 
       {/* photos, after rachelchen.tech: rows of equal-width pictures, captions on hover */}
-      <section className="mt-24 md:mt-32 md:max-w-[46rem]">
+      <section className="mt-24 md:mt-12 md:max-w-[46rem]">
         {GALLERY.map((row, r) => (
           <div key={r} className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 items-start mt-8 md:mt-12 first:mt-0">
             {row.map((g) => (
@@ -173,7 +174,7 @@ export default function About() {
         ))}
       </section>
 
-      <section className="mt-32 md:mt-48 md:max-w-[46rem]">
+      <section className="mt-32 md:mt-20 md:max-w-[46rem]">
         <h2 className="font-normal text-[0.85rem] md:text-[0.9rem] text-[var(--muted)] mb-4">Writing</h2>
         <WritingList />
       </section>
