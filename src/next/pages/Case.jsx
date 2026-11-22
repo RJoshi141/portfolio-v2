@@ -662,7 +662,7 @@ const StoryChapter = ({ s, p, i, prev }) => {
       {s.eyebrow && !cont && <p className="text-[0.8rem] md:text-[0.85rem] text-[var(--muted)]">{s.eyebrow}</p>}
       {s.heading && (cont
         ? <h3 className="text-[1.05rem] md:text-[1.2rem] font-medium leading-[1.3] tracking-[-0.01em]">{s.heading}</h3>
-        : <h2 className="mt-2 md:mt-3 text-[1.35rem] md:text-[2rem] font-normal leading-[1.2] tracking-[-0.01em]" style={{ fontFamily: '"Playfair Display", Georgia, serif' }}>{s.heading}</h2>)}
+        : <h2 className="mt-2 md:mt-3 text-[1.35rem] md:text-[2rem] font-medium leading-[1.2] tracking-[-0.01em]" style={{ fontFamily: '"Playfair Display", Georgia, serif' }}>{s.heading}</h2>)}
       {paras.map((t) => <p key={t} data-split="lines" className="mt-4 md:mt-5 max-w-2xl text-[0.88rem] md:text-[0.95rem] leading-[1.65] text-[var(--muted)]">{t}</p>)}
       {s.list && (
         <ul className="mt-6 max-w-2xl">
@@ -837,7 +837,7 @@ export default function Case({ slug }) {
 
       {/* then the name and the facts, quiet and left aligned in the content column */}
       <header className="mx-auto md:max-w-[52rem] mt-12 md:mt-16">
-        <h1 className="text-[2rem] md:text-[2.8rem] font-normal leading-[1.1] tracking-[-0.01em]" style={{ fontFamily: '"Playfair Display", Georgia, serif' }}>{p.name}</h1>
+        <h1 className="text-[2rem] md:text-[2.8rem] font-medium leading-[1.1] tracking-[-0.01em]" style={{ fontFamily: '"Playfair Display", Georgia, serif' }}>{p.name}</h1>
         <p className="mt-4 max-w-2xl text-[0.88rem] md:text-[0.95rem] leading-[1.65] text-[var(--muted)]">{p.summary}</p>
         <dl className="mt-8 max-w-2xl space-y-2 text-[0.85rem] md:text-[0.9rem]">
           {[["Role", p.role], ["Platform", p.platform], ["Stack", p.stackLabel || p.stack.slice(0, 3).join(", ")]].map(([l, v]) => (

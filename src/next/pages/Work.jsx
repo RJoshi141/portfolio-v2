@@ -13,6 +13,7 @@ import duoCardMp4 from "../../assets/case-studies/duo/duo-card.mp4";
 import duoCardPoster from "../../assets/case-studies/duo/duo-card-poster.jpg";
 import evenHand from "../../assets/case-studies/even-hand.png";
 import bHome from "../../assets/case-studies/bound/icon-homescreen.png";
+import jCard from "../../assets/case-studies/joydrop/joydrop-card.jpg";
 import landscapeFrame from "../../assets/case-studies/iphone-landscape-frame.png";
 import zMenu from "../../assets/case-studies/zoomies/menu-poster.jpg";
 import zStart from "../../assets/case-studies/zoomies/start-poster.jpg";
@@ -121,12 +122,15 @@ const SHAPE = {
   utter: "aspect-[3/2]", cellscope: "aspect-[16/10]", zoomies: "aspect-[16/9]", lumon: "aspect-[16/10]",
 };
 // which cards go in the left column, picked so both columns end at about the same height
-const LEFT = ["joydrop", "bound", "even", "cellscope"];
+const LEFT = ["joydrop", "even", "bound", "cellscope"];
+// card order on the page: Even before Bound
+const ORDER = ["joydrop", "utter", "layer", "even", "bound"];
+const ordered = [...all].sort((a, b) => (ORDER.indexOf(a.slug) + 1 || 99) - (ORDER.indexOf(b.slug) + 1 || 99));
 // card backdrops picked by hand: Even in the app's own blue, Bound on the research chat's photo
 const CARD_BG = {
   even: "radial-gradient(120% 100% at 20% 0%, #C7D4F6 0%, #7F9BE8 38%, #3B62D6 72%, #1D4ED8 100%)",
 };
-const FULLBLEED = ["utter", "iphone-duo", "zoomies", "bound"]; // no colour panel, the content fills the card
+const FULLBLEED = ["utter", "iphone-duo", "zoomies", "bound", "joydrop"]; // no colour panel, the content fills the card
 const FLOW = { even: 2, layer: 1, bound: 1 }; // which of the Solution flows to show
 const appClip = (p) => {
   const sol = p.sections?.[0] || {};
@@ -155,6 +159,8 @@ const CardArt = ({ p }) => {
   );
   // Even: the phone in hand, cropped in close on the route
   if (p.slug === "even") return <img src={evenHand} alt="" loading="lazy" className="absolute max-w-none w-[165%] left-[-16%] top-[-4%]" />;
+  // Joydrop: the app in hand, sending a joydrop
+  if (p.slug === "joydrop") return <img src={jCard} alt="" loading="lazy" className="absolute inset-0 w-full h-full object-cover object-[78%_50%]" />;
   if (p.slug === "iphone-duo") return <Clip mp4={duoCardMp4} poster={duoCardPoster} className="absolute inset-0 w-full h-full object-cover scale-[1.06]" />;
   const c = appClip(p);
   if (c) { const { tone, ...d } = c; return <div className="absolute inset-0 flex items-center justify-center"><Device {...d} className="h-[78%]" /></div>; }
@@ -217,7 +223,7 @@ export default function Work() {
     <main ref={root} className="px-5 md:px-10 pt-28 md:pt-[calc(30vh-1.3rem)]">
       {/* after rachelchen.tech: one line about me in a big serif, where I am now and where I've been,
           then the work */}
-      <h1 className="font-normal max-w-[56rem] text-[2.1rem] md:text-[3.5rem] leading-[1.1] tracking-[-0.01em]" style={{ fontFamily: '"Playfair Display", Georgia, serif' }}>Ritika Joshi is an engineer with a designer's eye.</h1>
+      <h1 className="font-medium max-w-[60rem] text-[2.3rem] md:text-[3.9rem] leading-[1.1] tracking-[-0.01em]" style={{ fontFamily: '"Playfair Display", Georgia, serif', color: "#454542" }}>Ritika Joshi is an engineer with a designer's eye.</h1>
       <div className="mt-10 md:mt-14 grid grid-cols-1 sm:grid-cols-[minmax(0,15rem)_minmax(0,28rem)] gap-x-12 gap-y-6 text-[0.85rem] md:text-[0.9rem] leading-[1.55]">
         <div>
           <p className="text-[var(--muted)]">Currently</p>
@@ -240,11 +246,11 @@ export default function Work() {
       {/* the work, as a grid only */}
       <div ref={items} className="mt-14 md:mt-20">
         {/* two columns that stack independently, so tall and wide cards stagger (after rachelchen.tech) */}
-        <div className="sm:hidden space-y-10">{all.map((p, i) => <GridCard key={p.slug} p={p} i={i} />)}</div>
+        <div className="sm:hidden space-y-10">{ordered.map((p, i) => <GridCard key={p.slug} p={p} i={i} />)}</div>
         <div className="hidden sm:grid grid-cols-2 gap-x-4 md:gap-x-5 items-start md:max-w-[56rem]">
           {[0, 1].map((col) => (
             <div key={col} className="space-y-10 md:space-y-12">
-              {all.map((p, i) => ((LEFT.includes(p.slug) ? 0 : 1) === col ? <GridCard key={p.slug} p={p} i={i} /> : null))}
+              {ordered.map((p, i) => ((LEFT.includes(p.slug) ? 0 : 1) === col ? <GridCard key={p.slug} p={p} i={i} /> : null))}
             </div>
           ))}
         </div>
