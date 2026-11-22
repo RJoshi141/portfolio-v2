@@ -314,7 +314,7 @@ const LandscapeDemo = ({ phones, ...single }) => {
 // image-rendering: pixelated keeps the 48px cells crisp when scaled up (same idea as .nearest filtering in SpriteKit).
 // `hold` (ms) freezes on the last frame before looping: the play runs through `play`% of the cycle,
 // then sits on the final frame for the rest (per-sprite keyframes, since the split differs per sheet).
-const SpriteSheet = ({ name, src, frames, ms, note, hold = 0 }) => {
+const SpriteSheet = ({ name, src, frames, ms, note, hold = 0, light }) => {
   const play = frames * ms;
   const total = play + hold;
   const id = `sprite-${name.toLowerCase().replace(/[^a-z0-9]/g, "")}`;
@@ -330,7 +330,7 @@ const SpriteSheet = ({ name, src, frames, ms, note, hold = 0 }) => {
         100% { background-position-x: 100%; }
       }`}</style>
     )}
-    <div className="aspect-[4/3] bg-[#1a1a1a] flex flex-col items-center justify-center gap-[8%]">
+    <div className={`aspect-[4/3] flex flex-col items-center justify-center gap-[8%] ${light ? "" : "bg-[#1a1a1a]"}`}>
       <div
         role="img"
         aria-label={`${name} animation`}
@@ -346,11 +346,12 @@ const SpriteSheet = ({ name, src, frames, ms, note, hold = 0 }) => {
       <img src={src} alt={`${name} sprite sheet`} className="w-[86%] h-auto" style={{ imageRendering: "pixelated" }} />
     </div>
     <figcaption className="mt-4 md:mt-5">
-      <p className="text-base md:text-lg text-white">{name}</p>
-      <p className="mt-1 font-mono text-xs md:text-sm uppercase tracking-wider text-neutral-500">
+      {/* light: the story layout's caption style (title, then grey text), no dark panel */}
+      <p className={light ? "text-[0.92rem] md:text-[0.98rem] font-medium" : "text-base md:text-lg text-white"}>{name}</p>
+      <p className={light ? "mt-1 text-[0.82rem] md:text-[0.86rem] leading-[1.6] text-[var(--muted)]" : "mt-1 font-mono text-xs md:text-sm uppercase tracking-wider text-neutral-500"}>
         {frames} frames · {ms}ms per frame
       </p>
-      {note && <p className="mt-2 text-sm md:text-base font-light leading-[1.6] text-neutral-400">{note}</p>}
+      {note && <p className={light ? "mt-1 text-[0.82rem] md:text-[0.86rem] leading-[1.6] text-[var(--muted)]" : "mt-2 text-sm md:text-base font-light leading-[1.6] text-neutral-400"}>{note}</p>}
     </figcaption>
   </figure>
   );
@@ -377,7 +378,7 @@ export const AssetShelf = ({ items, still, className = "my-12 md:my-20 bg-[#1a1a
 
 export const Sprites = ({ sheets, still }) => (
   <motion.div {...(still ? {} : rise())} className="my-12 md:my-20 grid md:grid-cols-2 gap-x-6 md:gap-x-8 gap-y-10 md:gap-y-14">
-    {sheets.map((s) => <SpriteSheet key={s.name} {...s} />)}
+    {sheets.map((s) => <SpriteSheet key={s.name} {...s} light={still} />)}
   </motion.div>
 );
 

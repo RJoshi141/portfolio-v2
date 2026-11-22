@@ -6,9 +6,13 @@
 //         year, [ view project ]); right half is a strip of its screens running off the edge.
 import { useLayoutEffect, useRef, useState } from "react";
 import { featured, selected } from "../../revamp/data/projects";
-import { CardVisual, Device, Roll, go, getSettled, usePageMotion } from "../shared";
+import { CardVisual, Clip, Device, Grain, Roll, go, getSettled, usePageMotion } from "../shared";
 import { gsap } from "../motion";
 import { Footer } from "../NextApp";
+import duoCardMp4 from "../../assets/case-studies/duo/duo-card.mp4";
+import duoCardPoster from "../../assets/case-studies/duo/duo-card-poster.jpg";
+import evenHand from "../../assets/case-studies/even-hand.png";
+import bHome from "../../assets/case-studies/bound/icon-homescreen.png";
 import landscapeFrame from "../../assets/case-studies/iphone-landscape-frame.png";
 import zMenu from "../../assets/case-studies/zoomies/menu-poster.jpg";
 import zStart from "../../assets/case-studies/zoomies/start-poster.jpg";
@@ -103,15 +107,69 @@ const Tile = ({ p, t }) => (
   </div>
 );
 
+// the cards show the work itself on a bright grainy colour (after rachelchen.tech), not black panels
+const CARD_TONE = {
+  cellscope: "radial-gradient(120% 100% at 20% 0%, #F5F9FF 0%, #D6E6FA 50%, #A9C8F0 100%)",
+  lumon: "radial-gradient(120% 100% at 30% 0%, #1E4A66 0%, #0D2A42 55%, #061827 100%)",
+  even: "radial-gradient(120% 100% at 20% 0%, #EEF3FF 0%, #C9D8FF 45%, #8FADF7 100%)",
+  utter: "radial-gradient(120% 100% at 20% 0%, #FBF4E4 0%, #F1DDB0 45%, #E2BF79 100%)",
+};
+// each card plays the app itself: one real interaction from the case study, in its device
+// each card takes the shape that suits its work: tall for phones, wide for screens and the game
+const SHAPE = {
+  joydrop: "aspect-[4/5]", layer: "aspect-[4/5]", bound: "aspect-[4/5]", even: "aspect-[4/5]",
+  utter: "aspect-[3/2]", cellscope: "aspect-[16/10]", zoomies: "aspect-[16/9]", lumon: "aspect-[16/10]",
+};
+// which cards go in the left column, picked so both columns end at about the same height
+const LEFT = ["joydrop", "bound", "even", "cellscope"];
+// card backdrops picked by hand: Even in the app's own blue, Bound on the research chat's photo
+const CARD_BG = {
+  even: "radial-gradient(120% 100% at 20% 0%, #C7D4F6 0%, #7F9BE8 38%, #3B62D6 72%, #1D4ED8 100%)",
+};
+const FULLBLEED = ["utter", "iphone-duo", "zoomies", "bound"]; // no colour panel, the content fills the card
+const FLOW = { even: 2, layer: 1, bound: 1 }; // which of the Solution flows to show
+const appClip = (p) => {
+  const sol = p.sections?.[0] || {};
+  if (p.slug in FLOW && sol.flows?.[FLOW[p.slug]]) { const f = sol.flows[FLOW[p.slug]]; return { kind: f.kind || "phone", frame: f.frame, mp4: f.mp4, poster: f.poster, tone: f.tone }; }
+  if (sol.phoneDemo?.mp4) return { kind: "phone", ...sol.phoneDemo };
+  return null;
+};
+const CardArt = ({ p }) => {
+  // full-bleed: the recording or photo is the whole card
+  if (p.slug === "utter" && p.heroImage) return <img src={p.heroImage} alt="" loading="lazy" className="absolute inset-0 w-full h-full object-cover" />;
+
+  // Bound: the ink start screen (blackletter over the oil painting), in its frame
+  // Bound: the wax seal icon on a real home screen, filling the card
+  if (p.slug === "bound") return <img src={bHome} alt="" loading="lazy" className="absolute inset-0 w-full h-full object-cover object-left-top" />;
+  // Zoomies: the pixel dog's run cycle, on the game's own flat sky
+  if (p.slug === "zoomies") return (
+    <div className="absolute inset-0 flex items-center justify-center" style={{ background: "#87CFFA" }}>
+      <div className="sprite-run h-[78%] aspect-square" style={{ backgroundImage: `url(${zRun})`, "--frames": 8 }} />
+    </div>
+  );
+  // CellScope: just the dashboard screen, no laptop around it
+  if (p.slug === "cellscope" && p.cardDemo?.mp4) return (
+    <div className="absolute inset-0 flex items-center justify-center">
+      <Clip mp4={p.cardDemo.mp4} poster={p.cardDemo.poster} className="w-[84%] h-auto shadow-[0_12px_30px_-12px_rgba(30,60,110,0.35)]" />
+    </div>
+  );
+  // Even: the phone in hand, cropped in close on the route
+  if (p.slug === "even") return <img src={evenHand} alt="" loading="lazy" className="absolute max-w-none w-[165%] left-[-16%] top-[-4%]" />;
+  if (p.slug === "iphone-duo") return <Clip mp4={duoCardMp4} poster={duoCardPoster} className="absolute inset-0 w-full h-full object-cover scale-[1.06]" />;
+  const c = appClip(p);
+  if (c) { const { tone, ...d } = c; return <div className="absolute inset-0 flex items-center justify-center"><Device {...d} className="h-[78%]" /></div>; }
+  return <div className="absolute inset-[14%] flex items-center justify-center [&_img]:object-contain [&_video]:object-contain"><CardVisual p={p} /></div>;
+};
 const GridCard = ({ p, i }) => (
   <a {...open(p)} data-cursor="View project" data-item className="group block">
-    <div className="relative overflow-hidden aspect-square bg-[var(--fg)]">
-      <div className={`absolute ${FULL.includes(p.slug) ? "inset-0" : "inset-[17%]"} flex items-center justify-center transition-transform duration-[1.1s] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.05] [&_img]:object-contain [&_video]:object-contain`}>
-        <CardVisual p={p} />
+    <Grain tone={FULLBLEED.includes(p.slug) ? undefined : (CARD_BG[p.slug] || appClip(p)?.tone) || p.grain || CARD_TONE[p.slug] || "neutral"} className={`relative overflow-hidden ${SHAPE[p.slug] || "aspect-square"}`}>
+      <div className="absolute inset-0">
+        <CardArt p={p} />
       </div>
-    </div>
-    <div className="mt-3 flex items-baseline justify-between gap-4 text-sm">
-      <p className="flex items-baseline gap-3"><span className="mono text-xs text-[var(--muted)]">{idx(i)}</span><Roll>{p.name}</Roll></p>
+    </Grain>
+    <div className="mt-3 flex items-baseline gap-2 text-[0.9rem]">
+      <p className="group-hover:text-[var(--red)] transition-colors">{p.name}</p>
+      <span className="text-[var(--line)]">/</span>
       <p className="text-[var(--muted)] truncate">{kind(p)}</p>
     </div>
   </a>
@@ -181,8 +239,14 @@ export default function Work() {
       </div>
       {/* the work, as a grid only */}
       <div ref={items} className="mt-14 md:mt-20">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 md:gap-x-5 gap-y-10 md:gap-y-12 md:max-w-[56rem]">
-          {all.map((p, i) => <GridCard key={p.slug} p={p} i={i} />)}
+        {/* two columns that stack independently, so tall and wide cards stagger (after rachelchen.tech) */}
+        <div className="sm:hidden space-y-10">{all.map((p, i) => <GridCard key={p.slug} p={p} i={i} />)}</div>
+        <div className="hidden sm:grid grid-cols-2 gap-x-4 md:gap-x-5 items-start md:max-w-[56rem]">
+          {[0, 1].map((col) => (
+            <div key={col} className="space-y-10 md:space-y-12">
+              {all.map((p, i) => ((LEFT.includes(p.slug) ? 0 : 1) === col ? <GridCard key={p.slug} p={p} i={i} /> : null))}
+            </div>
+          ))}
         </div>
       </div>
       <Footer />
