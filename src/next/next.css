@@ -115,7 +115,7 @@ body::after {
   content: ""; position: fixed; inset: 0; z-index: 9999; pointer-events: none;
   /* high-contrast noise, so the specks read as grain rather than a grey wash */
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='linear' slope='2.4' intercept='-.7'/%3E%3CfeFuncG type='linear' slope='2.4' intercept='-.7'/%3E%3CfeFuncB type='linear' slope='2.4' intercept='-.7'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  opacity: .26; mix-blend-mode: multiply;
+  opacity: 0; /* grain off by choice */ mix-blend-mode: multiply;
 }
 [data-theme="dark"] body::after { opacity: .17; mix-blend-mode: screen; }
 
@@ -147,3 +147,5 @@ img, video { -webkit-user-drag: none; }
    the page colour itself is on <body>, so it's there from the first frame */
 @keyframes page-in { from { opacity: 0; } to { opacity: 1; } }
 #root { animation: page-in 0.6s ease-out both; }
+/* resume roles: no red text on hover, the logo and photos fade instead */
+.has-cursor button.no-red:hover { color: inherit; }

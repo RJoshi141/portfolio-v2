@@ -56,6 +56,37 @@ const GALLERY = [
 
 { let n = 0; GALLERY.flat().forEach((g) => { if (g.label) g.n = String(++n).padStart(2, "0"); }); }
 
+// consecutive photos belong to the label above them
+const PILES = [];
+GALLERY.flat().forEach((g) => { if (g.label || !PILES.length) PILES.push({ label: g.label, n: g.n, items: [] }); PILES[PILES.length - 1].items.push(g); });
+const TILT = [-6, 4, -2, 7, -4, 3];
+const hand = { fontFamily: '"Caveat", "Bradley Hand", cursive' };
+const Polaroid = ({ g, style, className = "" }) => (
+  <figure className={`absolute left-1/2 top-0 w-[78%] bg-[#fdfcf9] p-[6%] pb-[4%] shadow-[0_6px_18px_-8px_rgba(0,0,0,0.35)] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${className}`} style={style}>
+    <img src={g.src} alt={g.caption} loading="lazy" className="w-full aspect-square object-cover" />
+    <figcaption className="mt-[6%] text-center text-[0.95rem] md:text-[1.05rem] leading-[1.05] text-[#4a4a46] line-clamp-2 min-h-[2.1em]" style={hand}>{g.caption === "Me" ? "Hi :)" : g.caption}</figcaption>
+  </figure>
+);
+const Pile = ({ pile }) => {
+  const n = pile.items.length;
+  return (
+    <div className="group relative hover:z-20 focus-within:z-20 outline-none" tabIndex={0}>
+      <p className="text-[0.8rem] md:text-[0.85rem] text-[var(--muted)] whitespace-nowrap"><span className="mr-2">{pile.n}</span>{pile.label}</p>
+      <div className="relative mt-3 aspect-[5/6]">
+        {pile.items.map((g, i) => {
+          const rest = TILT[(i + pile.label.length) % TILT.length];
+          const spread = (i - (n - 1) / 2) * 72; // % of a polaroid's width
+          return (
+            <Polaroid key={g.caption} g={g}
+              className="[transform:translateX(var(--x0))_rotate(var(--r0))] group-hover:[transform:translateX(var(--x1))_translateY(-6%)_rotate(var(--r1))] group-focus-within:[transform:translateX(var(--x1))_translateY(-6%)_rotate(var(--r1))] hover:!z-10"
+              style={{ zIndex: n - i, "--x0": `calc(-50% + ${i * 4}%)`, "--r0": `${rest}deg`, "--x1": `calc(-50% + ${spread}%)`, "--r1": `${n > 1 ? (i - (n - 1) / 2) * 6 : 0}deg` }} />
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
 const ICONS = { sf: sfIcon, singapore: singaporeIcon, cincinnati: cincinnatiIcon, kentucky: georgetownIcon };
 
 // the 3D badge from the original site, loaded only here
@@ -156,22 +187,9 @@ export default function About() {
         </div>
       </div>
 
-      {/* photos, after rachelchen.tech: rows of equal-width pictures, captions on hover */}
-      <section className="mt-24 md:mt-12 md:max-w-[46rem]">
-        {GALLERY.map((row, r) => (
-          <div key={r} className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 items-start mt-8 md:mt-12 first:mt-0">
-            {row.map((g) => (
-              // the caption rides on the cursor while you hover the photo
-              <figure key={g.caption}>
-                {/* a numbered label where a group starts; the others keep the same space so photos line up */}
-                <p className="h-6 md:h-7 text-[0.8rem] md:text-[0.85rem] text-[var(--muted)] whitespace-nowrap">
-                  {g.label && <><span className="mr-2">{g.n}</span>{g.label}</>}
-                </p>
-                <img src={g.src} alt={g.caption} data-cursor={g.caption} loading="lazy" className="w-full h-auto" />
-              </figure>
-            ))}
-          </div>
-        ))}
+      {/* photos as polaroid piles: each group is a messy stack that fans out when you hover it */}
+      <section className="mt-24 md:mt-12 md:max-w-[46rem] grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-8 md:gap-y-10">
+        {PILES.map((pile) => <Pile key={pile.label} pile={pile} />)}
       </section>
 
       <section className="mt-32 md:mt-20 md:max-w-[46rem]">
