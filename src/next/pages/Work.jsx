@@ -223,7 +223,7 @@ export default function Work() {
     <main ref={root} className="px-5 md:px-10 pt-28 md:pt-[calc(30vh-1.3rem)]">
       {/* after rachelchen.tech: one line about me in a big serif, where I am now and where I've been,
           then the work */}
-      <h1 className="font-medium max-w-[60rem] text-[2.3rem] md:text-[3.9rem] leading-[1.1] tracking-[-0.01em]" style={{ fontFamily: '"Playfair Display", Georgia, serif', color: "#454542" }}>Ritika Joshi is an engineer with a designer's eye.</h1>
+      <h1 className="font-medium max-w-[60rem] text-[2.3rem] md:text-[3.9rem] leading-[1.1] tracking-[-0.03em]" style={{ color: "#111" }}>Ritika Joshi is an engineer with a designer's eye.</h1>
       <div className="mt-10 md:mt-14 grid grid-cols-1 sm:grid-cols-[minmax(0,15rem)_minmax(0,28rem)] gap-x-12 gap-y-6 text-[0.85rem] md:text-[0.9rem] leading-[1.55]">
         <div>
           <p className="text-[var(--muted)]">Currently</p>

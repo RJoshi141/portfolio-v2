@@ -1,23 +1,11 @@
 // About: the swinging badge between my first and last name up top, then a centered bio,
 // experience rows and writing.
-import { lazy, Suspense, useEffect, useRef, useState } from "react";
-import { experience, writing } from "../../revamp/data/content";
+import { useRef } from "react";
+import { writing } from "../../revamp/data/content";
 import { Roll, go, usePageMotion } from "../shared";
 import { Footer } from "../NextApp";
 import { gsap } from "../motion";
-// landmark line icons from the previous site, inlined so fill="currentColor" follows the theme
-import sfIcon from "../../assets/city-sf.svg?raw";
-import singaporeIcon from "../../assets/city-singapore.svg?raw";
-import cincinnatiIcon from "../../assets/city-cincinnati.svg?raw";
-import georgetownIcon from "../../assets/city-georgetown-icon.svg?raw";
 
-// the past companies printed as pills on the badge, in their brand colors
-const PAST = [
-  { label: "Toyota", bg: "#EB0A1E" },
-  { label: "P&G", bg: "#003DA5" },
-  { label: "BECO", bg: "#141413" },
-  { label: "Kroger", bg: "#21409A" },
-];
 
 // gallery: one row of photos, all the same width (each keeps its own shape)
 import galMe from "../../assets/gallery/me.jpg";
@@ -34,7 +22,7 @@ import galBadminton from "../../assets/gallery/badminton.jpg";
 import galGreek from "../../assets/gallery/greek-life.jpg";
 const GALLERY = [
   [
-    { src: galMe, caption: "Me", label: "Hi :)" },
+    { src: galMe, caption: "Me", label: "Hi" },
     { src: galZip, caption: "Ziplining with the team", label: "Joydrop" },
     { src: galGame, caption: "Game night" },
     { src: galBridge, caption: "Say hi to Karl", label: "SF" },
@@ -64,7 +52,7 @@ const hand = { fontFamily: '"Caveat", "Bradley Hand", cursive' };
 const Polaroid = ({ g, style, className = "" }) => (
   <figure className={`absolute left-1/2 top-0 w-[78%] bg-[#fdfcf9] p-[6%] pb-[4%] shadow-[0_6px_18px_-8px_rgba(0,0,0,0.35)] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${className}`} style={style}>
     <img src={g.src} alt={g.caption} loading="lazy" className="w-full aspect-square object-cover" />
-    <figcaption className="mt-[6%] text-center text-[0.95rem] md:text-[1.05rem] leading-[1.05] text-[#4a4a46] line-clamp-2 min-h-[2.1em]" style={hand}>{g.caption === "Me" ? "Hi :)" : g.caption}</figcaption>
+    <figcaption className="mt-[6%] text-center text-[0.95rem] md:text-[1.05rem] leading-[1.05] text-[#4a4a46] line-clamp-2 min-h-[2.1em]" style={hand}>{g.caption === "Me" ? "Me :)" : g.caption}</figcaption>
   </figure>
 );
 const Pile = ({ pile }) => {
@@ -87,39 +75,8 @@ const Pile = ({ pile }) => {
   );
 };
 
-const ICONS = { sf: sfIcon, singapore: singaporeIcon, cincinnati: cincinnatiIcon, kentucky: georgetownIcon };
-
-// the 3D badge from the original site, loaded only here
-const Lanyard = lazy(() => import("../../components/Lanyard"));
 
 // follows the light/dark switch so the badge lighting matches the page
-const useTheme = () => {
-  const get = () => document.documentElement.dataset.theme || "light";
-  const [t, setT] = useState(get);
-  useEffect(() => {
-    const mo = new MutationObserver(() => setT(get()));
-    mo.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
-    return () => mo.disconnect();
-  }, []);
-  return t;
-};
-
-// the badge, swinging on its own in the right column (no name around it)
-const Pass = ({ className = "" }) => {
-  const theme = useTheme();
-  const [grabbed, setGrabbed] = useState(false);
-  return (
-    <div className={`relative ${className}`}>
-      <div className="absolute inset-0 badge-in" onPointerDown={() => setGrabbed(true)}>
-        <Suspense fallback={null}>
-          <Lanyard key={theme} position={[0, 0, 25]} gravity={[0, -40, 0]} cardImage="/portfolio-v2/assets/comic-self.png" theme={theme} bandColor="#1f1f1e" variant="clear" currently="Founding engineer @ Joydrop" previously={PAST} still />
-        </Suspense>
-      </div>
-      <p className={`pointer-events-none absolute right-0 bottom-2 text-[0.78rem] text-[var(--muted)] transition-opacity duration-700 ${grabbed ? "opacity-0" : "opacity-100"}`}>Grab the badge</p>
-    </div>
-  );
-};
-
 // Writing: a loose gallery of cards, like a portfolio grid. Each column a different image height
 // so it reads as a staggered wall; title underneath with the source and date in grey.
 const SHAPES = ["aspect-[16/10]", "aspect-[4/5]", "aspect-square"];
@@ -147,42 +104,17 @@ export default function About() {
       <h1 className="sr-only">About Ritika Joshi</h1>
 
       {/* after rachelchen.tech/about: a few quiet paragraphs, then a plain list of where I've been.
-          The badge swings beside them. */}
-      <div className="md:grid md:grid-cols-[minmax(0,32rem)_minmax(0,1fr)] md:gap-x-16 pt-8 md:pt-0">
-        <div className="md:order-2 md:sticky md:top-28 md:self-start">
-          <Pass className="h-[26rem] md:h-[40rem]" />
-        </div>
-
-        <div className="md:order-1 mt-6 md:mt-0 md:pt-[calc(30vh-7rem-0.15rem)]">
+          */}
+      <div className="md:max-w-[32rem] pt-8 md:pt-0">
+        <div className="mt-6 md:mt-0 md:pt-[calc(30vh-7rem-0.15rem)]">
           <section className="space-y-3.5 text-[0.85rem] md:text-[0.9rem] leading-[1.55] text-[var(--muted)]">
             <p>I'm a software engineer who loves products, and loves owning them from the first idea to the version people use every day.</p>
             <p>I started at <a href="https://app.joydrop.me/" target="_blank" rel="noopener noreferrer" className="text-[var(--fg)] underline decoration-[var(--line)] underline-offset-4 hover:decoration-[var(--fg)]">Joydrop</a> as a frontend engineer and grew into its founding product engineer. Today I own the app end to end, across web and iOS. I care how things feel, not just whether they work.</p>
             <p>Before that I studied Computer Science at the University of Cincinnati, where co-ops took me to Kroger, P&amp;G, BECO Ventures in Singapore and the factory floor at Toyota.</p>
-            <p>Outside of work, I paint with acrylics, cook for friends and go looking for good techno.</p>
           </section>
 
-          <section className="mt-12 md:mt-16">
-            <ol className="space-y-4">
-              {experience.map((e) => {
-                const now = e.when.includes("Now");
-                const year = (e.when.match(/\d{4}/g) || []).pop();
-                return (
-                  <li key={e.company} className="grid grid-cols-[4.5rem_minmax(0,1fr)] md:grid-cols-[6rem_minmax(0,1fr)_auto] gap-x-4 items-start">
-                    <span className="text-[0.82rem] md:text-[0.86rem]" style={{ color: now ? "var(--fg)" : "var(--muted)" }}>{now ? "Now" : year}</span>
-                    <div className="min-w-0">
-                      <a href={e.link} target="_blank" rel="noopener noreferrer" className="block text-[0.82rem] md:text-[0.86rem] leading-snug hover:underline underline-offset-4">{e.company}</a>
-                      <p className="text-[0.82rem] md:text-[0.86rem] leading-snug text-[var(--muted)]">{e.title}</p>
-                    </div>
-                    {/* the city's landmark, small, with the place */}
-                    <span className="col-start-2 md:col-start-auto mt-1 md:mt-0.5 flex items-center gap-2 text-[0.8rem] text-[var(--muted)]">
-                      {ICONS[e.whereIcon] && <span aria-hidden className="block h-4 text-[var(--muted)] [&>svg]:h-full [&>svg]:w-auto" dangerouslySetInnerHTML={{ __html: ICONS[e.whereIcon] }} />}
-                      {e.where}
-                    </span>
-                  </li>
-                );
-              })}
-            </ol>
-            <a href="#/resume" onClick={go("#/resume")} className="inline-block mt-10 text-[0.82rem] md:text-[0.86rem]"><Roll>Full resume</Roll></a>
+          <section className="mt-6">
+            <a href="#/resume" onClick={go("#/resume")} className="inline-block text-[0.82rem] md:text-[0.86rem]"><Roll>Full resume</Roll></a>
           </section>
         </div>
       </div>

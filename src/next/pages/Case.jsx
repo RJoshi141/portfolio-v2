@@ -642,8 +642,8 @@ const TwoCol = ({ rows }) => {
     <div className={`mt-8 grid ${code ? "" : "md:grid-cols-2"} gap-x-10 gap-y-8`}>
       {rows.map((r) => (
         <div key={r.title} data-fade>
-          <p className="text-[1.05rem] font-medium">{r.title}</p>
-          <p className="mt-2 max-w-2xl text-[0.98rem] leading-[1.65] text-[var(--muted)]">{r.text}</p>
+          <p className="text-[0.92rem] md:text-[0.98rem] font-medium">{r.title}</p>
+          <p className="mt-1.5 max-w-2xl text-[0.82rem] md:text-[0.86rem] leading-[1.6] text-[var(--muted)]">{r.text}</p>
           {r.code && (
             <pre className="mt-4 overflow-x-auto bg-[#1C1C1B] border border-white/[0.06] p-4 md:p-5 text-[0.72rem] md:text-[0.78rem] leading-[1.6] text-[#E6E4DE]"><code className="mono">{r.code}</code></pre>
           )}
@@ -662,7 +662,7 @@ const StoryChapter = ({ s, p, i, prev }) => {
       {s.eyebrow && !cont && <p className="text-[0.8rem] md:text-[0.85rem] text-[var(--muted)]">{s.eyebrow}</p>}
       {s.heading && (cont
         ? <h3 className="text-[1.05rem] md:text-[1.2rem] font-medium leading-[1.3] tracking-[-0.01em]">{s.heading}</h3>
-        : <h2 className="mt-2 md:mt-3 text-[1.35rem] md:text-[2rem] font-medium leading-[1.2] tracking-[-0.01em]" style={{ fontFamily: '"Playfair Display", Georgia, serif' }}>{s.heading}</h2>)}
+        : <h2 className="mt-2 md:mt-3 text-[1.35rem] md:text-[2rem] font-medium leading-[1.2] tracking-[-0.03em]" style={{ color: "#111" }}>{s.heading}</h2>)}
       {paras.map((t) => <p key={t} data-split="lines" className="mt-4 md:mt-5 max-w-2xl text-[0.88rem] md:text-[0.95rem] leading-[1.65] text-[var(--muted)]">{t}</p>)}
       {s.list && (
         <ul className="mt-6 max-w-2xl">
@@ -837,7 +837,7 @@ export default function Case({ slug }) {
 
       {/* then the name and the facts, quiet and left aligned in the content column */}
       <header className="mx-auto md:max-w-[52rem] mt-12 md:mt-16">
-        <h1 className="text-[2rem] md:text-[2.8rem] font-medium leading-[1.1] tracking-[-0.01em]" style={{ fontFamily: '"Playfair Display", Georgia, serif' }}>{p.name}</h1>
+        <h1 className="text-[2rem] md:text-[2.8rem] font-medium leading-[1.1] tracking-[-0.03em]" style={{ color: "#111" }}>{p.name}</h1>
         <p className="mt-4 max-w-2xl text-[0.88rem] md:text-[0.95rem] leading-[1.65] text-[var(--muted)]">{p.summary}</p>
         <dl className="mt-8 max-w-2xl space-y-2 text-[0.85rem] md:text-[0.9rem]">
           {[["Role", p.role], ["Platform", p.platform], ["Stack", p.stackLabel || p.stack.slice(0, 3).join(", ")]].map(([l, v]) => (

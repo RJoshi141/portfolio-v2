@@ -241,7 +241,6 @@ export const Footer = ({ tight }) => (
 
 // ---------------------------------------------------------------- app
 // warm the About badge (three.js + physics) in the background so opening About doesn't stutter
-if (typeof window !== "undefined") import("../components/Lanyard"); // start right away, alongside the page
 // a refresh always starts at the top of the page, not wherever the browser last was
 if (typeof window !== "undefined") {
   if ("scrollRestoration" in history) history.scrollRestoration = "manual";

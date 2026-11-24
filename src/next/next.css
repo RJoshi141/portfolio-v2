@@ -149,3 +149,6 @@ img, video { -webkit-user-drag: none; }
 #root { animation: page-in 0.6s ease-out both; }
 /* resume roles: no red text on hover, the logo and photos fade instead */
 .has-cursor button.no-red:hover { color: inherit; }
+/* resume photos: when a role closes they rise, overshoot ~1.5px and settle */
+@keyframes photo-bounce { 0% { transform: translateY(0); } 50% { transform: translateY(-1.5px); } 100% { transform: translateY(0); } }
+.photo-bounce { animation: photo-bounce .28s ease-out .22s both; }
