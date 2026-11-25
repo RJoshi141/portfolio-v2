@@ -144,7 +144,7 @@ const CardArt = ({ p }) => {
 
   // Bound: the ink start screen (blackletter over the oil painting), in its frame
   // Bound: the wax seal icon on a real home screen, filling the card
-  if (p.slug === "bound") return <img src={bHome} alt="" loading="lazy" className="absolute inset-0 w-full h-full object-cover object-center" />;
+  if (p.slug === "bound") return <img src={bHome} alt="" loading="lazy" className="absolute inset-0 w-full h-full object-cover object-[52%_50%]" />;
   // Zoomies: the pixel dog's run cycle, on the game's own flat sky
   if (p.slug === "zoomies") return (
     <div className="absolute inset-0 flex items-center justify-center" style={{ background: "#87CFFA" }}>

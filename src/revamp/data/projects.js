@@ -10,7 +10,6 @@ import duoFoldMp4 from "../../assets/case-studies/duo/duo-fold.mp4";
 import duoFoldPoster from "../../assets/case-studies/duo/duo-fold-poster.jpg";
 import duoCardMp4 from "../../assets/case-studies/duo/duo-fold-card.mp4";
 import duoCardPoster from "../../assets/case-studies/duo/duo-fold-card-poster.jpg";
-import layerCard from "../../assets/case-studies/layer/card-3d.png";
 // Layer revamp (Oct 2026): new recordings, screens and the iPhone 17 frame
 import iphone17Frame from "../../assets/case-studies/iphone-17-frame.png";
 // blurred photo backdrops for the Layer phones (Pexels)
@@ -26,7 +25,6 @@ import l2ScanMp4 from "../../assets/case-studies/layer2/scan.mp4";
 import l2ScanPoster from "../../assets/case-studies/layer2/scan-poster.jpg";
 import l2VoiceMp4 from "../../assets/case-studies/layer2/voice.mp4";
 import l2VoicePoster from "../../assets/case-studies/layer2/voice-poster.jpg";
-import l2Start from "../../assets/case-studies/layer2/start-screen.jpg";
 import l2Questionnaire from "../../assets/case-studies/layer2/questionnaire.jpg";
 import l2TourVoice from "../../assets/case-studies/layer2/tour-voice.jpg";
 import l2AddProduct from "../../assets/case-studies/layer2/add-product.jpg";
@@ -62,36 +60,15 @@ import boundIconHome from "../../assets/case-studies/bound/icon-homescreen.png";
 import boundTearSpec from "../../assets/case-studies/bound/tear-spec.jpg";
 import boundPortraits from "../../assets/case-studies/bound/portrait-picker.jpg";
 import boundSignIn from "../../assets/case-studies/bound/sign-in.jpg";
-import layerHero3phones from "../../assets/case-studies/layer/hero-3phones.png";
-import layerShelf from "../../assets/case-studies/layer/shelf.png";
-import layerProduct from "../../assets/case-studies/layer/product.png";
-import layerRoutine from "../../assets/case-studies/layer/routine.png";
-import layerOnboarding from "../../assets/case-studies/layer/onboarding.png";
-import layerHomescreen from "../../assets/case-studies/layer/homescreen.png";
-import layerWidget from "../../assets/case-studies/layer/widget.png";
-import layerIcons from "../../assets/case-studies/layer/icons.png";
-import layerScanMp4 from "../../assets/case-studies/layer/scan-moisturizer.mp4";
-import layerScanPoster from "../../assets/case-studies/layer/scan-moisturizer-poster.jpg";
-import layerTourMp4 from "../../assets/case-studies/layer/intro-tour.mp4";
-import layerTourPoster from "../../assets/case-studies/layer/intro-tour-poster.jpg";
-import layerVoiceMp4 from "../../assets/case-studies/layer/voice-checkin.mp4";
-import layerVoicePoster from "../../assets/case-studies/layer/voice-checkin-poster.jpg";
-import layerReviewMp4 from "../../assets/case-studies/layer/routine-review.mp4";
-import layerReviewPoster from "../../assets/case-studies/layer/routine-review-poster.jpg";
-import layerEmptyShelf from "../../assets/case-studies/layer/empty-shelf.jpg";
-import layerEmptyRoutine from "../../assets/case-studies/layer/empty-routine.jpg";
 import evenCard from "../../assets/case-studies/even/card-3d.png";
 import evenHero from "../../assets/case-studies/even/hero-3d.jpg";
 import evenHeroMp4 from "../../assets/case-studies/even/hero-flyin.mp4";
 import evenHeroPoster from "../../assets/case-studies/even/hero-flyin-poster.jpg";
 import evenIcons from "../../assets/case-studies/even/icons.png";
-import evenRoute from "../../assets/case-studies/even/route.png";
-import evenTripInfo from "../../assets/case-studies/even/trip-info.png";
-import evenDirections from "../../assets/case-studies/even/directions.png";
-import evenInspect from "../../assets/case-studies/even/inspect.png";
 import evenSlopeLayer from "../../assets/case-studies/even/slope-layer.png";
 import evenLegend from "../../assets/case-studies/even/legend.png";
-import evenProfiles from "../../assets/case-studies/even/profiles.png";
+import evenTripInfo from "../../assets/case-studies/even/trip-info.png";
+import evenDirections from "../../assets/case-studies/even/directions.png";
 import evenAppStartMp4 from "../../assets/case-studies/even/app-start-2.mp4";
 import evenAppStartPoster from "../../assets/case-studies/even/app-start-2-poster.jpg";
 import evenChangeLocationMp4 from "../../assets/case-studies/even/change-location.mp4";
@@ -99,7 +76,6 @@ import evenChangeLocationPoster from "../../assets/case-studies/even/change-loca
 import evenPickLocationMp4 from "../../assets/case-studies/even/pick-location-2.mp4";
 import evenPickLocationPoster from "../../assets/case-studies/even/pick-location-2-poster.jpg";
 import utterHeroMp4 from "../../assets/case-studies/utter/hero-watch-3.mp4";
-import utterHeroPoster from "../../assets/case-studies/utter/hero-watch-3-poster.jpg";
 import utterHeroWrist from "../../assets/case-studies/utter/hero-wrist.jpg"; // the welcome screen on a wrist
 import lumonHeroMp4 from "../../assets/case-studies/lumon/hero-imac.mp4";
 import lumonHeroPoster from "../../assets/case-studies/lumon/hero-imac-poster.jpg";
@@ -114,14 +90,12 @@ import lumonShowUiPoster from "../../assets/case-studies/lumon/show-interface-po
 import utterSketchV1 from "../../assets/case-studies/utter/sketch-v1-idle.png";
 import utterSketchV2 from "../../assets/case-studies/utter/sketch-v2-recording.png";
 import utterSketchV3 from "../../assets/case-studies/utter/sketch-v3-review.png";
-import utterSketchFinal from "../../assets/case-studies/utter/sketch-final.png";
 import watchUltraFrame from "../../assets/case-studies/watch-ultra-frame.png";
 import utterDemoMp4 from "../../assets/case-studies/utter/watch-demo.mp4";
 import utterDemoWebm from "../../assets/case-studies/utter/watch-demo.webm";
 import utterPhoneOnboarding from "../../assets/case-studies/utter/iphone-onboarding.png";
 import utterPhoneRecord from "../../assets/case-studies/utter/iphone-record.png";
 import utterPhoneInbox from "../../assets/case-studies/utter/iphone-inbox.png";
-import utterWatchIntro from "../../assets/case-studies/utter/watch-intro-3up.png";
 import utterWatchRecordReview from "../../assets/case-studies/utter/watch-final-record-review.png";
 import utterWatchSyncConfirm from "../../assets/case-studies/utter/watch-final-sync-confirm.png";
 // the two exploration boards: sketches, and the app on real devices
@@ -135,6 +109,16 @@ import joydropCommunitiesBefore from "../../assets/case-studies/joydrop/communit
 import joydropCommunitiesAfter from "../../assets/case-studies/joydrop/communities-after.png";
 import joydropFeedPoster from "../../assets/case-studies/joydrop/app-scroll-poster.jpg";
 import joydropFeedMp4 from "../../assets/case-studies/joydrop/app-scroll.mp4";
+import joydropWebShotSignup from "../../assets/case-studies/joydrop/web-shot-signup.jpg";
+import joydropWebShotFeed from "../../assets/case-studies/joydrop/web-shot-feed.jpg";
+import joydropWebShotSearch from "../../assets/case-studies/joydrop/web-shot-search.jpg";
+import joydropWebShotCreate from "../../assets/case-studies/joydrop/web-shot-create.jpg";
+import joydropWebShotMarket from "../../assets/case-studies/joydrop/web-shot-market.jpg";
+import joydropWebShotProfile from "../../assets/case-studies/joydrop/web-shot-profile.jpg";
+import joydropWebFeedMp4 from "../../assets/case-studies/joydrop/web-feed.mp4";
+import joydropWebFeedPoster from "../../assets/case-studies/joydrop/web-feed.jpg";
+import joydropWebMarketMp4 from "../../assets/case-studies/joydrop/web-market.mp4";
+import joydropWebMarketPoster from "../../assets/case-studies/joydrop/web-market.jpg";
 import joydropQuestionnaireMp4 from "../../assets/case-studies/joydrop/onboarding-questionnaire.mp4";
 import joydropQuestionnairePoster from "../../assets/case-studies/joydrop/onboarding-questionnaire-poster.jpg";
 import joydropTourMp4 from "../../assets/case-studies/joydrop/onboarding-tour.mp4";
@@ -189,10 +173,6 @@ import joydropBgLaugh from "../../assets/case-studies/joydrop/bg-laugh.jpg";
 import joydropBgNight from "../../assets/case-studies/joydrop/bg-night.jpg";
 import joydropBgWindow from "../../assets/case-studies/joydrop/bg-window.jpg";
 import joydropBgHands from "../../assets/case-studies/joydrop/bg-hands.jpg";
-import joydropBgTalk from "../../assets/case-studies/joydrop/bg-talk.jpg";
-import joydropBgNeon from "../../assets/case-studies/joydrop/bg-neon.jpg";
-import joydropBgHallway from "../../assets/case-studies/joydrop/bg-hallway.jpg";
-import joydropBgHuddle from "../../assets/case-studies/joydrop/bg-huddle.jpg";
 import joydropBgCrowd from "../../assets/case-studies/joydrop/bg-crowd.jpg";
 import joydropBgDance from "../../assets/case-studies/joydrop/bg-dance.jpg";
 import iphoneFrame from "../../assets/case-studies/iphone-frame.png";
@@ -283,10 +263,8 @@ export const projects = [
             { name: "Ash", hex: "#8A7F74" },
           ],
         },
-        images: [
-          { src: joydropLoginBefore, tall: true, caption: "Before. The web login, on a phone." },
-          { src: joydropLoginAfter, tall: true, caption: "After. The native iOS login: \"Seen starts here.\"" },
-        ],
+        // drag the handle to wipe between the two
+        compare: { framed: true, before: joydropLoginBefore, after: joydropLoginAfter, caption: "The web login on a phone, and the native iOS login: \"Seen starts here.\"" },
       },
       {
         tag: "Key decision",
@@ -302,7 +280,8 @@ export const projects = [
           why: "People open the app to read what someone said, so that comes first.",
         },
         image: { src: joydropHomeBefore, caption: "Before. The Figma design, with a Highlights carousel above the feed." },
-        phones: [
+        // one phone at a time, fading to the next on a loop
+        carousel: [
           { frame: iphoneFrame, poster: joydropHomeFeed, caption: "After. The For You feed: posts first, with search and send up top. Cards tilt like notes pinned to a board.", tone: `center / cover no-repeat url(${joydropBgCoffee})` },
           { frame: iphoneFrame, poster: joydropHomeHighlight, caption: "After. Highlight view: featured Joydrops fill the card in violet, with the Dots and badge they came with.", tone: `center / cover no-repeat url(${joydropBgLaugh})` },
           { frame: iphoneFrame, poster: joydropHomeComments, caption: "After. Comments with reactions, replies, GIFs and @ tagging.", tone: `center / cover no-repeat url(${joydropBgNight})` },
@@ -349,18 +328,38 @@ export const projects = [
         eyebrow: "Core flows",
         heading: "Person first, next step on the row",
         body: "Two tabs, For You and Community, grouped by recency. A colored badge on the avatar tells you the type at a glance, and you can accept an invite or send a first Joydrop without opening anything.",
-        phones: [
-          { frame: iphoneFrame, poster: joydropInappBeforeList, caption: "Before. One flat list, the same blue buttons on every row.", tone: `center / cover no-repeat url(${joydropBgTalk})` },
-          { frame: iphoneFrame, poster: joydropInappForYou, caption: "After. Tabs, recency groups, a badge per type.", tone: `center / cover no-repeat url(${joydropBgNeon})` },
-        ],
+        compare: { frame: iphoneFrame, before: joydropInappBeforeList, after: joydropInappForYou, caption: "One flat list with the same blue buttons, then tabs, recency groups and a badge per type." },
       },
       {
         eyebrow: "Core flows",
         heading: "One job per button",
         body: "Search opens as its own screen with Users and Communities tabs. Send is violet, connect is black, and once you're connected, send takes the full width.",
-        phones: [
-          { frame: iphoneFrame, poster: joydropSearchBefore, caption: "Before. One search box above a grid of blue buttons.", tone: `center / cover no-repeat url(${joydropBgHallway})` },
-          { frame: iphoneFrame, poster: joydropSearchAfter, caption: "After. Users and Communities, and you act right from the card.", tone: `center / cover no-repeat url(${joydropBgHuddle})` },
+        compare: { frame: iphoneFrame, before: joydropSearchBefore, after: joydropSearchAfter, caption: "One search box above a grid of blue buttons, then Users and Communities with actions on the card." },
+      },
+      {
+        eyebrow: "Web", nav: "On the web",
+        heading: "The same app, on the web",
+        body: [
+          "Joydrop runs in the browser too, so every screen had to work from a phone up to a wide laptop. The layout stays the same; the navigation and overlays change with the space.",
+          "The look is neo-brutalist on purpose: hard black outlines, flat offset shadows under inputs and buttons, and post cards that sit a little crooked, like notes pinned to a board. It feels handmade rather than corporate, which suits an app about thanking people. Fraunces and Space Mono keep it warm, and violet stays the one accent.",
+        ],
+        list: [
+          "Phones get a bottom tab bar, laptops a dark left rail",
+          "Search is its own screen on iOS and a drawer over the feed on the web",
+          "Sheets on iOS open as centered modals on the web",
+        ],
+        web: [
+          { mp4: joydropWebFeedMp4, poster: joydropWebFeedPoster, caption: "Onboarding, the feed and sending a Joydrop." },
+          { mp4: joydropWebMarketMp4, poster: joydropWebMarketPoster, caption: "Communities and the marketplace: claiming a spot at an event." },
+        ],
+        // a slow strip of web screens drifting past, faded at both edges
+        webStrip: [
+          { src: joydropWebShotSignup, label: "Sign up" },
+          { src: joydropWebShotFeed, label: "Feed" },
+          { src: joydropWebShotSearch, label: "Search" },
+          { src: joydropWebShotCreate, label: "Create a community" },
+          { src: joydropWebShotMarket, label: "Marketplace" },
+          { src: joydropWebShotProfile, label: "Profile" },
         ],
       },
       {
@@ -476,7 +475,7 @@ export const projects = [
         eyebrow: "Visual design", nav: "Visual design",
         heading: "One amber accent on black",
         body: "If it's yellow, it's the thing to tap. Each category gets its own colour: green Todo, orange Reminder, purple Idea, blue Note.",
-        images: [
+        carousel: [
           { src: utterPhoneOnboarding, tall: true, caption: "Onboarding: record on your wrist, read on your phone, four categories." },
           { src: utterPhoneRecord, tall: true, caption: "Record: hold the mic, or import the latest watch recording." },
           { src: utterPhoneInbox, tall: true, caption: "Inbox: sorted into Todo, Reminder, Idea and Note." },
@@ -790,10 +789,10 @@ export const projects = [
       {
         eyebrow: "Core flows",
         heading: "The small things that make it feel like a club",
-        cards: [
-          { title: "Every past meetup, on a library card", text: "The club ledger: each meetup styled like a due-date card, with the club's average rating and yours.", phone: { frame: iphoneFrame, poster: boundLedger } },
-          { title: "Silhouettes instead of initials", text: "Six Victorian cut-paper silhouettes, all facing right, in a coloured oval.", phone: { frame: iphoneFrame, poster: boundPortraits } },
-          { title: "No passwords, just codes", text: "Join with a 6-character invite code. Sign in with an 8-digit code sent to your email.", phone: { frame: iphoneFrame, poster: boundSignIn } },
+        carousel: [
+          { frame: iphoneFrame, poster: boundLedger, title: "Every past meetup, on a library card", caption: "The club ledger: each meetup styled like a due-date card, with the club's average rating and yours." },
+          { frame: iphoneFrame, poster: boundPortraits, title: "Silhouettes instead of initials", caption: "Six Victorian cut-paper silhouettes, all facing right, in a coloured oval." },
+          { frame: iphoneFrame, poster: boundSignIn, title: "No passwords, just codes", caption: "Join with a 6-character invite code. Sign in with an 8-digit code sent to your email." },
         ],
       },
       {
@@ -985,12 +984,15 @@ WEIGHT = """length_m * (1 + abs(grade) / 10)
         images: [
           { src: evenTripInfo, tall: true, caption: "Trip info: the slope profile against your limits, and what the shortest route would have cost you." },
           { src: evenDirections, tall: true, caption: "Directions: nine raw path pieces merged into five readable steps, each with slope and curb status." },
+          { src: evenLegend, tall: true, caption: "The legend: slope, curb status and map markers in one panel." },
+          { src: evenSlopeLayer, tall: true, caption: "The slope layer: every street colored by how steep it is." },
         ],
       },
       {
         eyebrow: "Visual design", nav: "Visual design",
         heading: "Subway signage, one blue",
         body: "Bold Helvetica, thick borders and hard shadows. Blue is the only accent, so wherever it shows up, that's the thing to tap.",
+        image: { src: evenIcons, caption: "The app icon in light, dark and tinted: A to B, one bend." },
         brand: {
           colors: [
             { name: "Paper", hex: "#FBFAF7" },

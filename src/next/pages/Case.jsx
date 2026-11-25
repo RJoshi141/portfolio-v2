@@ -13,6 +13,7 @@ import { WatchDemo, Sprites, AssetShelf } from "../../revamp/pages/CaseStudy";
 // current tool logos (from the maintained svg-logos set): Firebase's 2024 flame, the 2024 CSS mark,
 // the newer Docker whale. Xcode is the real Xcode 26 app icon; the rest have no newer version.
 import figma from "../../assets/tools/latest/figma.svg";
+import joydropIcon from "../../assets/joydrop.svg";
 import typescript from "../../assets/tools/latest/typescript.svg";
 import react from "../../assets/tools/latest/react.svg";
 import nextjs from "../../assets/tools/latest/nextjs.svg";
@@ -653,6 +654,119 @@ const TwoCol = ({ rows }) => {
   );
 };
 
+// Before / after: both screens stacked in one panel, a handle you drag to wipe between them.
+// Before shows left of the line, after shows right of it (after xiangyidesign.com/tiktokweb).
+const Compare = ({ c }) => {
+  const box = useRef(null);
+  const [x, setX] = useState(50);
+  const drag = useRef(false);
+  const at = (e) => {
+    const r = box.current.getBoundingClientRect();
+    setX(Math.min(100, Math.max(0, ((e.clientX - r.left) / r.width) * 100)));
+  };
+  const layer = (src) => (
+    <div className="absolute inset-0 flex items-center justify-center">
+      {/* screenshots that already have their phone drawn in go in as they are */}
+      {c.framed ? <img src={src} alt="" draggable={false} className="h-[84%] w-auto" /> : <Device kind="phone" frame={c.frame} poster={src} className="h-[84%]" />}
+    </div>
+  );
+  return (
+    <figure className="mt-10 md:mt-12">
+      <div
+        ref={box}
+        data-cursor="Drag"
+        role="slider" aria-label="Before and after" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(x)} tabIndex={0}
+        onPointerDown={(e) => { drag.current = true; e.currentTarget.setPointerCapture(e.pointerId); at(e); }}
+        onPointerMove={(e) => drag.current && at(e)}
+        onPointerUp={() => (drag.current = false)}
+        onPointerCancel={() => (drag.current = false)}
+        onKeyDown={(e) => { if (e.key === "ArrowLeft") setX((v) => Math.max(0, v - 5)); if (e.key === "ArrowRight") setX((v) => Math.min(100, v + 5)); }}
+        className="relative aspect-[5/4] md:aspect-[16/11] overflow-hidden rounded-[18px] bg-[#f1f1ef] select-none touch-pan-y outline-none"
+      >
+        {layer(c.before)}
+        <div className="absolute inset-0" style={{ clipPath: `inset(0 0 0 ${x}%)` }}>{layer(c.after)}</div>
+        <span className="absolute left-4 top-4 md:left-5 md:top-5 rounded-full bg-[#e2e2df] px-3.5 py-1.5 text-[0.8rem] md:text-[0.9rem] text-[#111]">Before</span>
+        <span className="absolute right-4 top-4 md:right-5 md:top-5 rounded-full bg-[#111] px-3.5 py-1.5 text-[0.8rem] md:text-[0.9rem] text-white">After</span>
+        {/* the line and its round handle */}
+        <div className="pointer-events-none absolute inset-y-0 w-px bg-black/15" style={{ left: `${x}%` }}>
+          <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-white shadow-[0_2px_10px_rgba(0,0,0,0.12)] flex items-center justify-center">
+            <svg width="18" height="12" viewBox="0 0 18 12" fill="none" stroke="#111" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M5 1 1 6l4 5M13 1l4 5-4 5" /></svg>
+          </span>
+        </div>
+      </div>
+      {c.caption && <figcaption className="mt-3 text-[0.8rem] leading-[1.55] text-[var(--muted)]">{c.caption}</figcaption>}
+    </figure>
+  );
+};
+
+// Carousel: one phone at a time in a grey panel, cross-fading to the next every few seconds, with dots
+const Carousel = ({ items }) => {
+  const [i, setI] = useState(0);
+  const [tick, setTick] = useState(0); // restarts the timer after a dot is clicked
+  useEffect(() => {
+    const t = setInterval(() => setI((v) => (v + 1) % items.length), 3200);
+    return () => clearInterval(t);
+  }, [items.length, tick]);
+  return (
+    <figure className="mt-10 md:mt-12">
+      <div className="relative aspect-[5/4] md:aspect-[16/11] overflow-hidden rounded-[18px] bg-[#f1f1ef] select-none">
+        {items.map((it, k) => (
+          <div key={k} className="absolute inset-0 flex items-center justify-center transition-opacity duration-700 ease-out" style={{ opacity: k === i ? 1 : 0 }}>
+            {/* src: a screenshot that already has its phone drawn in */}
+            {it.src ? <img src={it.src} alt="" draggable={false} className="h-[80%] w-auto -mt-[3%]" /> : <Device kind="phone" frame={it.frame} poster={it.poster} mp4={it.mp4} className="h-[80%] -mt-[3%]" />}
+          </div>
+        ))}
+        <div className="absolute bottom-[4%] left-0 right-0 flex justify-center gap-2.5">
+          {items.map((_, k) => (
+            <button key={k} type="button" aria-label={`Slide ${k + 1}`} onClick={() => { setI(k); setTick((t) => t + 1); }}
+              className={`w-2 h-2 rounded-full transition-colors duration-300 ${k === i ? "bg-[#777]" : "bg-[#d4d4d1]"}`} />
+          ))}
+        </div>
+      </div>
+      {/* captions stacked in one cell, so the height fits the longest and they fade with the phones */}
+      <figcaption className="mt-3 grid text-[0.8rem] leading-[1.55] text-[var(--muted)]">
+        {items.map((it, k) => (
+          <span key={k} className="[grid-area:1/1] transition-opacity duration-700" style={{ opacity: k === i ? 1 : 0 }}>{it.title && <span className="font-medium text-[var(--fg)]">{it.title}. </span>}{it.caption}</span>
+        ))}
+      </figcaption>
+    </figure>
+  );
+};
+
+// web screens drifting slowly to the left in a loop, faded out at both edges; pauses on hover
+const WebStrip = ({ items }) => (
+  <div className="web-strip mt-10 md:mt-12 overflow-hidden" style={{ WebkitMaskImage: "linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent)", maskImage: "linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent)" }}>
+    {/* spacing is padding on each card (not flex gap) so the two halves are exactly equal and the loop never jumps */}
+    <div className="web-strip-track flex w-max">
+      {[...items, ...items].map((it, k) => (
+        <div key={k} aria-hidden={k >= items.length} className="shrink-0 pr-4 md:pr-5"><div className="w-[19rem] md:w-[30rem] rounded-[18px] bg-[#e7e7e5] px-4 md:px-6 pt-4 md:pt-5 overflow-hidden">
+          <div className="flex items-center gap-2">
+            <img src={joydropIcon} alt="" className="w-7 h-7 rounded-full" />
+            <span className="rounded-full bg-[#111] px-3 py-1 text-[0.78rem] md:text-[0.85rem] text-white">{it.label}</span>
+          </div>
+          <div className="mt-4 md:mt-5 rounded-t-[10px] border-[5px] border-b-0 border-[#111] overflow-hidden">
+            <img src={it.src} alt={it.label} loading="lazy" draggable={false} className="block w-full h-auto" />
+          </div>
+        </div></div>
+      ))}
+    </div>
+  </div>
+);
+
+// web recordings: the screen alone, rounded, looping
+const WebScreens = ({ items }) => (
+  <div className="mt-10 md:mt-12 grid md:grid-cols-2 gap-8 md:gap-5">
+    {items.map((w) => (
+      <figure key={w.mp4}>
+        <div className="overflow-hidden rounded-[12px] ring-1 ring-black/[0.06] bg-[#141210]">
+          <Clip mp4={w.mp4} poster={w.poster} className="block w-full h-auto" />
+        </div>
+        {w.caption && <figcaption className="mt-3 text-[0.8rem] leading-[1.55] text-[var(--muted)]">{w.caption}</figcaption>}
+      </figure>
+    ))}
+  </div>
+);
+
 const StoryChapter = ({ s, p, i, prev }) => {
   // same eyebrow as the chapter before: no repeated label, and the heading drops to a subheading
   const cont = !!s.eyebrow && prev === s.eyebrow;
@@ -766,6 +880,10 @@ const StoryChapter = ({ s, p, i, prev }) => {
       {s.flows && <Rows>{s.flows.map((f) => <Row key={f.label} tone={f.tone} phone={{ kind: f.kind || "phone", frame: f.frame, mp4: f.mp4, poster: f.poster }} title={f.label} text={f.text} />)}</Rows>}
       {s.chat && <Rows><Row tone={s.chat.tone} text={s.chat.text}><GroupChat chat={s.chat} frame={s.chat.frame} /></Row></Rows>}
       {s.cards && <Rows>{s.cards.map((c) => <Row key={c.title} tone="neutral" phone={{ kind: "phone", ...c.phone }} title={c.title} text={c.text} />)}</Rows>}
+      {s.compare && <Compare c={s.compare} />}
+      {s.web && <WebScreens items={s.web} />}
+      {s.webStrip && <WebStrip items={s.webStrip} />}
+      {s.carousel && <Carousel items={s.carousel} />}
       <StoryVisuals s={s} p={p} />
       {s.components === "bound" && <div className="mt-10 md:mt-12"><BoundPieces /></div>}
       {(s.empathy || (s.components && s.components !== "bound")) && (

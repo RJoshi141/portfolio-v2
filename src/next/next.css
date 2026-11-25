@@ -152,3 +152,8 @@ img, video { -webkit-user-drag: none; }
 /* resume photos: when a role closes they rise, overshoot ~1.5px and settle */
 @keyframes photo-bounce { 0% { transform: translateY(0); } 50% { transform: translateY(-1.5px); } 100% { transform: translateY(0); } }
 .photo-bounce { animation: photo-bounce .28s ease-out .22s both; }
+/* Joydrop web strip: two copies side by side, slid left by one copy's width, so it loops seamlessly */
+@keyframes web-strip { to { transform: translateX(-50%); } }
+.web-strip-track { animation: web-strip 70s linear infinite; }
+.web-strip:hover .web-strip-track { animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce) { .web-strip-track { animation: none; } }
