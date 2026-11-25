@@ -87,6 +87,7 @@ const Cursor = () => {
 
 // ---------------------------------------------------------------- nav
 import resumeGlass from "../assets/nav/resume-glass.svg";
+import backGlass from "../assets/nav/back-glass.svg";
 import workGlass from "../assets/nav/work-glass.svg";
 import aboutGlass from "../assets/nav/about-glass.svg";
 import contactGlass from "../assets/nav/contact-glass.svg";
@@ -214,9 +215,10 @@ const Nav = ({ route, theme, setTheme }) => {
     <header ref={bar} className="hidden md:flex fixed top-0 inset-x-0 z-[100] px-6 py-5 md:py-6 items-start justify-between gap-6 text-[var(--muted)]">
       {/* plain name, or on a case study a way back: ← Work / Bound */}
       {route.page === "work" && route.slug && findProject(route.slug) ? (
-        <p key="crumb" className="fade-in flex items-center gap-2 text-[0.92rem] whitespace-nowrap">
-          <a href="#/work" onClick={go("#/work")} className="flex items-center gap-1.5 hover:text-[var(--red)] transition-colors">
-            <svg aria-hidden width="14" height="14" viewBox="0 0 14 14"><path d="M12 7H2M6 3L2 7l4 4" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" /></svg>
+        <p key="crumb" className="fade-in glass-tray -ml-1.5 -mt-1 flex items-center gap-2 rounded-full pl-1.5 pr-3.5 py-1.5 text-[0.92rem] whitespace-nowrap">
+          {/* the way back, in the same frosted glass as the case study menu, with the glass back arrow */}
+          <a href="#/work" onClick={go("#/work")} className="no-red flex items-center gap-1.5">
+            <img src={backGlass} alt="" className="w-6 h-6" draggable={false} />
             Work
           </a>
           <span className="opacity-50">/</span>
