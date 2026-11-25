@@ -4,6 +4,7 @@
 // Sends to VITE_FORM_ENDPOINT (Formspree / Web3Forms) when it's set; otherwise Submit
 // opens the visitor's mail app with everything filled in.
 import { useRef, useState } from "react";
+import sendGlass from "../../assets/nav/send-glass.svg";
 import { usePageMotion } from "../shared";
 import { Footer } from "../NextApp";
 
@@ -92,7 +93,9 @@ export default function Contact() {
             <textarea className={`${field} min-h-[6rem] resize-y`} value={f.message} onChange={set("message")} placeholder="Type here..." />
           </label>
           <div className="sm:col-span-2 flex flex-wrap items-center gap-4">
-            <button type="submit" disabled={status === "sending"} className="text-[0.92rem] px-4 py-2 bg-[var(--fg)] text-[var(--bg)] hover:opacity-80 transition-opacity">
+            {/* a white glass tile like the dock, with the glass paper plane */}
+            <button type="submit" disabled={status === "sending"} className="no-red inline-flex items-center gap-2 rounded-[12px] border border-[#dcdcd9] bg-white/80 backdrop-blur-md px-4 py-2 text-[0.92rem] text-[#111] shadow-[0_1px_3px_rgba(0,0,0,0.06)] hover:opacity-80 transition-opacity">
+              <img src={sendGlass} alt="" className="w-5 h-5" draggable={false} />
               {status === "sending" ? "Sending…" : status === "sent" ? "Sent, thank you" : "Send"}
             </button>
             {err && <p className="text-[0.85rem] text-red-500">{err}</p>}

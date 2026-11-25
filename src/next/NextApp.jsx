@@ -86,6 +86,59 @@ const Cursor = () => {
 };
 
 // ---------------------------------------------------------------- nav
+import resumeGlass from "../assets/nav/resume-glass.svg";
+import workGlass from "../assets/nav/work-glass.svg";
+import aboutGlass from "../assets/nav/about-glass.svg";
+import contactGlass from "../assets/nav/contact-glass.svg";
+const NAV_ICON = { work: workGlass, about: aboutGlass, resume: resumeGlass, contact: contactGlass };
+const DOCK_LABEL = { work: "Work", about: "About Me", resume: "Resume", contact: "Contact" };
+
+// Desktop nav as a small dock (after a macOS-style dock): white tiles with glass icons in a pale tray.
+// The tile under the pointer grows, its neighbours a little, and a dark label pops up above it.
+const Dock = ({ route }) => {
+  const [hover, setHover] = useState(-1);
+  const [hidden, setHidden] = useState(false);
+  const items = COLS.flat();
+  // slides away while scrolling down, springs back up (with a small overshoot) on the way up
+  useEffect(() => {
+    let last = window.scrollY;
+    const onScroll = () => {
+      const y = window.scrollY, d = y - last;
+      last = y;
+      if (Math.abs(d) < 3) return;
+      setHidden(d > 0 && y > 80);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+  return (
+    <nav aria-label="Site" className="fixed bottom-8 md:bottom-14 left-1/2 z-[100]"
+      style={{ transform: `translate(-50%, ${hidden ? "calc(100% + 7rem)" : "0"})`, transition: hidden ? "transform .35s cubic-bezier(.5,0,.75,0)" : "transform .6s cubic-bezier(.34,1.56,.64,1)" }}>
+      {/* tiles change real size (not just scale), so the whole bar grows with them */}
+      {/* the tray keeps a fixed height, so a growing tile pops up out of it (only the width grows) */}
+      <ul onMouseLeave={() => setHover(-1)} className="flex items-end gap-2 h-[58px] rounded-[22px] border border-[#dcdcd9] bg-transparent px-2.5 pb-[8px] transition-all duration-200">
+        {items.map(([l, h, page], i) => {
+          const on = route.page === page;
+          const d = hover < 0 ? 9 : Math.abs(hover - i);
+          const size = d === 0 ? 54 : d === 1 ? 46 : 40;
+          return (
+            <li key={l} className="relative" onMouseEnter={() => setHover(i)}>
+              {/* label above the hovered tile */}
+              <span className={`pointer-events-none absolute left-1/2 -translate-x-1/2 bottom-full mb-3 whitespace-nowrap rounded-[10px] bg-[#2a2a29] px-3 py-1.5 text-[0.85rem] text-white transition-all duration-200 ${hover === i ? "opacity-100 translate-y-0" : "opacity-0 translate-y-1"}`}>{DOCK_LABEL[page] || l}</span>
+              <a href={h} onClick={go(h)} aria-label={l}
+                className="block rounded-[12px] bg-white/80 backdrop-blur-md shadow-[0_1px_3px_rgba(0,0,0,0.06)] flex items-center justify-center"
+                style={{ width: size, height: size, transform: `translateY(${d === 0 ? -6 : d === 1 ? -2 : 0}px)`, transition: "width .2s ease-out, height .2s ease-out, transform .2s ease-out" }}>
+                <img src={NAV_ICON[page]} alt="" className="w-[66%] h-[66%]" draggable={false} />
+              </a>
+              {/* the page you're on: a small red dot under its tile */}
+              <span className={`absolute left-1/2 -translate-x-1/2 -bottom-[6px] w-1 h-1 rounded-full bg-[var(--red)] transition-opacity ${on ? "opacity-100" : "opacity-0"}`} />
+            </li>
+          );
+        })}
+      </ul>
+    </nav>
+  );
+};
 const WORK_COUNT = featured.length + selected.length;
 // two short columns of links, after titarvl.framer.website
 const COLS = [
@@ -104,7 +157,6 @@ const Nav = ({ route, theme, setTheme }) => {
   const shown = useRef(false);
   const bar = useRef(null);
   const nameEl = useRef(null);
-  const mbar = useRef(null); // the phone header, hidden and shown with the desktop one
 
   // the name is plain text now (no ink loop)
 
@@ -121,7 +173,6 @@ const Nav = ({ route, theme, setTheme }) => {
       if (hide === hidden) return;
       hidden = hide;
       // desktop header always stays; only the phone header tucks away
-      gsap.to(mbar.current, { yPercent: hide ? -110 : 0, duration: hide ? 0.5 : 0.7, ease: hide ? "power3.in" : "expo.out", overwrite: true });
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -159,27 +210,7 @@ const Nav = ({ route, theme, setTheme }) => {
     {/* desktop: the pages as a quiet list down the left, after rachelchen.tech. The current one
         gets a short line in front, like the case study legend */}
     {/* inside a story case study the section legend takes this spot instead */}
-    {!(route.page === "work" && route.slug && findProject(route.slug)?.layout === "story") && <nav aria-label="Site" className="fade-in hidden md:block fixed left-6 top-[30vh] z-[100]">
-      <ul className="space-y-2.5">
-        {COLS.flat().map(([l, h, page]) => {
-          const on = route.page === page;
-          return (
-            <li key={l}>
-              <a href={h} onClick={go(h)} className={`block text-[0.9rem] leading-snug transition-colors ${on ? "" : "text-[var(--muted)] hover:text-[var(--red)]"}`} style={on ? { color: "var(--red)" } : undefined}>{l}</a>
-            </li>
-          );
-        })}
-      </ul>
-    </nav>}
-    {/* phones: one row of pages, the current one in red, a faint rule underneath (after rachelchen.tech) */}
-    <div ref={mbar} className="md:hidden fixed top-0 inset-x-0 z-[100] bg-[var(--bg)]">
-      <nav aria-label="Site" className="mx-4 py-4 flex items-center gap-5 border-b border-[var(--line)] text-[0.9rem]">
-        {COLS.flat().map(([l, h, page]) => {
-          const on = route.page === page;
-          return <a key={l} href={h} onClick={go(h)} className={on ? "" : "text-[var(--muted)] hover:text-[var(--red)] transition-colors"} style={on ? { color: "var(--red)" } : undefined}>{l}</a>;
-        })}
-      </nav>
-    </div>
+    <Dock route={route} />
     <header ref={bar} className="hidden md:flex fixed top-0 inset-x-0 z-[100] px-6 py-5 md:py-6 items-start justify-between gap-6 text-[var(--muted)]">
       {/* plain name, or on a case study a way back: ← Work / Bound */}
       {route.page === "work" && route.slug && findProject(route.slug) ? (
