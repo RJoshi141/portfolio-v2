@@ -2,7 +2,7 @@
 // a number and a title that morphs in, a one-liner beside "Role / Platform / Stack / Code" meta,
 // a modest centered hero, then chapters on a two-column grid (label and heading left, copy
 // and media right), recordings in a device with clickable chapters, the numbers, and next up.
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { ArrowUpRight, Star } from "lucide-react";
 import { featured, selected, findProject } from "../../revamp/data/projects";
 import { Clip, Device, DragStrip, CardVisual, Grain, Roll, Walkthrough, go, isVideo, pad, usePageMotion } from "../shared";
@@ -919,13 +919,21 @@ const Legend = ({ sections, accent }) => {
     // jump straight there, no scrolling animation
     lenis ? lenis.scrollTo(el, { offset: -110, immediate: true }) : el.scrollIntoView();
   };
+  // styled like the dock on the main pages: a thin outlined tray, the current section on a white tile
+  const navRef = useRef(null);
+  const [pill, setPill] = useState(null);
+  useLayoutEffect(() => {
+    const btn = navRef.current?.querySelector(`[data-i="${on}"]`);
+    if (btn) setPill({ top: btn.offsetTop, height: btn.offsetHeight });
+  }, [on, sections]);
   return (
-    <nav className="fade-in fixed left-6 top-[30vh] z-[90] space-y-2.5 w-[8rem]">
+    <nav ref={navRef} className="fade-in fixed left-3 top-[calc(30vh-0.75rem)] z-[90] w-[10rem] p-1.5 rounded-[22px] glass-tray">
+      {pill && <span key={on} aria-hidden className="pill-in absolute left-1.5 right-1.5 rounded-[12px] bg-white/80 backdrop-blur-md shadow-[0_1px_3px_rgba(0,0,0,0.06)]" style={{ top: pill.top, height: pill.height }} />}
       {entries.map((e) => {
         const active = e.i === on;
         return (
-          <button key={e.i} type="button" onClick={() => jump(e.i)} className={`block text-left text-[0.9rem] leading-snug transition-colors ${active ? "" : "text-[var(--muted)] hover:text-[var(--red)]"}`}
-            style={active ? { color: "var(--red)" } : undefined}>
+          <button key={e.i} data-i={e.i} type="button" onClick={() => jump(e.i)}
+            className={`no-red relative z-10 block w-full text-left rounded-[12px] px-3 py-1.5 text-[0.86rem] leading-snug ${active ? "text-[#111] hover:!text-[#111]" : "text-[var(--muted)] hover:!text-[var(--muted)]"}`}>
             {e.label}
           </button>
         );

@@ -74,13 +74,13 @@ const Cursor = () => {
   }, []);
   // over links: the dot opens into a thin black ring with a small red dot in the middle
   // anything with a label (View project, Save, Drag) gets the same ring; the words aren't shown
-  const ring = mode === "link" || !!label;
-  const size = ring ? { width: 38, height: 38, borderRadius: 99 } : mode === "text" ? { width: 2, height: 20, borderRadius: 1 } : { width: 12, height: 12, borderRadius: 99 };
+  const ringOn = mode === "link" || !!label;
+  const size = ringOn ? { width: 38, height: 38, borderRadius: 99 } : mode === "text" ? { width: 2, height: 20, borderRadius: 1 } : { width: 12, height: 12, borderRadius: 99 };
   return (
     <div ref={dot} className="pointer-events-none fixed left-0 top-0 z-[300] hidden md:block will-change-transform">
       {/* the cursor: a red dot that opens into a ring over links and narrows into a caret over text */}
-      <div className="absolute -translate-x-1/2 -translate-y-1/2 transition-[width,height,border-radius,background-color] duration-200 ease-out" style={{ background: ring ? "rgba(17,17,17,0.05)" : "var(--red)", border: ring ? "0.75px solid #111" : "0px solid var(--red)", ...size }} />
-      <div className={`absolute -translate-x-1/2 -translate-y-1/2 w-[4px] h-[4px] rounded-full bg-[var(--red)] transition-opacity duration-200 ${ring ? "opacity-100" : "opacity-0"}`} />
+      <div className="absolute -translate-x-1/2 -translate-y-1/2 transition-[width,height,border-radius,background-color] duration-200 ease-out" style={{ background: ringOn ? "rgba(17,17,17,0.05)" : "var(--red)", border: ringOn ? "0.75px solid #111" : "0px solid var(--red)", ...size }} />
+      <div className={`absolute -translate-x-1/2 -translate-y-1/2 w-[4px] h-[4px] rounded-full bg-[var(--red)] transition-opacity duration-200 ${ringOn ? "opacity-100" : "opacity-0"}`} />
     </div>
   );
 };
