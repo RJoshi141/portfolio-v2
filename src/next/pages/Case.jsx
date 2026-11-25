@@ -713,7 +713,7 @@ const Carousel = ({ items }) => {
         {items.map((it, k) => (
           <div key={k} className="absolute inset-0 flex items-center justify-center transition-opacity duration-700 ease-out" style={{ opacity: k === i ? 1 : 0 }}>
             {/* src: a screenshot that already has its phone drawn in */}
-            {it.src ? <img src={it.src} alt="" draggable={false} className="h-[80%] w-auto -mt-[3%]" /> : <Device kind="phone" frame={it.frame} poster={it.poster} mp4={it.mp4} className="h-[80%] -mt-[3%]" />}
+            {it.src ? <img src={it.src} alt="" draggable={false} className="h-[80%] w-auto -mt-[3%]" /> : <Device kind={it.kind || "phone"} frame={it.frame} poster={it.poster} mp4={it.mp4} className="h-[80%] -mt-[3%]" />}
           </div>
         ))}
         <div className="absolute bottom-[4%] left-0 right-0 flex justify-center gap-2.5">

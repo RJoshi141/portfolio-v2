@@ -36,11 +36,11 @@ import l2Card from "../../assets/case-studies/layer2/card-2phones.png";
 import boundHero from "../../assets/case-studies/bound/hero-2phones.png"; // start screen + shelves, two floating phones
 import boundWireframes from "../../assets/case-studies/bound/wireframes.jpg";
 // blurred photo backdrops for the phone panels (Pexels)
+import boundBgReading from "../../assets/case-studies/bound/bg-reading.jpg";
+import boundBgReaders from "../../assets/case-studies/bound/bg-readers.jpg";
+import boundBgNotes from "../../assets/case-studies/bound/bg-notes.jpg";
 import boundBgLibrary from "../../assets/case-studies/bound/bg-library.jpg";
 import boundBgWindow from "../../assets/case-studies/bound/bg-window.jpg";
-import boundBgReaders from "../../assets/case-studies/bound/bg-readers.jpg";
-import boundBgReading from "../../assets/case-studies/bound/bg-reading.jpg";
-import boundBgNotes from "../../assets/case-studies/bound/bg-notes.jpg";
 import boundJoinMp4 from "../../assets/case-studies/bound/join.mp4";
 import boundJoinPoster from "../../assets/case-studies/bound/join-poster.jpg";
 import boundShelfMp4 from "../../assets/case-studies/bound/shelf.mp4";
@@ -64,6 +64,9 @@ import evenCard from "../../assets/case-studies/even/card-3d.png";
 import evenHero from "../../assets/case-studies/even/hero-3d.jpg";
 import evenHeroMp4 from "../../assets/case-studies/even/hero-flyin.mp4";
 import evenHeroPoster from "../../assets/case-studies/even/hero-flyin-poster.jpg";
+import evenBgDepot from "../../assets/case-studies/even/bg-depot.jpg";
+import evenBgStop from "../../assets/case-studies/even/bg-stop.jpg";
+import evenBgTram from "../../assets/case-studies/even/bg-tram.jpg";
 import evenIcons from "../../assets/case-studies/even/icons.png";
 import evenSlopeLayer from "../../assets/case-studies/even/slope-layer.png";
 import evenLegend from "../../assets/case-studies/even/legend.png";
@@ -572,10 +575,10 @@ export const projects = [
       {
         eyebrow: "Onboarding", nav: "Onboarding",
         heading: "Five questions before the first scan",
-        phones: [
-          { kind: "phone17", frame: iphone17Frame, mp4: l2StartMp4, poster: l2StartPoster, caption: "The first screen sets the tone: skin, in order, in warm gold light. It promises calm before it asks for anything.", tone: "radial-gradient(120% 100% at 20% 0%, #FBF6EC 0%, #F0DFC2 45%, #DDBF94 80%, #CBA97A 100%)" },
-          { kind: "phone17", frame: iphone17Frame, poster: l2Questionnaire, caption: "Five questions, one per card, over a close-up of real skin. One at a time keeps it from feeling like a medical form.", tone: "radial-gradient(120% 100% at 80% 0%, #F8F1EC 0%, #EBD9CF 45%, #D7B9A8 80%, #C6A08C 100%)" },
-          { kind: "phone17", frame: iphone17Frame, poster: l2TourVoice, caption: "The tour ends on two promises: you can just talk to it, and nothing you say or scan leaves the phone.", tone: "radial-gradient(120% 100% at 50% 100%, #F4F3EE 0%, #E2E0D8 45%, #C9C6BC 80%, #B8B6AF 100%)" },
+        carousel: [
+          { kind: "phone17", frame: iphone17Frame, mp4: l2StartMp4, poster: l2StartPoster, caption: "The first screen sets the tone: skin, in order, in warm gold light. It promises calm before it asks for anything." },
+          { kind: "phone17", frame: iphone17Frame, poster: l2Questionnaire, caption: "Five questions, one per card, over a close-up of real skin. One at a time keeps it from feeling like a medical form." },
+          { kind: "phone17", frame: iphone17Frame, poster: l2TourVoice, caption: "The tour ends on two promises: you can just talk to it, and nothing you say or scan leaves the phone." },
         ],
       },
       {
@@ -691,19 +694,19 @@ export const projects = [
             label: "Tear into the app",
             text: "The start screen is an oil painting of stacked books. Leaving it, and finishing the join step, rips the page along a ragged edge and lifts it away.",
             frame: iphoneFrame, mp4: boundJoinMp4, poster: boundJoinPoster,
-            tone: "radial-gradient(120% 100% at 20% 0%, #FBF1EC 0%, #EED3C8 45%, #D9AFA2 80%, #C99A8C 100%)",
+            tone: `center / cover no-repeat url(${boundBgReading})`,
           },
           {
             label: "Shelves that feel like shelves",
             text: "To read, Reading now and Finished, on oak planks. Spine width follows page count, and each spine takes its colour from the real cover. Tap one and it lifts with a paper slip underneath.",
             frame: iphoneFrame, mp4: boundShelfMp4, poster: boundShelfPoster,
-            tone: "radial-gradient(120% 100% at 80% 0%, #FCF7EA 0%, #F1E3BF 45%, #DEC898 80%, #CDB582 100%)",
+            tone: `center / cover no-repeat url(${boundBgReaders})`,
           },
           {
             label: "Add any book",
             text: "Search Open Library by title, author or ISBN, or scan the barcode on the back. Real covers, page counts and a heart for favourites.",
             frame: iphoneFrame, mp4: boundAddMp4, poster: boundAddPoster,
-            tone: "radial-gradient(120% 100% at 50% 100%, #F1F5EE 0%, #D6E2D0 45%, #B5C8AE 80%, #A2B89B 100%)",
+            tone: `center / cover no-repeat url(${boundBgNotes})`,
           },
         ],
       },
@@ -755,10 +758,10 @@ export const projects = [
           chose: 1,
           why: "You already log your page, so it's the sharpest line.",
         },
-        phones: [
-          { frame: iphoneFrame, poster: boundLogPages, caption: "Log your page.", tone: `center / cover no-repeat url(${boundBgReading})` },
-          { frame: iphoneFrame, poster: boundBookNotes, caption: "The club's notes, on ruled index cards.", tone: `center / cover no-repeat url(${boundBgReaders})` },
-          { frame: iphoneFrame, poster: boundComposer, caption: "A note with a rating, tags and a spoiler switch.", tone: `center / cover no-repeat url(${boundBgNotes})` },
+        carousel: [
+          { frame: iphoneFrame, poster: boundLogPages, caption: "Log your page." },
+          { frame: iphoneFrame, poster: boundBookNotes, caption: "The club's notes, on ruled index cards." },
+          { frame: iphoneFrame, poster: boundComposer, caption: "A note with a rating, tags and a spoiler switch." },
         ],
       },
       {
@@ -908,19 +911,19 @@ export const projects = [
             label: "Get started",
             text: "One question first: how do you get around? A manual chair, a power chair, a cane or a stroller each set their own uphill, downhill and curb limits, so every route after that is planned for you.",
             frame: iphoneFrame, mp4: evenAppStartMp4, poster: evenAppStartPoster,
-            tone: "radial-gradient(120% 100% at 20% 0%, #EEF3FF 0%, #C9D8FF 45%, #8FADF7 80%, #5A82EE 100%)",
+            tone: `center / cover no-repeat url(${evenBgDepot})`,
           },
           {
             label: "Search",
             text: "Search only suggests places Even can actually route to, and checks that where you are is covered first. No dead ends after you've already picked a destination.",
             frame: iphoneFrame, mp4: evenPickLocationMp4, poster: evenPickLocationPoster,
-            tone: "radial-gradient(120% 100% at 80% 0%, #FBFAF7 0%, #ECEAE3 50%, #D6D3CA 100%)",
+            tone: `center / cover no-repeat url(${evenBgStop})`,
           },
           {
             label: "Tap anywhere",
             text: "Tap any sidewalk to see its incline and surface before you commit, then start or end a route right there. The map becomes something you can question, not just follow.",
             frame: iphoneFrame, mp4: evenChangeLocationMp4, poster: evenChangeLocationPoster,
-            tone: "radial-gradient(120% 100% at 50% 100%, #F0F8F2 0%, #CFE8D6 45%, #9BCFAA 80%, #6BB283 100%)",
+            tone: `center / cover no-repeat url(${evenBgTram})`,
           },
         ],
       },
@@ -981,7 +984,7 @@ WEIGHT = """length_m * (1 + abs(grade) / 10)
         eyebrow: "Core flows", nav: "Core flows",
         heading: "One route, and why",
         body: "One line colored by slope, green under 3% and amber up to 8%. The reasoning lives in two pop-ups.",
-        images: [
+        carousel: [
           { src: evenTripInfo, tall: true, caption: "Trip info: the slope profile against your limits, and what the shortest route would have cost you." },
           { src: evenDirections, tall: true, caption: "Directions: nine raw path pieces merged into five readable steps, each with slope and curb status." },
           { src: evenLegend, tall: true, caption: "The legend: slope, curb status and map markers in one panel." },

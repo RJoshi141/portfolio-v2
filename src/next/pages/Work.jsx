@@ -12,6 +12,7 @@ import { Footer } from "../NextApp";
 import duoCardMp4 from "../../assets/case-studies/duo/duo-card.mp4";
 import duoCardPoster from "../../assets/case-studies/duo/duo-card-poster.jpg";
 import evenHand from "../../assets/case-studies/even-hand.png";
+import evenCardBg from "../../assets/case-studies/even/card-bg.jpg";
 import bHome from "../../assets/case-studies/bound/bound-card.jpg";
 import jCard from "../../assets/case-studies/joydrop/joydrop-card.jpg";
 import landscapeFrame from "../../assets/case-studies/iphone-landscape-frame.png";
@@ -128,7 +129,8 @@ const ORDER = ["joydrop", "utter", "layer", "even", "bound"];
 const ordered = [...all].sort((a, b) => (ORDER.indexOf(a.slug) + 1 || 99) - (ORDER.indexOf(b.slug) + 1 || 99));
 // card backdrops picked by hand: Even in the app's own blue, Bound on the research chat's photo
 const CARD_BG = {
-  even: "radial-gradient(120% 100% at 20% 0%, #C7D4F6 0%, #7F9BE8 38%, #3B62D6 72%, #1D4ED8 100%)",
+  // a bus interior, blurred and grained in the file itself, so it reads as a soft gradient behind the hand
+  even: `center / cover no-repeat url(${evenCardBg})`,
 };
 const FULLBLEED = ["utter", "iphone-duo", "zoomies", "bound", "joydrop"]; // no colour panel, the content fills the card
 const FLOW = { even: 2, layer: 1, bound: 1 }; // which of the Solution flows to show
