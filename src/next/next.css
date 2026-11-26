@@ -13,7 +13,9 @@
   --blob: #dedcd7;
 }
 
-html { background: var(--bg); }
+/* the scrollbar is always there (and its space always kept), so pages never shift sideways when
+   a short page has nothing to scroll or Lenis pauses scrolling during a page change */
+html { background: var(--bg); overflow-y: scroll; scrollbar-gutter: stable; }
 body {
   background: var(--bg);
   color: var(--fg);
@@ -26,7 +28,7 @@ body {
 /* Lenis */
 html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-smooth { scroll-behavior: auto !important; }
-.lenis.lenis-stopped { overflow: hidden; }
+.lenis.lenis-stopped { overflow-x: hidden; overflow-y: scroll; } /* keep the scrollbar while paused */
 
 /* hide the native cursor where the custom one is active */
 @media (hover: hover) and (pointer: fine) {
