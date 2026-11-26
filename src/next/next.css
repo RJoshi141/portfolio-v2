@@ -182,3 +182,26 @@ img, video { -webkit-user-drag: none; }
   -webkit-backdrop-filter: blur(14px) saturate(140%);
   backdrop-filter: blur(14px) saturate(140%);
 }
+
+/* the bottom dock: a frosted tray holding white tiles, each with a colour icon */
+.dock-tray {
+  background: linear-gradient(180deg, rgba(255,255,255,.32) 0%, rgba(250,248,244,.22) 100%);
+  /* a hairline edge: half a pixel on retina screens */
+  border: 0.5px solid rgba(255,255,255,.55);
+  box-shadow: 0 10px 30px -12px rgba(0,0,0,.14);
+  -webkit-backdrop-filter: blur(8px) saturate(150%);
+  backdrop-filter: blur(8px) saturate(150%);
+}
+.dock-tile {
+  /* plain white tiles, so the colour lives in the icons */
+  background: linear-gradient(180deg, #fff 0%, #f7f6f3 100%);
+  box-shadow:
+    inset 0 -2px 4px rgba(0,0,0,.04),
+    0 0 0 0.5px rgba(0,0,0,.06),
+    0 4px 10px -4px rgba(0,0,0,.14);
+  transition: width .3s cubic-bezier(.34,1.56,.64,1), height .3s cubic-bezier(.34,1.56,.64,1), transform .35s cubic-bezier(.34,1.56,.64,1), box-shadow .3s ease;
+}
+.dock-tile:active { transform: scale(.9) !important; transition-duration: .12s; }
+/* the colour icons carry their own shading; a faint white lift keeps them crisp on the tile */
+.dock-icon { filter: drop-shadow(0 1px 0 rgba(255,255,255,.5)); }
+@media (prefers-reduced-motion: reduce) { .dock-tile { transition: none; } }

@@ -64,9 +64,9 @@ import evenCard from "../../assets/case-studies/even/card-3d.png";
 import evenHero from "../../assets/case-studies/even/hero-3d.jpg";
 import evenHeroMp4 from "../../assets/case-studies/even/hero-flyin.mp4";
 import evenHeroPoster from "../../assets/case-studies/even/hero-flyin-poster.jpg";
-import evenBgDepot from "../../assets/case-studies/even/bg-depot.jpg";
-import evenBgStop from "../../assets/case-studies/even/bg-stop.jpg";
-import evenBgTram from "../../assets/case-studies/even/bg-tram.jpg";
+import evenBgBay from "../../assets/case-studies/even/bg-bay.jpg"; // looking down to the bay and Alcatraz
+import evenBgHill from "../../assets/case-studies/even/bg-hill.jpg"; // a street climbing toward Russian Hill
+import evenBgStreet from "../../assets/case-studies/even/bg-street.jpg"; // a steep block of bay windows
 import evenIcons from "../../assets/case-studies/even/icons.png";
 import evenSlopeLayer from "../../assets/case-studies/even/slope-layer.png";
 import evenLegend from "../../assets/case-studies/even/legend.png";
@@ -911,19 +911,19 @@ export const projects = [
             label: "Get started",
             text: "One question first: how do you get around? A manual chair, a power chair, a cane or a stroller each set their own uphill, downhill and curb limits, so every route after that is planned for you.",
             frame: iphoneFrame, mp4: evenAppStartMp4, poster: evenAppStartPoster,
-            tone: `center / cover no-repeat url(${evenBgDepot})`,
+            tone: `center / cover no-repeat url(${evenBgBay})`,
           },
           {
             label: "Search",
             text: "Search only suggests places Even can actually route to, and checks that where you are is covered first. No dead ends after you've already picked a destination.",
             frame: iphoneFrame, mp4: evenPickLocationMp4, poster: evenPickLocationPoster,
-            tone: `center / cover no-repeat url(${evenBgStop})`,
+            tone: `center / cover no-repeat url(${evenBgHill})`,
           },
           {
             label: "Tap anywhere",
             text: "Tap any sidewalk to see its incline and surface before you commit, then start or end a route right there. The map becomes something you can question, not just follow.",
             frame: iphoneFrame, mp4: evenChangeLocationMp4, poster: evenChangeLocationPoster,
-            tone: `center / cover no-repeat url(${evenBgTram})`,
+            tone: `center / cover no-repeat url(${evenBgStreet})`,
           },
         ],
       },

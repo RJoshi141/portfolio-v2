@@ -78,9 +78,9 @@ const Cursor = () => {
   const size = ringOn ? { width: 38, height: 38, borderRadius: 99 } : mode === "text" ? { width: 2, height: 20, borderRadius: 1 } : { width: 12, height: 12, borderRadius: 99 };
   return (
     <div ref={dot} className="pointer-events-none fixed left-0 top-0 z-[300] hidden md:block will-change-transform">
-      {/* the cursor: a red dot that opens into a ring over links and narrows into a caret over text */}
-      <div className="absolute -translate-x-1/2 -translate-y-1/2 transition-[width,height,border-radius,background-color] duration-200 ease-out" style={{ background: ringOn ? "rgba(17,17,17,0.05)" : "var(--red)", border: ringOn ? "0.75px solid #111" : "0px solid var(--red)", ...size }} />
-      <div className={`absolute -translate-x-1/2 -translate-y-1/2 w-[4px] h-[4px] rounded-full bg-[var(--red)] transition-opacity duration-200 ${ringOn ? "opacity-100" : "opacity-0"}`} />
+      {/* the cursor: a black dot that opens into a ring over links and narrows into a caret over text */}
+      <div className="absolute -translate-x-1/2 -translate-y-1/2 transition-[width,height,border-radius,background-color] duration-200 ease-out" style={{ background: ringOn ? "rgba(17,17,17,0.05)" : "#111", border: ringOn ? "0.75px solid #111" : "0px solid #111", ...size }} />
+      <div className={`absolute -translate-x-1/2 -translate-y-1/2 w-[4px] h-[4px] rounded-full bg-[#111] transition-opacity duration-200 ${ringOn ? "opacity-100" : "opacity-0"}`} />
     </div>
   );
 };
@@ -92,10 +92,23 @@ import workGlass from "../assets/nav/work-glass.svg";
 import aboutGlass from "../assets/nav/about-glass.svg";
 import contactGlass from "../assets/nav/contact-glass.svg";
 const NAV_ICON = { work: workGlass, about: aboutGlass, resume: resumeGlass, contact: contactGlass };
+// the dock's own two-tone glass icons: a white-to-deep back shape and a pale tinted front, one hue per page
+import workColor from "../assets/nav/work-color.svg";
+import aboutColor from "../assets/nav/about-color.svg";
+import resumeColor from "../assets/nav/resume-color.svg";
+import contactColor from "../assets/nav/contact-color.svg";
+const DOCK_ICON = { work: workColor, about: aboutColor, resume: resumeColor, contact: contactColor };
 const DOCK_LABEL = { work: "Work", about: "About Me", resume: "Resume", contact: "Contact" };
+// each page has its own colour, used for its label and the dot under the current page
+const DOCK_TONE = {
+  work:    { ink: "#E0603E" },
+  about:   { ink: "#7A5CE6" },
+  resume:  { ink: "#2E9E62" },
+  contact: { ink: "#3D8FDB" },
+};
 
-// Desktop nav as a small dock (after a macOS-style dock): white tiles with glass icons in a pale tray.
-// The tile under the pointer grows, its neighbours a little, and a dark label pops up above it.
+// Desktop nav as a small dock (after a macOS-style dock): white tiles with colour icons in a frosted tray.
+// The tile under the pointer grows, tips and bounces, its neighbours a little, and a label in its colour pops up above it.
 const Dock = ({ route }) => {
   const [hover, setHover] = useState(-1);
   const [hidden, setHidden] = useState(false);
@@ -117,22 +130,26 @@ const Dock = ({ route }) => {
       style={{ transform: `translate(-50%, ${hidden ? "calc(100% + 7rem)" : "0"})`, transition: hidden ? "transform .35s cubic-bezier(.5,0,.75,0)" : "transform .6s cubic-bezier(.34,1.56,.64,1)" }}>
       {/* tiles change real size (not just scale), so the whole bar grows with them */}
       {/* the tray keeps a fixed height, so a growing tile pops up out of it (only the width grows) */}
-      <ul onMouseLeave={() => setHover(-1)} className="flex items-end gap-2 h-[58px] rounded-[22px] border border-[#dcdcd9] bg-transparent px-2.5 pb-[8px] transition-all duration-200">
+      <ul onMouseLeave={() => setHover(-1)} className="dock-tray flex items-end gap-2.5 h-[60px] rounded-[24px] px-2.5 pb-[9px] transition-all duration-200">
         {items.map(([l, h, page], i) => {
           const on = route.page === page;
           const d = hover < 0 ? 9 : Math.abs(hover - i);
           const size = d === 0 ? 54 : d === 1 ? 46 : 40;
+          const tone = DOCK_TONE[page];
+          const tilt = d === 0 ? (i % 2 ? 6 : -6) : 0; // the hovered tile tips a little, alternating sides
           return (
             <li key={l} className="relative" onMouseEnter={() => setHover(i)}>
               {/* label above the hovered tile */}
-              <span className={`pointer-events-none absolute left-1/2 -translate-x-1/2 bottom-full mb-3 whitespace-nowrap rounded-[10px] bg-[#2a2a29] px-3 py-1.5 text-[0.85rem] text-white transition-all duration-200 ${hover === i ? "opacity-100 translate-y-0" : "opacity-0 translate-y-1"}`}>{DOCK_LABEL[page] || l}</span>
+              <span className={`pointer-events-none absolute left-1/2 -translate-x-1/2 bottom-full mb-3 whitespace-nowrap rounded-[10px] px-3 py-1.5 text-[0.85rem] font-medium text-white transition-all duration-300 ${hover === i ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-1.5 scale-90"}`}
+                style={{ background: tone.ink, transitionTimingFunction: "cubic-bezier(.34,1.56,.64,1)" }}>{DOCK_LABEL[page] || l}</span>
               <a href={h} onClick={go(h)} aria-label={l}
-                className="block rounded-[12px] bg-white/80 backdrop-blur-md shadow-[0_1px_3px_rgba(0,0,0,0.06)] flex items-center justify-center"
-                style={{ width: size, height: size, transform: `translateY(${d === 0 ? -6 : d === 1 ? -2 : 0}px)`, transition: "width .2s ease-out, height .2s ease-out, transform .2s ease-out" }}>
-                <img src={NAV_ICON[page]} alt="" className="w-[66%] h-[66%]" draggable={false} />
+                className="dock-tile flex items-center justify-center rounded-[14px]"
+                style={{ width: size, height: size,
+                  transform: `translateY(${d === 0 ? -8 : d === 1 ? -3 : 0}px) rotate(${tilt}deg)` }}>
+                <img src={DOCK_ICON[page]} alt="" className="dock-icon w-[64%] h-[64%]" draggable={false} />
               </a>
               {/* the page you're on: a small red dot under its tile */}
-              <span className={`absolute left-1/2 -translate-x-1/2 -bottom-[6px] w-1 h-1 rounded-full bg-[var(--red)] transition-opacity ${on ? "opacity-100" : "opacity-0"}`} />
+              <span className={`absolute left-1/2 -translate-x-1/2 -bottom-[7px] w-[5px] h-[5px] rounded-full transition-all duration-300 ${on ? "opacity-100 scale-100" : "opacity-0 scale-0"}`} style={{ background: tone.ink }} />
             </li>
           );
         })}

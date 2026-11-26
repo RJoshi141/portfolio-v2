@@ -15,6 +15,7 @@ import evenHand from "../../assets/case-studies/even-hand.png";
 import evenCardBg from "../../assets/case-studies/even/card-bg.jpg";
 import bHome from "../../assets/case-studies/bound/bound-card.jpg";
 import jCard from "../../assets/case-studies/joydrop/joydrop-card.jpg";
+import lCard from "../../assets/case-studies/layer2/layer-card.jpg";
 import landscapeFrame from "../../assets/case-studies/iphone-landscape-frame.png";
 import zMenu from "../../assets/case-studies/zoomies/menu-poster.jpg";
 import zStart from "../../assets/case-studies/zoomies/start-poster.jpg";
@@ -132,7 +133,7 @@ const CARD_BG = {
   // a bus interior, blurred and grained in the file itself, so it reads as a soft gradient behind the hand
   even: `center / cover no-repeat url(${evenCardBg})`,
 };
-const FULLBLEED = ["utter", "iphone-duo", "zoomies", "bound", "joydrop"]; // no colour panel, the content fills the card
+const FULLBLEED = ["utter", "iphone-duo", "zoomies", "bound", "joydrop", "layer"]; // no colour panel, the content fills the card
 const FLOW = { even: 2, layer: 1, bound: 1 }; // which of the Solution flows to show
 const appClip = (p) => {
   const sol = p.sections?.[0] || {};
@@ -146,6 +147,8 @@ const CardArt = ({ p }) => {
 
   // Bound: the ink start screen (blackletter over the oil painting), in its frame
   // Bound: the wax seal icon on a real home screen, filling the card
+  // Layer: the routine review on a phone, lying on cork and linen
+  if (p.slug === "layer") return <img src={lCard} alt="" loading="lazy" className="absolute inset-0 w-full h-full object-cover object-[50%_62%]" />;
   if (p.slug === "bound") return <img src={bHome} alt="" loading="lazy" className="absolute inset-0 w-full h-full object-cover object-[52%_50%]" />;
   // Zoomies: the pixel dog's run cycle, on the game's own flat sky
   if (p.slug === "zoomies") return (
